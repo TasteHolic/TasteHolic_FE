@@ -69,6 +69,7 @@ const searchBar: React.FC = () => {
       border: "none",
       color: "#D9D9D9",
       cursor: "pointer",
+      outline: "none",
     },
     toggleContainer: {
       display: "flex",
@@ -112,6 +113,7 @@ const searchBar: React.FC = () => {
       border: "none",
       padding: "20px",
       cursor: "pointer",
+      outline: "none",
     },
     searchButtonSvg: {
       marginTop: "5px",
