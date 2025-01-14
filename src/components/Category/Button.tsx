@@ -1,4 +1,3 @@
-//숙명여대_박다은_다나
 import React from 'react';
 import './Button.css';
 
