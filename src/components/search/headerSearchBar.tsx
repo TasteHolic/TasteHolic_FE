@@ -61,6 +61,7 @@ const styles = {
     right: "-7px",
     color: "#ffffff",
     cursor: "pointer",
+    outline: "none",
   },
 };
 
