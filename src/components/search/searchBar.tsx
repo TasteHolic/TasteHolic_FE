@@ -4,7 +4,8 @@ const searchBar: React.FC = () => {
   const [isMyBar, setIsMyBar] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const placeholderText = "위스키, 와인, 만들어보고 싶은 레시피 등을 검색해보세요.";
+  const placeholderText =
+    "위스키, 와인, 만들어보고 싶은 레시피 등을 검색해보세요.";
 
   const handleToggle = () => {
     setIsMyBar((prevState) => !prevState);
@@ -63,7 +64,7 @@ const searchBar: React.FC = () => {
     clearButton: {
       position: "absolute" as const,
       top: "50%",
-      right: "-35px",
+      right: "-6px",
       transform: "translateY(-50%)",
       background: "none",
       border: "none",
@@ -89,9 +90,7 @@ const searchBar: React.FC = () => {
     toggleSwitch: {
       width: "37.839px",
       height: "23px",
-      background: isMyBar
-        ? "#36B5F4"
-        : "rgba(120, 120, 128, 0.40)",
+      background: isMyBar ? "#36B5F4" : "rgba(120, 120, 128, 0.40)",
       boxShadow: "0px 5.391px 5.391px 0px rgba(0, 0, 0, 0.25)",
       borderRadius: "12px",
       position: "relative" as const,
@@ -142,7 +141,10 @@ const searchBar: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
           />
           {inputValue && (
-            <button style={styles.clearButton} onClick={() => setInputValue("")}>
+            <button
+              style={styles.clearButton}
+              onClick={() => setInputValue("")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
