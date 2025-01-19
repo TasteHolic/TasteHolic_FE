@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import "pretendard/dist/web/static/pretendard.css"
 
-const searchBar: React.FC = () => {
+interface MainSearch {
+    myBarClick: () => void; //My Bar 일시 호출
+    searchClick: () => void; //검색 시 호출
+}
+
+const searchBar: React.FC<MainSearch> = ({myBarClick}, {searchClick}) => {
   const [isMyBar, setIsMyBar] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const placeholderText =
-    "위스키, 와인, 만들어보고 싶은 레시피 등을 검색해보세요.";
-
+  const placeholderText = "위스키, 와인, 만들어보고 싶은 레시피 등을 검색해보세요.";
+    
   const handleToggle = () => {
     setIsMyBar((prevState) => !prevState);
   };
@@ -37,22 +42,31 @@ const searchBar: React.FC = () => {
     } as React.CSSProperties,
     searchInput: {
       borderRadius: "16px",
-      width: "350px",
+      width: "335px",
       height: "19px",
       background: "#121212",
       color: "#FFF",
       textAlign: "left" as const,
       fontFamily: "Pretendard, sans-serif",
       fontWeight: 500,
-      fontSize: "14px",
+      fontSize: "16px",
       lineHeight: "normal",
       letterSpacing: "-0.64px",
       textTransform: "capitalize" as const,
       border: "none",
       outline: "none",
+      caretColor: "#F42B72",
     },
-    placeholder: {
-      fontWeight: 300,
+    pplaceholder: {
+        color: "#9B9898",
+        textAlign: "center",
+        fontFamily: '"Pretendard JP", sans-serif',
+        fontSize: "16px",
+        fontStyle: "normal",
+        fontWeight: 300,
+        lineHeight: "normal",
+        letterSpacing: "-0.64px",
+        textTransform: "capitalize",
     },
     separator: {
       width: "1px",
@@ -64,11 +78,12 @@ const searchBar: React.FC = () => {
     clearButton: {
       position: "absolute" as const,
       top: "50%",
-      right: "-6px",
+      marginTop: "2px",
+      right: "14px",
       transform: "translateY(-50%)",
       background: "none",
       border: "none",
-      color: "#D9D9D9",
+      padding: "0px",
       cursor: "pointer",
       outline: "none",
     },
@@ -89,8 +104,10 @@ const searchBar: React.FC = () => {
     },
     toggleSwitch: {
       width: "37.839px",
-      height: "23px",
-      background: isMyBar ? "#36B5F4" : "rgba(120, 120, 128, 0.40)",
+      height: "24px",
+      background: isMyBar
+        ? "#36B5F4"
+        : "rgba(120, 120, 128, 0.40)",
       boxShadow: "0px 5.391px 5.391px 0px rgba(0, 0, 0, 0.25)",
       borderRadius: "12px",
       position: "relative" as const,
@@ -102,17 +119,20 @@ const searchBar: React.FC = () => {
       height: "20px",
       backgroundColor: "#fff",
       borderRadius: "50%",
-      position: "absolute" as const,
-      top: "2px",
+      position: "relative" as const,
+      marginTop: "2px",
       left: isMyBar ? "15.839px" : "2px",
       transition: "left 0.3s ease",
     },
     searchButton: {
       background: "none",
       border: "none",
-      padding: "20px",
+      padding: "0px",
+      marginTop: "5px",
+      marginRight: "20px",
       cursor: "pointer",
       outline: "none",
+
     },
     searchButtonSvg: {
       marginTop: "5px",
@@ -127,7 +147,10 @@ const searchBar: React.FC = () => {
       <div style={styles.searchBar}>
         <div style={styles.toggleContainer}>
           <span style={styles.toggleLabel}>My Bar</span>
-          <div style={styles.toggleSwitch} onClick={handleToggle}>
+          <div style={styles.toggleSwitch}   onClick={() => {
+          handleToggle();
+          myBarClick();
+          }}>
             <div style={styles.knob}></div>
           </div>
         </div>
@@ -137,14 +160,12 @@ const searchBar: React.FC = () => {
             style={styles.searchInput}
             type="text"
             placeholder={placeholderText}
+            className="search-iinput"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
           {inputValue && (
-            <button
-              style={styles.clearButton}
-              onClick={() => setInputValue("")}
-            >
+            <button style={styles.clearButton} onClick={() => setInputValue("")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -175,7 +196,7 @@ const searchBar: React.FC = () => {
             </button>
           )}
         </div>
-        <button style={styles.searchButton}>
+        <button style={styles.searchButton} onClick={searchClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -190,6 +211,20 @@ const searchBar: React.FC = () => {
           </svg>
         </button>
       </div>
+      <style>
+        {`
+          .search-iinput::pplaceholder {
+            color: ${styles.pplaceholder.color};
+            text-align: ${styles.pplaceholder.textAlign};
+            font-family: ${styles.pplaceholder.fontFamily};
+            font-size: ${styles.pplaceholder.fontSize};
+            font-style: ${styles.pplaceholder.fontStyle}
+            font-weight: ${styles.pplaceholder.fontWeight};
+            letter-spacing: ${styles.pplaceholder.letterSpacing};
+            text-transform: ${styles.pplaceholder.textTransform};
+          }
+        `}
+      </style>
     </div>
   );
 };
