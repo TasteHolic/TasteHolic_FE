@@ -1,0 +1,20 @@
+const GoogleAlertsIcon = () => (
+
+
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+    <rect width="32" height="32" fill="url(#pattern0_768_3359)"/>
+    <defs>
+    <pattern id="pattern0_768_3359" patternContentUnits="objectBoundingBox" width="1" height="1">
+    <use xlinkHref="#image0_768_3359" transform="scale(0.015625)"/>
+    </pattern>
+    <image id="image0_768_3359" width="64" height="64" xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFhklEQVR4nO2ae4hVRRzHZ3Oz1N0ebtm7iIyU1YqEsqeRRYlYlm2WhEQUVlqZFRYFsZVkVJipKUFv0vCPiopisSLLau0l2YOi6GVEalZarpa6n/h5v0en07l37z33nrPnLvcDsu6emd+cmfOb32vGuRo1atSoUaOqAM4H2oB1wEZgOXAt0Nv1ZIDewCLyswI40PVUgMc00d+Ba4B9gSbgYuAHPfsI2M31NIAzNMG/gGMjnjd5izDZ9TSAJ7uaHNCiNu+5ngbwgSbXr0CbPdRmg6tGgGOAO4HXgF+ATVL5lcB6oBNoLNB/Py3AWldNACOAtyiOoQXkXKI2b7pqANgdeERf1vgVmAeMBg7W8z7AofL9LQVkDQC+k5wJLusA/c1Y6YVN1W8HGmLIaQAmeh5gCdDLZRmgrzf5b4HmmHIagdXe9ng5ziKmDjDfm3zsyE1b5HvJmueqAWCsp/ZDKyBvOPC38oL9XZYBDtGLGtdVUO4MyZzvsgo5ax4EMy8BdRWUvTfwh7RqgMsiwKOavLmqpgTlX+2yBnCDXu5PYEhCY4zTGC+4LEEuqNmiYGdcguMcqQX42mUF4DSgQy/WmvBYDYGWuQzF9+v1UgsqafQKGFmjI8lxStmPZpGNZ9IITYHDNN6qpMfKixKYoHBhzAF2cSmgZMloS2O8/wDsCbzjZXW27693KaJtZtyR5rh+hGcuLsBK1QvlAepdwsgAWqHUGJz0eJEAB1h4CywDtnmLsUZbYbhLCPvqqRZCgF6WyABnqxBpP4cEqahswVQv5Q34DJhk6XAF38XKYBsk/+RKyY3EDBpws75qFFtUl7cvPsbq81qYhzwVRQnRvaY1rkyAuZL5fLmyukQTw4vpXwUWq4hpX/ef0ILYpB8HRqoIMjGkFWYsH4y7EKoCb9SWGxRHRtEABwFbgc3K6evyFChOUnnLNMHnU+BKBSyna9HCC9G/+DfaPt5l6v+6SxpyX9FYVkKfw4G7gJ+8ya4FbtJCnAC86LnPNaXkC8Bz6ndF7IkVi/YyqsHVxTCaLSGtWCWNqAeONguuv3cWmzfo7MA4wiUNUOeVnS8q43Q3yNsD2j35U7XNugxo5Gm2a03cOZUMcLlnAEtyZcAFwI/8n3dD7cZ76fPYAvJOieqfhhtcoYEXFbMV1McMXMAnFiZbKTzfOR8wXW1NxffK0+ZStVno0gQY7KW504toP0ttNysIypscKYr8GDgKWKp+M/K0vUrPH3ZpA5wr32tqOq0LtQ8mP6IIue1qbwXOmfr/b+YxItraBQljrusOgMme+7o1j8ELjqsmlXDSY24RLXCQU5wX0XaKns1x3QW5vRwswky/8OGd1K4spSYgm3GPJzfyK+tajLHYdSfkwtsgBG4LSt4KkY0pMeVO8KpKX1iUGXp+op4td90NcJYivMBFDrPqbLn5uXcvCOUdOxbBzhQDT+GyALnA5G291CYvoGksQ6aF0kQtggKnD+043GUFcmFteP8OLEPeIC99Dk6BXwlvh8wBjPJiBcv0botzixM4UzJMswYCP+v3Z5Mus5cN8ERIfc2QjSlRxt3q+4B+b/YW9haXZdgZBG311BcVREYW0X9Xr9+OIEqVpm2Se5zLKuRS4K80gft1QBp4CuMNK54U6D9N7T4Pq7vkoeP2VM4dYqFiaaeyu/EqYbV6RUzjfWWZfUN73259GKMi5PbzMsvRLsuwcx93yhjW65Jza6i4avXD2RZWe4HVfQXk2oVKY7bLOuQWIXCNX6rw0ayrcjcq4QmzWknXPhHy+niR5ixXDQDneDahELZdwqyT8VwilxgcuXckdeEiScN4IfC0FqND/74BnlL8YFnk8aosLw2dJ/i0J3nalCl0+nOqLlwMy/x1uBo1atSo4aqDfwE9I1Jfkk9m4wAAAABJRU5ErkJggg=="/>
+    </defs>
+    </svg>
+
+    
+
+
+
+);
+
+export default GoogleAlertsIcon;
