@@ -1,0 +1,17 @@
+const JingleBellIcon = () => (
+
+
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+    <rect width="32" height="32" fill="url(#pattern0_768_3364)"/>
+    <defs>
+    <pattern id="pattern0_768_3364" patternContentUnits="objectBoundingBox" width="1" height="1">
+    <use xlinkHref="#image0_768_3364" transform="scale(0.015625)"/>
+    </pattern>
+    <image id="image0_768_3364" width="64" height="64" xlinkHref="data:image/png;base64,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"/>
+    </defs>
+    </svg>
+
+
+);
+
+export default JingleBellIcon;
