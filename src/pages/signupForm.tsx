@@ -160,19 +160,24 @@ const SignupForm: React.FC = () => {
             alert('사용할 수 있는 아이디입니다.');
         }
     };
-    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+    
+        // 아이디 중복 여부 확인
+        if (!isIdChecked) {
+            alert('아이디 중복 확인을 완료해주세요.');
+            return;
+        }
+    
+        if (isIdDuplicate) {
+            alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
+            return;
+        }
+    
+        // 필수 유효성 검사 통과 여부 확인
         const { id, password, ...relevantValidation } = validation;
-
-        console.log('필수 입력 필드 유효성 상태:', relevantValidation);
-        console.log('아이디 중복 여부:', isIdDuplicate);
-        console.log('필수 약관 동의 상태:', isAllRequiredChecked);
-
-        // const requiredValidation = { ...validation };
-        // delete requiredValidation.nickname; // 닉네임 유효성을 제외
-        
+    
         if (Object.values(relevantValidation).every((v) => v) && !isIdDuplicate && isAllRequiredChecked) {
             const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
             const newUser = { id: form.id, nickname: form.nickname };
@@ -183,9 +188,9 @@ const SignupForm: React.FC = () => {
             // 유효성 검사 실패 시 메시지
             if (!isAllRequiredChecked) {
                 alert('필수 약관을 모두 동의해주세요.');
-        } else {
-            alert('입력한 정보를 확인해주세요.');
-        }
+            } else {
+                alert('입력한 정보를 확인해주세요.');
+            }
         }
     };
 
