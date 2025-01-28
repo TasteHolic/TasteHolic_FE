@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./SearchPage.css";
 import "pretendard/dist/web/static/pretendard.css";
-import Header from "../components/Header";
 import SearchBar from "../components/search/searchBar";
 import SearchCategory from "../components/search/searchCategory";
 import CategoryType from "../components/search/CategotyType";
@@ -170,7 +169,6 @@ const SearchPage: React.FC = () => {
   
   return(
     <>
-      <Header/>
       <div className="body">
       <div className="container2">
           <div className="greetings">어떤 Taste를 찾고 계신가요?</div>
