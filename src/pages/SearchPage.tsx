@@ -4,7 +4,7 @@ import "./SearchPage.css";
 import "pretendard/dist/web/static/pretendard.css";
 import SearchBar from "../components/search/searchBar";
 import SearchCategory from "../components/search/searchCategory";
-import CategoryType from "../components/search/CategotyType";
+import CategoryType from "../components/search/searchPageOnly/CategotyType";
 import AlcoholSlideBar from "../components/search/searchPageOnly/AlcoholSlideBar";
 import TypeLabel from "../components/search/searchPageOnly/TypeLabel";
 import TypeLabelSvg from "../components/search/searchPageOnly/TypeLabelSvg";
