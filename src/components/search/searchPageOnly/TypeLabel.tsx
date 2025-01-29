@@ -3,7 +3,7 @@ import React, {useState} from "react";
 interface TypeLabelProps {
   name: string; 
   onDelete: () => void; 
-  category?: "aroma" | "flavor" | "aftertaste";
+  category?: "aroma" | "flavor" | "mood";
 }
 
 const TypeLabel: React.FC<TypeLabelProps> = ({
@@ -28,7 +28,7 @@ const TypeLabel: React.FC<TypeLabelProps> = ({
           ? "#D393F4"
           : category === "flavor"
           ? "var(--primary-rose-400, #FB6BA2)"
-          : category === "aftertaste"
+          : category === "mood"
           ? "var(--subgreen-400-main, #4ECE95)"
           : "#999"
       }`,
@@ -37,7 +37,7 @@ const TypeLabel: React.FC<TypeLabelProps> = ({
         ? "rgba(211, 147, 244, 0.60)"
         : category === "flavor"
         ? "rgba(251, 107, 162, 0.60)"
-        : category === "aftertaste"
+        : category === "mood"
         ? "rgba(78, 206, 149, 0.60)"
         : "rgba(153, 153, 153, 0.60)",
     },
