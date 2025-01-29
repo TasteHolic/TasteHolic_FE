@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "core-js": "^3.40.0",
+    "framer-motion": "^12.0.5",
     "pretendard": "^1.3.9",
-    "primitives": "^0.1.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.3",

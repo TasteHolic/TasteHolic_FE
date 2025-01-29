@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SearchPage.css";
+
 import "pretendard/dist/web/static/pretendard.css";
-import Header from "../components/Header";
 import SearchBar from "../components/search/searchBar";
 import SearchCategory from "../components/search/searchCategory";
 import CategoryType from "../components/search/CategotyType";
@@ -10,6 +10,7 @@ import TypeLabel from "../components/search/searchPageOnly/TypeLabel";
 import TypeLabelSvg from "../components/search/searchPageOnly/TypeLabelSvg";
 
 const SearchPage: React.FC = () => {
+  const [isPopupVisible, setIsPopupVisible] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [showSlideBar, setShowSlideBar] = useState<boolean>(false);
   const [selectedRange, setSelectedRange] = useState<{ min: number; max: number }>({
@@ -22,6 +23,14 @@ const SearchPage: React.FC = () => {
   const [flavorLabels, setFlavorLabels] = useState<{ name: string }[]>([]);
   const [aromaLabels, setAromaLabels] = useState<{ name: string }[]>([]);
   const [aftertasteLabels, setAftertasteLabels] = useState<{ name: string }[]>([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddClick = (min: number, max: number) => {
     setSelectedRange({ min, max });
@@ -170,7 +179,20 @@ const SearchPage: React.FC = () => {
   
   return(
     <>
-      <Header/>
+      {isPopupVisible && (
+        <div
+          className="popup"
+          style={{
+            top: '250px',
+            left: '300px',
+            position: 'fixed',
+          }}
+        >
+          <div className="popup-strong">My Bar를 활성해보세요</div>
+          <div className="popup-small">내가 가진 술로 만들 수 있는 레시피만<br/>검색할 수 있어요!</div>
+          <div className="popup-beak"></div>
+        </div>
+      )}
       <div className="body">
       <div className="container2">
           <div className="greetings">어떤 Taste를 찾고 계신가요?</div>

@@ -15,7 +15,7 @@ body{
   gap: 30px;
 }
 .greetings {
-  margin-top: 160px;
+  margin-top: 88px;
   color: #FFF;
   font-family: "Pretendard", sans-serif;
   font-size: 32px;
@@ -39,3 +39,50 @@ body{
   justify-content: flex-start;
   gap: 7px;
 }
+.popup {
+  position: fixed;
+  padding: 10px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+.popup-strong {
+  color: #000;
+
+  text-align: center;
+  font-family: Pretendard;
+  font-size: var(--sds-typography-body-size-medium);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 22.4px */
+  letter-spacing: -0.64px;
+}
+
+.popup-small {
+  color: #000;
+
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 19.6px */
+  letter-spacing: -0.56px;;
+}
+.popup.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.popup-beak {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+}
+

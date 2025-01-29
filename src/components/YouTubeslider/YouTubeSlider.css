@@ -1,0 +1,53 @@
+.youtube-slider-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden; /* 컨테이너 밖의 영상 숨김 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+  
+  .slider-wrapper {
+    display: flex;
+    
+    transition: transform 0.5s ease-in-out; /* 부드러운 슬라이드 이동 */
+    width: calc(100% * 5); /* 전체 비디오 개수에 따라 너비 설정 */
+    gap: 16px;
+   
+  }
+  
+  .slider-item {
+    flex: 0 0 calc(100% / 2.5); /* 한 번에 2.5개의 비디오가 보이도록 설정 */
+    opacity: 1;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    
+  }
+  
+  .slider-item.inactive {
+    opacity: 0.5; /* 가장 오른쪽에 있는 영상 불투명하게 설정 */
+    filter: brightness(50%);
+    pointer-events: none;
+  }
+  
+  .video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* 비율 설정 */
+    border: none;
+  }
+  
+  .slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 15;
+  }
+  
+  .slider-button.next-button {
+    right: -1px;
+  }
+  

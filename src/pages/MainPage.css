@@ -1,0 +1,301 @@
+/* taste-mood.css */
+body{
+  margin:0;
+  background: #161616;
+}
+/* 전체 배경 설정 */
+.taste-mood-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  
+  background: #161616;
+  color: #ffffff;
+  padding: 36px 0 41px 0;
+}
+.taste-mood-container .taste-mood-description {
+  margin-top: 21px; /* 원하는 간격으로 조정 */
+}
+/* 카드 컨테이너 스타일 */
+.taste-mood-cards {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 45rem;
+  overflow: hidden;
+}
+
+/* 카드 스타일 */
+.taste-mood-card {
+  position: absolute;
+  width: 80%;
+  height: 87%;
+  background-image:url("/image/maintastemoodcard.png"); 
+  background-size: cover;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 1.5rem;
+  text-align: center;
+  z-index: 5;
+}
+ /* 카드 이미지 스타일링 */
+ .taste-mood-card-image {
+  height: 70%;
+  object-fit: cover; /* 이미지가 카드에 맞게 조정 */
+  margin-top: 20px;
+  
+}
+.card-hover-buttons {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 17px;
+  right: 17px;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 1rem;
+  z-index: 15;
+}
+
+.taste-mood-card:hover .card-hover-buttons {
+  display: flex;
+}
+
+.taste-mood-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+  background-image: url("/image/maintastemoodhover.png");
+ }
+ 
+
+.taste-mood-card.center {
+  z-index: 10;
+}
+
+
+/* 카드 텍스트 스타일 */
+.taste-mood-card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.taste-mood-card-description {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* 카드 안의 화살표 버튼 */
+.card-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 15;
+}
+
+.card-arrow-left {
+  left: -1rem;
+}
+
+.card-arrow-right {
+  right: -1rem;
+}
+
+/* 페이지네이션 스타일 */
+.taste-mood-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0px;
+  gap: 0.5rem;
+}
+
+.taste-mood-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #787878;
+}
+
+.taste-mood-dot.active {
+  background-color: #ffffff;
+}
+
+.leftarrow-image  {
+  width: 48px; /* 버튼 이미지의 크기 */
+  height: 48px;
+  object-fit: contain;
+}
+.rightarrow-image  {
+  width: 48px; /* 버튼 이미지의 크기 */
+  height: 48px;
+  object-fit: contain;
+}
+.holicNow-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: #121212;;
+  color: #ffffff;
+  padding: 4rem 0 14rem 0;
+
+}
+.holic-container {
+  width: 80%;
+  display: flex;
+  
+  font-size: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  
+}
+
+.holicLabel{
+  display: inline-block;
+  
+}
+/*  */
+.pick-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 84px;
+}
+.picking-container{
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pick-arrow{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 15;
+}
+.pick-arrow-left{
+  left: 120px;
+}
+.pick-arrow-right{
+  right: 120px;
+}
+.pick-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.drink-name{
+  color: #F5F5F5;
+
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.96px;
+
+  margin-bottom: 24px;
+}
+.drink-description{
+  color: #F5F5F5;
+
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+
+  width: 130px;
+}
+.drink-img{
+  width: 431px;
+  height: 431px;
+  transform: rotate(0.921deg);
+  flex-shrink: 0;
+  margin-top: 45px;
+  margin-bottom: 65px;
+}
+.taste-notes{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+.taste-note{
+  /*  */
+}
+.taste-note-name{
+  color: #FFF;
+
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.8px;
+  text-transform: capitalize;
+  
+  margin-bottom: 26px;
+}
+/*  */
+
+/*  */
+.best-taste-container{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: #121212;
+  left: 0;
+  padding: 8rem 0 14rem 0;
+}
+.best-tastes{
+  width: 1040px;
+}
+.best-taste-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;  
+}
+
+.best-taste-label{
+  display: inline-block;
+  
+}
+.best-taste-description{
+  margin-right: 0;
+
+  color: #B1B1B1;
+
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 24px;
+  margin-top: 16px;
+}
