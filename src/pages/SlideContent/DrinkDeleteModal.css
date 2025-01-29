@@ -1,0 +1,107 @@
+.drink-delete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(22, 22, 22, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.drink-delete-modal .modal-content {
+  display: flex;
+  width: 500px;
+  height: 174px;
+  padding: 50px 34px 34px 34px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 16.231px;
+  border: 0.676px solid #fff;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 2.705px 2.705px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(33.81374740600586px);
+  box-sizing: border-box;
+}
+
+.drink-delete-modal .modal-content p {
+  color: var(--grayscale-gray50, #f3f5f6);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.drink-delete-modal .modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.drink-delete-modal .confirm-button {
+  padding: 12px 24px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border-radius: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+}
+
+.drink-delete-modal .confirm-button:hover {
+  background: linear-gradient(90deg, #ff3838, #ff1a1a);
+}
+
+.drink-delete-modal .cancel-button {
+  flex: 1;
+  display: flex;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  transition: background 0.3s ease;
+}
+
+.drink-delete-modal .cancel-button:hover {
+  background: #d1d1d1;
+}
+
+/* 페이드 인 효과 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

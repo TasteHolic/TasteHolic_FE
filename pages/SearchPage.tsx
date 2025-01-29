@@ -2,6 +2,10 @@ import React from "react";
 import SearchBar from "../src/components/search/searchBar";
 import Header from "../src/components/Header";
 import SearchCategory from "../src/components/search/searchCategory";
+import "../src/index.css";
+import RecommandCard from "../src/components/Category/RecommandCard";
+import CategoryCard from "../src/components/Category/CategoryCard";
+import Footer from "../src/components/Footer";
 import {
   TopSection,
   TopTitle,
@@ -11,8 +15,12 @@ import {
   SectionTitle,
   CardWrapper,
   Container,
+  RecommandSection,
+  RecommandCardWrapper,
+  RecommandTitle,
+  InfoText,
 } from "./SearchPage.styled";
-import CategoryCard from "../src/components/Category/CategoryCard";
+
 const SearchPage = () => {
   return (
     <Container>
@@ -56,6 +64,20 @@ const SearchPage = () => {
           />
         </CardWrapper>
       </CategorySection>
+      <RecommandSection>
+        <RecommandTitle>
+          UMC 님의 취향을 완성할 TASTE를 제안합니다.
+        </RecommandTitle>
+        <InfoText>
+          이러한 알고리즘에 의해 추천된다는 것을 알리는 안내문구
+        </InfoText>
+        <RecommandCardWrapper>
+          <RecommandCard />
+          <RecommandCard />
+          <RecommandCard />
+        </RecommandCardWrapper>
+      </RecommandSection>
+      <Footer />
     </Container>
   );
 };

@@ -1,0 +1,292 @@
+.add-drink-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(22, 22, 22, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.add-drink-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  height: 437px;
+  flex-shrink: 0;
+  padding: 40px 40px 30px;
+  border-radius: 16.231px;
+  border: 0.676px solid #fff;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 2.705px 2.705px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(33.81374740600586px);
+  box-sizing: border-box;
+}
+
+.add-drink-modal .form-group {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-drink-modal label {
+  color: #f3f5f6;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.error-text {
+  color: var(--primary-rose-400, #fb6ba2);
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+  height: 17px;
+  visibility: hidden;
+  opacity: 0;
+}
+.show-error {
+  visibility: visible;
+  opacity: 1;
+}
+
+.add-drink-modal .modal-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.add-drink-modal .confirm-button {
+  display: flex;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  box-sizing: border-box;
+}
+
+.add-drink-modal .confirm-button:hover {
+  background: #e1e1e1;
+}
+
+.add-drink-modal .cancel-button {
+  width: 76px;
+  height: 43px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  box-sizing: border-box;
+}
+
+.add-drink-modal .cancel-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.add-drink-modal .custom-dropdown {
+  position: relative;
+  width: 180px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #999;
+  background: transparent;
+  color: var(--grayscale-gray400, #8d8f90);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-drink-modal .custom-dropdown.open {
+  border-color: var(--subgreen-400-main, #4ece95);
+}
+
+.add-drink-modal .dropdown-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.add-drink-modal .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--grayscale-gray50, #f3f5f6);
+  background: var(--grayscale-gray800, #242525);
+  box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.51);
+  list-style: none;
+  padding: 0;
+  z-index: 1001;
+  margin-top: 8px;
+}
+.add-drink-modal .name-dropdown {
+  width: 320px;
+  box-sizing: border-box;
+}
+.add-drink-modal .dropdown-item {
+  height: 41px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.56px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.add-drink-modal .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.add-drink-modal .dropdown-item {
+  height: 41px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.56px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.add-drink-modal .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.custom-dropdown.has-error {
+  border: 1px solid var(--primary-rose-500-main, #f42b72) !important;
+}
+
+.custom-dropdown.is-valid {
+  border: 1px solid var(--subgreen-400-main, #4ece95) !important;
+  color: #4ece95 !important;
+}
+/* 검색창 스타일 */
+.search-box {
+  display: flex;
+  width: 318px;
+  height: 60px;
+  padding: 12px;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--grayscale-gray800, #242525);
+  border-bottom: 1px solid var(--grayscale-gray50, #f3f5f6);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.search-box input {
+  width: 296px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50px;
+  border: 1px solid var(--grayscale-gray50, #f3f5f6);
+  box-shadow: 0px 4px 10px 0px rgba(255, 255, 255, 0.1);
+  padding-left: 40px;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  font-family: Pretendard;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: -0.56px;
+  outline: none;
+  box-sizing: border-box;
+}
+search-box input::placeholder {
+  color: var(--grayscale-gray400, #8d8f90);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: -0.56px;
+}
+.dropdown-menu .search-box {
+  height: 60px !important; /* 검색창을 포함한 드롭다운 아이템 높이 조정 */
+}
+/* 검색 아이콘 */
+.search-box .search-icon {
+  position: absolute;
+  left: 28px;
+  width: 16px;
+  height: 16px;
+  background: url("/image/Search.svg") no-repeat center;
+  background-size: cover;
+}
+/* 추가 옵션 */
+.add-new {
+  color: var(
+    --accent-lavendar-500-main,
+    #be61eb
+  ) !important; /* 색상 강제 적용 */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  cursor: pointer;
+}
+
+.add-new:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.dropdown-item .add-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  filter: brightness(0) saturate(100%) invert(41%) sepia(74%) saturate(524%)
+    hue-rotate(244deg) brightness(92%) contrast(88%);
+}

@@ -1,0 +1,58 @@
+.tasting-note-container {
+  display: flex;
+  flex-direction: column; /* 리스트 아래 버튼 배치 */
+  align-items: center; /* 중앙 정렬 */
+  justify-content: center;
+  width: 100%;
+}
+
+.tasting-note-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 요소들이 중앙 정렬되도록 설정 */
+  gap: 20px;
+  max-width: 700px;
+  box-sizing: border-box;
+}
+
+.view-all-button {
+  width: 254px;
+  height: 52px;
+  display: inline-flex;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  border: 1px solid var(--grayscale-gray500, #727475);
+  background: transparent;
+  color: var(--grayscale-gray200, #c8cacb);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-top: 40px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-align: center;
+  position: relative;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 버튼 호버 효과 */
+.view-all-button:hover {
+  background: var(--grayscale-gray800, #2d2e2f);
+  color: #fff;
+}
+
+/* 아이콘 스타일 */
+.button-icon {
+  width: 20px;
+  height: 20px;
+}

@@ -1,0 +1,61 @@
+.tasting-note-card {
+  width: 216px;
+  height: 265.091px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 16px;
+  opacity: 0.9;
+  background: var(--grayscale-gray900, #1c1d1d);
+}
+
+/* 이미지 스타일 */
+.tasting-note-image-container {
+  display: flex;
+  width: 184px;
+  height: 168px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tasting-note-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 이름 스타일 */
+.tasting-note-name {
+  color: #f5f6f7;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.8px;
+  text-transform: capitalize;
+  margin: 0;
+  margin-top: 16px;
+}
+
+/* 날짜 스타일 */
+.tasting-note-date {
+  align-self: stretch;
+  color: #f5f6f7;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  text-transform: capitalize;
+  margin-top: 8px;
+}
