@@ -56,42 +56,55 @@ const SearchPage: React.FC = () => {
 
   
   const handleCategoryTypeClick = (type: string) => {
-    // Map "etc~" types to unique internal labels while displaying "기타"
-    const labelMapping = {
+    const labelMapping: Record<string, string> = {
       etcVariety: "기타 주종",
       etcAroma: "기타 맛",
       etcFlavor: "기타 향",
       etcMood: "기타 분위기",
     };
-  
-    const displayName = labelMapping[type] || type;
+    
+    const displayName = labelMapping[type as keyof typeof labelMapping] || type;
+    
     const newLabel = { name: displayName };
   
-    // Toggle the selected category
     setActiveCategories((prev) =>
       prev.includes(type) ? prev.filter((cat) => cat !== type) : [...prev, type]
     );
   
-    // Handle "all~" category selection
     if (type === "allVariety") {
-      setVarietyLabels([{ name: "모든 주종 포함" }]);
+      setVarietyLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 주종 포함")
+          ? []
+          : [{ name: "모든 주종 포함" }] 
+      );
       setActiveCategories((prev) => prev.filter((cat) => cat === "allVariety"));
       return;
     } else if (type === "allAroma") {
-      setAromaLabels([{ name: "모든 맛 포함" }]);
+      setAromaLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 향 포함")
+          ? [] 
+          : [{ name: "모든 향 포함" }]
+      );
       setActiveCategories((prev) => prev.filter((cat) => cat === "allAroma"));
       return;
     } else if (type === "allFlavor") {
-      setFlavorLabels([{ name: "모든 향 포함" }]);
+      setFlavorLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 맛 포함")
+          ? [] 
+          : [{ name: "모든 맛 포함" }]
+      );
       setActiveCategories((prev) => prev.filter((cat) => cat === "allFlavor"));
       return;
     } else if (type === "allMood") {
-      setMoodLabels([{ name: "모든 분위기 포함" }]);
+      setMoodLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 분위기 포함")
+          ? []
+          : [{ name: "모든 분위기 포함" }] 
+      );
       setActiveCategories((prev) => prev.filter((cat) => cat === "allMood"));
       return;
     }
   
-    // Function to toggle labels for specific types
     const toggleLabel = (
       labels: { name: string }[],
       setLabels: React.Dispatch<React.SetStateAction<{ name: string }[]>>
@@ -99,7 +112,6 @@ const SearchPage: React.FC = () => {
       setLabels((prevLabels) => {
         const labelExists = prevLabels.find((label) => label.name === displayName);
   
-        // Check if "all~" is active in the current category
         const isAllActive = prevLabels.some(
           (label) =>
             label.name === "모든 주종 포함" ||
@@ -108,7 +120,6 @@ const SearchPage: React.FC = () => {
             label.name === "모든 분위기 포함"
         );
   
-        // If "all~" is active and a specific type is selected, remove "all~" and add the new label
         if (isAllActive) {
           setActiveCategories((prev) =>
             prev.filter(
@@ -127,18 +138,16 @@ const SearchPage: React.FC = () => {
                 label.name !== "모든 향 포함" &&
                 label.name !== "모든 분위기 포함"
             ),
-            newLabel, // ✅ Add the new label after removing "all~"
+            newLabel,
           ];
         }
   
-        // Toggle specific type label normally
         return labelExists
           ? prevLabels.filter((label) => label.name !== displayName)
           : [...prevLabels, newLabel];
       });
     };
   
-    // Determine the category and update labels accordingly
     if (categories.includes("칵테일")) {
       toggleLabel(varietyLabels, setVarietyLabels);
     } else if (categories.includes("단맛")) {
@@ -151,7 +160,6 @@ const SearchPage: React.FC = () => {
   }; 
   
   const handleDelete = (type: string) => {
-    // Mapping "기타" labels to their corresponding category types
     const labelMapping: Record<string, string> = {
       "모든 주종 포함": "allVariety",
       "모든 맛 포함": "allAroma",
@@ -163,13 +171,10 @@ const SearchPage: React.FC = () => {
       "기타 분위기": "etcMood",
     };
   
-    // Find the actual type that needs to be removed from `activeCategories`
     const actualType = labelMapping[type] || type;
   
-    // Remove the type from `activeCategories`
     setActiveCategories((prev) => prev.filter((cat) => cat !== actualType));
   
-    // Remove the label from all relevant categories
     setVarietyLabels((prev) => prev.filter((label) => label.name !== type));
     setRangeLabels((prev) => prev.filter((label) => label.name !== type));
     setAromaLabels((prev) => prev.filter((label) => label.name !== type));
@@ -181,7 +186,7 @@ const SearchPage: React.FC = () => {
   const handleClick1 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories(["칵테일", "위스키", "진,럼,데낄라", "맥주"]);
+      setCategories(["칵테일", "위스키", "진,럼,데낄라"]);
     }, 0);
     setShowSlideBar(false);
     
