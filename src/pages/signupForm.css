@@ -1,11 +1,11 @@
-
 body {
     margin: 0;
+    font-family: 'Pretendard', sans-serif;
 }
 
 .signup-form {
     width: 100%;
-    min-width: 600px;
+    min-width: 671px;
     min-height: 100vh;
     background-color: #161616;
     border-radius: 8px;
@@ -17,8 +17,8 @@ body {
 }
 
 .inform {
-    height: 300px;
-    min-width: 600px;
+    height: 332px;
+    min-width: 671px;
     margin-bottom: 70px;
     background-color: #121212;
     border-radius: 0 0 20px 20px;
@@ -26,7 +26,7 @@ body {
 }
 
 .informbox {
-    width: 600px;
+    width: 671px;
     margin: 0 auto;
     padding-top: 80px;
 }
@@ -41,13 +41,17 @@ img {
 }
 
 .informbox h1 {
+    padding-top: 24px;
+    margin: 0;
     text-align: center;
+    font-size: 40px;
     font-weight: 300;
 }
 
-.informbox h6 {
+.informbox h4 {
+    font-weight: 500;
     text-align: end;
-    font-weight: 400;
+    line-height: 19.09px;
     color: rgb(207, 207, 207);
 }
 
