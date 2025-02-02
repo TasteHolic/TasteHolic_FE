@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import "pretendard/dist/web/static/pretendard.css";
 
 import TasteMoodLabel from "../components/Label/MainLabels/TasteMoodLabel";
 import HolicNowLabel from "../components/Label/MainLabels/HolicNowLabel";
 import BestTasteLabel from "../components/Label/MainLabels/BestTasteLabel";
 import PickLabel from "../components/Label/MainLabels/PickLabel";
+import { Icons } from '../components/icons/DrinkIcons/index';
 
 import { motion } from "framer-motion";
 import './MainPage.css';
@@ -41,15 +43,15 @@ const MainPage: React.FC = () => {
   const drinks = [
     {
       name: "GOD FATHER",
-      description: "달콤한 아마레토와 강렬한 스카치 위스키, 묵직한 달콤함",
-      imgSrc: "./image/drink1.png",
+      description: "달콤한 아마레토와\n강렬한 스카치 위스키,\n묵직한 달콤함",
+      imgSrc: "https://s3-alpha-sig.figma.com/img/e8fb/fe3d/f94198fcf4c596609ddece2824d871c7?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=LsKybvBzjwuHX5uKUgL36GycVWsdpVIc4Hx9NwrpCs48u7xeeM-2DFPn2JE17E15cGtIVjU1cZXHKX1sEo~OlGVXYe9f4GRezupdPaa2XOudlFoO~iinJhYjeb5vsonx378iYqFPzmvU7Zx3sWIp6XcIH~BTKEnHD3HXqd~cGtr2Jlepbibt53YthO0U~Csa-mcM7O5mcEcnkDI7qreYvD6dvU7H6Jwig~mUMqSr~3MBKT4mOW0diaaCQ67Z7YX-Sj1qDKKeuXVbNrhLj-7T~2TmmgUNQLv1fdDs1yORS~ynM9UOrYzsrd~mNb931zQsBjE5J85DASykcQwV~Wu77Q__",
       tasteNote: { des1: "아몬드, 바닐라, 견과류", des2: "부드러움, 달콤한 아몬드, 쌉싸름", des3: "긴 여운, 고소함, 아몬드의 잔향" },
       holicNote: { des1: "디저트와 함께, 가벼운 술자리에서", des2: "스카치 위스키, 아마레토", des3: "25% - 30%" },
     },
     {
       name: "",
       description: "",
-      imgSrc: "./image/drink2.png",
+      imgSrc: "",
       tasteNote: { des1: "", des2: "", des3: "" },
       holicNote: { des1: "", des2: "", des3: "" },
     },
@@ -66,15 +68,15 @@ const MainPage: React.FC = () => {
     setCurrentDrink((prev) => (prev - 1 + drinks.length) % drinks.length);
   };
 
-  const products = [
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
-    { name: '', description: '', imageUrl: '', iconType: undefined },
+  const products: { name: string; description: string; imageUrl: string; iconType: keyof typeof Icons }[] = [
+    { name: '라임 모히또', description: '상쾌한 라임 향기, 터지는 탄산', imageUrl: 'https://s3-alpha-sig.figma.com/img/5851/54a8/480176b823aeffdd487a500374c3d811?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=Pf~WjikjbgP7cUWdieGl9nyogFE8uVO9ZcqENRQ8zegux7a6fvZEw8XdTn1QaJT19meSaC7Tcn6-O-kJbpjSnqrMQkx8Xi~gxNOq2YRlURPXpzM2cGjxtxjdLmNeYXmlm6dT09COB9ZgG8hSwf3e5DI97NBrYH30kVsv2niEodcc86tuzb3asnMY8etOpOYfbPFWXXVWmH2z851PG2EC1sBlid46V8SymYBA9DOYJl3eVuD5DLi-WfBkj9NZtIkN2N7kae2Bj7CvBt3IbT3lao5a-s-pQUhbzTMgfQjWZ6hwdL1rGhXD-PMpOLQSYxi~7zx6CvIZL5Sjusf-xDy2RA__', iconType: "CocktailIcon" },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
+    { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
   ];
   
 
@@ -90,8 +92,15 @@ const MainPage: React.FC = () => {
           <div className="pick-content">
                 <p className="drink-name">{drinks[currentDrink].name}</p>
                 <p className="drink-description">{drinks[currentDrink].description}</p>
-                <div className="drink-img">
+                {/* <div className="drink-img">
                 <img src={drinks[currentDrink].imgSrc} alt={drinks[currentDrink].name} />
+                </div> */}
+                <div className="drink-img">
+                    <img src={drinks[currentDrink].imgSrc || "https://via.placeholder.com/150"} 
+                        alt={drinks[currentDrink].name || "Default Drink"} 
+                        onError={(e) => e.currentTarget.src = "https://via.placeholder.com/150"}
+                        className="drink-img"
+                    />
                 </div>
 
                 <div className="taste-notes">
