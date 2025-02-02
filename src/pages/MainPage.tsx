@@ -69,7 +69,10 @@ const MainPage: React.FC = () => {
   };
 
   const products: { name: string; description: string; imageUrl: string; iconType: keyof typeof Icons }[] = [
-    { name: '라임 모히또', description: '상쾌한 라임 향기, 터지는 탄산', imageUrl: 'https://s3-alpha-sig.figma.com/img/5851/54a8/480176b823aeffdd487a500374c3d811?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=Pf~WjikjbgP7cUWdieGl9nyogFE8uVO9ZcqENRQ8zegux7a6fvZEw8XdTn1QaJT19meSaC7Tcn6-O-kJbpjSnqrMQkx8Xi~gxNOq2YRlURPXpzM2cGjxtxjdLmNeYXmlm6dT09COB9ZgG8hSwf3e5DI97NBrYH30kVsv2niEodcc86tuzb3asnMY8etOpOYfbPFWXXVWmH2z851PG2EC1sBlid46V8SymYBA9DOYJl3eVuD5DLi-WfBkj9NZtIkN2N7kae2Bj7CvBt3IbT3lao5a-s-pQUhbzTMgfQjWZ6hwdL1rGhXD-PMpOLQSYxi~7zx6CvIZL5Sjusf-xDy2RA__', iconType: "CocktailIcon" },
+    { name: '라임 모히또', 
+     description: '상쾌한 라임 향기, 터지는 탄산', 
+     imageUrl: 'https://s3-alpha-sig.figma.com/img/5851/54a8/480176b823aeffdd487a500374c3d811?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=Pf~WjikjbgP7cUWdieGl9nyogFE8uVO9ZcqENRQ8zegux7a6fvZEw8XdTn1QaJT19meSaC7Tcn6-O-kJbpjSnqrMQkx8Xi~gxNOq2YRlURPXpzM2cGjxtxjdLmNeYXmlm6dT09COB9ZgG8hSwf3e5DI97NBrYH30kVsv2niEodcc86tuzb3asnMY8etOpOYfbPFWXXVWmH2z851PG2EC1sBlid46V8SymYBA9DOYJl3eVuD5DLi-WfBkj9NZtIkN2N7kae2Bj7CvBt3IbT3lao5a-s-pQUhbzTMgfQjWZ6hwdL1rGhXD-PMpOLQSYxi~7zx6CvIZL5Sjusf-xDy2RA__', 
+     iconType: "CocktailIcon" },
     { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
     { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
     { name: '', description: '', imageUrl: '', iconType: 'WhiskeyIcon' },
