@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './signupForm.css';
 import TermsAgreement from './TermsAgreement';
 
@@ -34,11 +34,24 @@ const SignupForm: React.FC = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isAllRequiredChecked, setIsAllRequiredChecked] = useState(false); // 약관 동의 상태
     const [hasInteracted, setHasInteracted] = useState(false);
-
+    
     const idInputRef = useRef<HTMLInputElement>(null);
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
     const nicknameInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const dummyUsers = [
+            { id: 'testUser1', nickname: '테스트닉1' },
+            { id: 'sampleUser2', nickname: '샘플닉2' },
+            { id: 'demoUser3', nickname: '데모닉3' },
+            { id: 'umcmember', nickname: 'UMC' }
+        ];
+        
+        if (!localStorage.getItem('registeredUsers')) {
+            localStorage.setItem('registeredUsers', JSON.stringify(dummyUsers));
+        }
+    }, []);
 
     const toggleShowPassword = () => {
         setShowPassword((prev) => !prev);
