@@ -16,7 +16,7 @@ body {
     color: #f42b72;
 }
 
-.inform {
+.signup-inform {
     height: 332px;
     min-width: 671px;
     margin-bottom: 70px;
@@ -25,22 +25,22 @@ body {
     box-shadow: 0 3px 15px rgb(45, 45, 45);
 }
 
-.informbox {
+.signup-informbox {
     width: 671px;
     margin: 0 auto;
     padding-top: 80px;
 }
 
-.imgbox {
+.signup-imgbox {
     text-align: center;
 }
 
-img {
+.signup-imgbox img {
     width: 90px;
     height: 90px;
 }
 
-.informbox h1 {
+.signup-informbox h1 {
     padding-top: 24px;
     margin: 0;
     text-align: center;
@@ -48,37 +48,37 @@ img {
     font-weight: 300;
 }
 
-.informbox h4 {
+.signup-informbox h4 {
     font-weight: 500;
     text-align: end;
     line-height: 19.09px;
     color: rgb(207, 207, 207);
 }
 
-.form-group {
+.signup-form-group {
     width: 600px;
     margin: 35px auto;
 }
 
-label {
+.signup-input-group label {
     display: block;
     margin-bottom: 5px;
     color: #ccc;
     width: 120px;
 }
 
-.input-group {
+.signup-input-group {
     display: flex;
     align-items: center;
 }
 
-.input-container {
+.signup-input-container {
     position: relative;
     flex: 1; /* input을 넓게 만들기 위해 flex 사용 */
     cursor: text;
 }
 
-input {
+.signup-input-container input {
     width:300px;
     height:35px;
     padding-right: 35px;
@@ -92,13 +92,13 @@ input {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-input:focus {
+.signup-input-container input:focus {
     border-radius: 5px;
     background-color: rgba(169, 169, 169, 0.2); /* 회색 불투명 배경 */
     outline:none;
 }
 
-.clear-icon {
+.signup-clear-icon {
     position: absolute;
     width:1.2rem;
     height: 1.2rem;
@@ -109,7 +109,7 @@ input:focus {
     opacity: 0;
 }
 
-.clear-icon-us{
+.signup-clear-icon-us{
     position: absolute;
     width:1.2rem;
     height: 1.2rem;
@@ -120,7 +120,7 @@ input:focus {
     opacity: 0;
 }
 
-.toggle-password-icon{
+.signup-toggle-password-icon{
     position: absolute;
     width:1.2rem;
     height: 1.2rem;
@@ -131,15 +131,15 @@ input:focus {
     opacity: 0;
 }
 
-.input-container:focus-within .clear-icon, 
-.input-container:focus-within .clear-icon-us, 
-.input-container:focus-within .toggle-password-icon{
+.signup-input-container:focus-within .signup-clear-icon, 
+.signup-input-container:focus-within .signup-clear-icon-us, 
+.signup-input-container:focus-within .signup-toggle-password-icon{
     opacity: 100;
 }
 
-.input-container.focused .clear-icon, 
-.input-container.focused .clear-icon-us, 
-.input-container:focused .toggle-password-icon{
+.signup-input-container.focused .signup-clear-icon, 
+.signup-input-container.focused .signup-clear-icon-us, 
+.signup-input-container:focused .signup-toggle-password-icon{
     opacity: 100;
 }
 
@@ -168,20 +168,20 @@ small {
     font-size: 12px;
 }
 
-small.error-text {
+small.signup-error-text {
     color: #fda4c7;
     font-size: 12px;
 }
 
-small.valid-text {
+small.signup-valid-text {
     color: #4ece95;
 }
 
-small.default-text {
+small.signup-default-text {
     color: #a9a9a9;
 }
 
-.back-button {
+.signup-back-button {
     padding: 10px 20px;
     background-color: rgb(39, 38, 38);
     color: #FFF;
@@ -190,7 +190,7 @@ small.default-text {
     font-size: 14px;
 }
 
-.submit-button {
+.signup-submit-button {
     padding: 10px 20px;
     background-color: white;
     color: black;
@@ -204,7 +204,7 @@ small.default-text {
     color: white;
 }
 
-.error-text {
+.signup-error-text {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -219,6 +219,7 @@ small.default-text {
     border-radius: 7px;
     font-size: 14px;
 }
+
 .idbutton{
     background-color: rgb(91, 91, 91);
 }
@@ -229,7 +230,7 @@ small.default-text {
     cursor: not-allowed;
 }
 
-.signup-form .input-group button {
+.signup-form .signup-input-group button {
     margin-left: 1rem;
 }
 
@@ -239,19 +240,20 @@ small.default-text {
 }
 
 /* 기본 브라우저 제공 아이콘 숨기기 */
-input[type="password"]::-ms-reveal,
-input[type="password"]::-webkit-clear-button,
-input[type="password"]::-webkit-textfield-decoration-container {
+.signup-input-container input[type="password"]::-ms-reveal,
+.signup-input-container input[type="password"]::-webkit-clear-button,
+.signup-input-container input[type="password"]::-webkit-textfield-decoration-container {
     display: none;
 }
 
-.error-message{
+.signup-error-message{
     display: flex;
     justify-content: center;
     padding: 14px 0px;
     color: var(--primary-rose-300, #FDA4C7);
 }
-.button-container{
+
+.signup-button-container{
     display: flex;
     padding: 14px;
     justify-content: center;
