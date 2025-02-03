@@ -37,7 +37,7 @@ const DeleteAccount: React.FC = () => {
             const isMatch = value === storedPassword;
 
             if (isEmpty) {
-                message = '아이디 또는 비밀번호를 입력하지 않았습니다. 다시 확인해주세요.';
+                message = '비밀번호를 입력하지 않았습니다. 다시 확인해주세요.';
             } else if (!isMatch) {
                 message = '비밀번호가 맞지 않습니다. 다시 확인해주세요.';
             } else {
@@ -69,7 +69,7 @@ const DeleteAccount: React.FC = () => {
                 </div>
             </div>
 
-            <div className="form-group">
+            <div className="delete-form-group">
                 <div className="imgbox2">
                     <img src="\image\deleteimg.png" alt="삭제 안내 내용" />
                 </div>
