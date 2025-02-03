@@ -1,8 +1,8 @@
 // src/ProductCard.tsx
 import React from 'react';
 import styled from 'styled-components';
-import Icon from '../icons/DrinkIcons/Icon'; 
-import { Icons } from '../icons/DrinkIcons/index2'; // 아이콘 URL 모음 파일 import
+import Icon from '../icons/drinkIcons/icon'; 
+import { Icons } from '../icons/drinkIcons/index'; // 아이콘 URL 모음 파일 import
 
 // Props 타입 정의
 interface ProductCardProps {

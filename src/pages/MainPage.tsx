@@ -5,12 +5,12 @@ import TasteMoodLabel from "../components/Label/MainLabels/TasteMoodLabel";
 import HolicNowLabel from "../components/Label/MainLabels/HolicNowLabel";
 import BestTasteLabel from "../components/Label/MainLabels/BestTasteLabel";
 import PickLabel from "../components/Label/MainLabels/PickLabel";
-import { Icons } from '../components/icons/DrinkIcons/index';
+import { Icons } from '../components/icons/drinkIcons/index';
 
 import { motion } from "framer-motion";
 import './MainPage.css';
 import SubLabel from "../components/Label/SubLabel";
-import { HeartIcon } from "../components/icons/subLabelIcons";
+import { HeartIcon, BirthdayHatIcon, CoconutCocktailIcon, GoogleAlertsIcon, JingleBellIcon, MusicIcon, PartyBalloonIcon} from "../components/icons/subLabelIcons";
 import YouTubeSlider from "../components/YouTubeslider/YouTubeSlider";
 
 import HolicNoteCard from "../components/noteCard/holicNoteCard";
@@ -20,11 +20,11 @@ import ProductCard from "../components/productCard/ProductCard";
 
 const MainPage: React.FC = () => {
   const cards = [
-    { id: 1, imgSrc: "./image/suggest1.png" },
-    { id: 2, imgSrc: "./image/suggest1.png" },
-    { id: 3, imgSrc: "./image/suggest1.png" },
-    { id: 4, imgSrc: "./image/suggest1.png" },
-    { id: 5, imgSrc: "./image/suggest1.png" },
+    { id: 1, imgSrc: "./image/suggest1.png", text: "사랑하는 사람과 로맨틱한 TASTE MOOD", icon: <HeartIcon /> },
+    { id: 2, imgSrc: "./image/suggest2.png", text: "친구들과 신나는 TASTE MOOD", icon: <PartyBalloonIcon />  },
+    { id: 3, imgSrc: "./image/suggest3.png", text: "조용한 분위기의 TASTE MOOD", icon: <MusicIcon />  },
+    { id: 4, imgSrc: "./image/suggest1.png", text: "혼자만의 여유로운 TASTE MOOD", icon: <CoconutCocktailIcon />  },
+    { id: 5, imgSrc: "./image/suggest1.png", text: "가족과 함께 따뜻한 TASTE MOOD", icon: <JingleBellIcon />  },
   ];
 
 
@@ -209,8 +209,8 @@ const MainPage: React.FC = () => {
                 </div>
               )}
               <SubLabel
-                text="사랑하는 사람과 로맨틱한 TASTE MOOD"
-                icon={<HeartIcon />}
+                text={card.text}
+                icon={card.icon}
                 isHovered={hoveredCard === card.id}
               />
             <img
