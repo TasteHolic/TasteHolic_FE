@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ProfilePage.css";
 
@@ -7,28 +7,47 @@ const MyBar = React.lazy(() => import("./SlideContent/MyBar"));
 const MyTastingNotes = React.lazy(() => import("./SlideContent/MyTastingNotes"));
 const MyRecipes = React.lazy(() => import("./SlideContent/MyRecipes"));
 
+// 현재 랜덤으로 유저 선택하도록 설정해둠둠
+const dummyProfiles = [
+    { userId: "WhiskyLover", introText: "칵테일을 좋아합니다.", profilePic: "/image/basicimage.png" },
+    { userId: "CocktailMaster", introText: "칵테일 마스터입니다.", profilePic: "/image/basicimage.png" },
+    { userId: "WineTaster", introText: "와인의 향을 즐깁니다.", profilePic: "/image/basicimage.png" }
+];
+
 const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
+
+    const randomProfile = useMemo(() => {
+        return dummyProfiles[Math.floor(Math.random() * dummyProfiles.length)];
+    }, []);
+
+    const [isLoggedOut, setIsLoggedOut] = useState<boolean>(() => localStorage.getItem("isLoggedOut") === "false"); // 로그인 된 상태를 가정하려면 true를 false로 변경하여 테스트하면 됩니다! false로 변경 시 로그아웃 되는 상태를 저장합니다. 
     const [userId, setUserId] = useState<string | null>(null);
-    const [introText, setIntroText] = useState<string>("");
-    const [profilePic, setProfilePic] = useState<string>("src/components/icons/profileIcons/basicimage.png");
+    const [introText, setIntroText] = useState<string | null>(null);
+    const [profilePic, setProfilePic] = useState<string>(randomProfile.profilePic);
     const [currentMenu, setCurrentMenu] = useState<number>(0);
     const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-    const [isLoggedOut, setIsLoggedOut] = useState(false);
 
     const menuItems = ["계정 관리", "내 바", "내 테이스팅 노트", "내 레시피"];
     const carouselViewRef = useRef<HTMLDivElement | null>(null);
     const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
-        const storedUserId = localStorage.getItem("userId");
-        const storedIntro = localStorage.getItem("introText");
-        const storedProfilePic = localStorage.getItem("profilePic");
+        if (isLoggedOut) {
+            setUserId(null);
+            setIntroText(null);
+            setProfilePic("/image/basicimage.png");
+            return;
+        }
 
-        if (storedUserId) setUserId(storedUserId);
-        if (storedIntro) setIntroText(storedIntro);
-        if (storedProfilePic) setProfilePic(storedProfilePic);
-    }, []);
+        const storedUserId = localStorage.getItem("userId") || randomProfile.userId;
+        const storedIntro = localStorage.getItem("introText") || randomProfile.introText;
+        const storedProfilePic = localStorage.getItem("profilePic") || randomProfile.profilePic;
+
+        setUserId(storedUserId);
+        setIntroText(storedIntro);
+        setProfilePic(storedProfilePic);
+    }, [isLoggedOut, randomProfile]);
 
     useLayoutEffect(() => {
         if (carouselViewRef.current && slideRefs.current[currentMenu]) {
@@ -39,29 +58,32 @@ const ProfilePage: React.FC = () => {
 
     const handleLogout = () => {
         localStorage.clear();
+        localStorage.setItem("isLoggedOut", "true"); // 로그아웃 상태 저장
         setUserId(null);
+        setIntroText(null);
         setIsLoggedOut(true);
         setLogoutModalOpen(false);
     };
 
     const handleLoginPage = () => {
+        localStorage.removeItem("isLoggedOut"); // 로그인 시 로그아웃 상태 해제
+        setIsLoggedOut(false);
         navigate('/login');
-    }
+    };
 
     const renderSlideContent = (index: number) => {
         if (isLoggedOut) {
             return (
                 <div className="logged-out-message">
-                    <img src="/image/logoutIcon.png" alt="로그아웃이미지"></img>
-                        <div className="message-container">
-                            로그인 후 이용할 수 있는 기능입니다.
-                        </div>
+                    <img src="/image/logoutIcon.png" alt="로그아웃이미지" />
+                    <div className="message-container">
+                        로그인 후 이용할 수 있는 기능입니다.
+                    </div>
                     <button className="loginpage-btn" onClick={handleLoginPage}>
                         로그인하기
                     </button>
                 </div>
-
-            )
+            );
         }
 
         switch (index) {
@@ -83,7 +105,7 @@ const ProfilePage: React.FC = () => {
             <div className="profile-header">
                 <div className="profile-container">
                     <div className="profile-picture">
-                        <img src={profilePic} alt="프로필 사진" />
+                        <img src={profilePic || "/image/basicimage.png"} alt="프로필 사진" />
                     </div>
                     <div className="profile-info">
                         <h2>{userId || "Guest"}</h2>
