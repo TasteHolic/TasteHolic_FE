@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './signupForm.css';
 import TermsAgreement from './TermsAgreement';
+import { Routes, Route, useNavigate } from "react-router-dom";
+import SignupNextPage from './SignupNextPage';
 
 const SignupForm: React.FC = () => {
     const [form, setForm] = useState({
@@ -39,6 +41,7 @@ const SignupForm: React.FC = () => {
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
     const nicknameInputRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 추가
 
     useEffect(() => {
         const dummyUsers = [
@@ -196,7 +199,8 @@ const SignupForm: React.FC = () => {
             const newUser = { id: form.id, nickname: form.nickname };
             localStorage.setItem('registeredUsers', JSON.stringify([...storedUsers, newUser]));
     
-            alert('회원가입 성공!');
+            
+            navigate('/signup-next');
         } else {
             // 유효성 검사 실패 시 메시지
             if (!isAllRequiredChecked) {
@@ -210,6 +214,8 @@ const SignupForm: React.FC = () => {
     const isIdValid = validation.idLength;
 
     return (
+     <Routes>
+      <Route path="/signup" element={
         <form className="signup-form" onSubmit={handleSubmit}>
             <div className="signup-inform">
                 <div className="signup-informbox">
@@ -442,6 +448,9 @@ const SignupForm: React.FC = () => {
                 <button type="submit" className="signup-submit-button">가입하기</button>
             </div>
         </form>
+      } />
+      <Route path="/signup-next" element={<SignupNextPage />} />
+     </Routes>
     );
 };
 
