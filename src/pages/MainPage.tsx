@@ -16,6 +16,7 @@ import YouTubeSlider from "../components/YouTubeslider/YouTubeSlider";
 import HolicNoteCard from "../components/noteCard/holicNoteCard";
 import TasteNoteCard from "../components/noteCard/tasteNoteCard";
 import ProductCard from "../components/productCard/ProductCard";
+import Footer from "../components/Footer";
 
 
 const MainPage: React.FC = () => {
@@ -243,7 +244,7 @@ const MainPage: React.FC = () => {
         </div>
         <YouTubeSlider/>
     </div>
-    
+    <Footer/>
     </>
   );
 };
