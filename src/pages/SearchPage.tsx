@@ -4,7 +4,7 @@ import "./SearchPage.css";
 import "pretendard/dist/web/static/pretendard.css";
 import SearchBar from "../components/search/searchBar";
 import SearchCategory from "../components/search/searchCategory";
-import CategoryType from "../components/search/CategotyType";
+import CategoryType from "../components/search/searchPageOnly/CategotyType";
 import AlcoholSlideBar from "../components/search/searchPageOnly/AlcoholSlideBar";
 import TypeLabel from "../components/search/searchPageOnly/TypeLabel";
 import TypeLabelSvg from "../components/search/searchPageOnly/TypeLabelSvg";
@@ -22,7 +22,20 @@ const SearchPage: React.FC = () => {
   const [rangeLabels, setRangeLabels] = useState<{ name: string }[]>([]);
   const [flavorLabels, setFlavorLabels] = useState<{ name: string }[]>([]);
   const [aromaLabels, setAromaLabels] = useState<{ name: string }[]>([]);
-  const [aftertasteLabels, setAftertasteLabels] = useState<{ name: string }[]>([]);
+  const [moodLabels, setMoodLabels] = useState<{ name: string }[]>([]);
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+
+
+  const [showAllVariety, setShowAllVariety] = useState(false);
+  const [showAllAroma, setShowAllAroma] = useState(false);
+  const [showAllFlavor, setShowAllFlavor] = useState(false);
+  const [showAllMood, setShowAllMood] = useState(false);
+
+  const [showEtcVariety, setShowEtcVariety] = useState(false);
+  const [showEtcAroma, setShowEtcAroma] = useState(false);
+  const [showEtcFlavor, setShowEtcFlavor] = useState(false);
+  const [showEtcMood, setShowEtcMood] = useState(false);
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,84 +54,153 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const handleCategoryTypeClick = (type: string) => {
-    const newLabel = { name: type };
   
-    if (type === "전체 선택") {
-      if (categories.includes("칵테일")) {
-        setVarietyLabels([{ name: "모든 주종 포함" }]);
-      } else if (categories.includes("단맛")) {
-        setFlavorLabels([{ name: "모든 맛 포함" }]);
-      } else if (categories.includes("시트러스")) {
-        setAromaLabels([{ name: "모든 향 포함" }]);
-      } else if (categories.includes("깔끔한")) {
-        setAftertasteLabels([{ name: "모든 여운 포함" }]);
-      }
+  const handleCategoryTypeClick = (type: string) => {
+    const labelMapping: Record<string, string> = {
+      etcVariety: "기타 주종",
+      etcAroma: "기타 맛",
+      etcFlavor: "기타 향",
+      etcMood: "기타 분위기",
+    };
+    
+    const displayName = labelMapping[type as keyof typeof labelMapping] || type;
+    
+    const newLabel = { name: displayName };
+  
+    setActiveCategories((prev) =>
+      prev.includes(type) ? prev.filter((cat) => cat !== type) : [...prev, type]
+    );
+  
+    if (type === "allVariety") {
+      setVarietyLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 주종 포함")
+          ? []
+          : [{ name: "모든 주종 포함" }] 
+      );
+      setActiveCategories((prev) => prev.filter((cat) => cat === "allVariety"));
+      return;
+    } else if (type === "allAroma") {
+      setAromaLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 향 포함")
+          ? [] 
+          : [{ name: "모든 향 포함" }]
+      );
+      setActiveCategories((prev) => prev.filter((cat) => cat === "allAroma"));
+      return;
+    } else if (type === "allFlavor") {
+      setFlavorLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 맛 포함")
+          ? [] 
+          : [{ name: "모든 맛 포함" }]
+      );
+      setActiveCategories((prev) => prev.filter((cat) => cat === "allFlavor"));
+      return;
+    } else if (type === "allMood") {
+      setMoodLabels((prevLabels) =>
+        prevLabels.some((label) => label.name === "모든 분위기 포함")
+          ? []
+          : [{ name: "모든 분위기 포함" }] 
+      );
+      setActiveCategories((prev) => prev.filter((cat) => cat === "allMood"));
       return;
     }
   
+    const toggleLabel = (
+      labels: { name: string }[],
+      setLabels: React.Dispatch<React.SetStateAction<{ name: string }[]>>
+    ) => {
+      setLabels((prevLabels) => {
+        const labelExists = prevLabels.find((label) => label.name === displayName);
+  
+        const isAllActive = prevLabels.some(
+          (label) =>
+            label.name === "모든 주종 포함" ||
+            label.name === "모든 맛 포함" ||
+            label.name === "모든 향 포함" ||
+            label.name === "모든 분위기 포함"
+        );
+  
+        if (isAllActive) {
+          setActiveCategories((prev) =>
+            prev.filter(
+              (cat) =>
+                cat !== "allVariety" &&
+                cat !== "allAroma" &&
+                cat !== "allFlavor" &&
+                cat !== "allMood"
+            )
+          );
+          return [
+            ...prevLabels.filter(
+              (label) =>
+                label.name !== "모든 주종 포함" &&
+                label.name !== "모든 맛 포함" &&
+                label.name !== "모든 향 포함" &&
+                label.name !== "모든 분위기 포함"
+            ),
+            newLabel,
+          ];
+        }
+  
+        return labelExists
+          ? prevLabels.filter((label) => label.name !== displayName)
+          : [...prevLabels, newLabel];
+      });
+    };
+  
     if (categories.includes("칵테일")) {
-      setVarietyLabels((prevLabels) => {
-        const labelExists = prevLabels.find((label) => label.name === type);
-        if (labelExists) {
-          return prevLabels.filter((label) => label.name !== type);
-        } else {
-          return [...prevLabels, newLabel];
-        }
-      });
+      toggleLabel(varietyLabels, setVarietyLabels);
     } else if (categories.includes("단맛")) {
-      setFlavorLabels((prevLabels) => {
-        const labelExists = prevLabels.find((label) => label.name === type);
-        if (labelExists) {
-          return prevLabels.filter((label) => label.name !== type);
-        } else {
-          return [...prevLabels, newLabel];
-        }
-      });
+      toggleLabel(flavorLabels, setFlavorLabels);
     } else if (categories.includes("시트러스")) {
-      setAromaLabels((prevLabels) => {
-        const labelExists = prevLabels.find((label) => label.name === type);
-        if (labelExists) {
-          return prevLabels.filter((label) => label.name !== type);
-        } else {
-          return [...prevLabels, newLabel];
-        }
-      });
+      toggleLabel(aromaLabels, setAromaLabels);
     } else if (categories.includes("깔끔한")) {
-      setAftertasteLabels((prevLabels) => {
-        const labelExists = prevLabels.find((label) => label.name === type);
-        if (labelExists) {
-          return prevLabels.filter((label) => label.name !== type);
-        } else {
-          return [...prevLabels, newLabel];
-        }
-      });
+      toggleLabel(moodLabels, setMoodLabels);
     }
+  }; 
+  
+  const handleDelete = (type: string) => {
+    const labelMapping: Record<string, string> = {
+      "모든 주종 포함": "allVariety",
+      "모든 맛 포함": "allAroma",
+      "모든 향 포함": "allFlavor",
+      "모든 여운 포함": "allMood",
+      "기타 주종": "etcVariety",
+      "기타 맛": "etcAroma",
+      "기타 향": "etcFlavor",
+      "기타 분위기": "etcMood",
+    };
+  
+    const actualType = labelMapping[type] || type;
+  
+    setActiveCategories((prev) => prev.filter((cat) => cat !== actualType));
+  
+    setVarietyLabels((prev) => prev.filter((label) => label.name !== type));
+    setRangeLabels((prev) => prev.filter((label) => label.name !== type));
+    setAromaLabels((prev) => prev.filter((label) => label.name !== type));
+    setFlavorLabels((prev) => prev.filter((label) => label.name !== type));
+    setMoodLabels((prev) => prev.filter((label) => label.name !== type));
   };
   
-  const handleDelete = (name: string) => {
-    setVarietyLabels((prev) => prev.filter((label) => label.name !== name));
-    setRangeLabels((prev) => prev.filter((label) => label.name !== name));
-    setAromaLabels((prev) => prev.filter((label) => label.name !== name));
-    setFlavorLabels((prev) => prev.filter((label) => label.name !== name));
-    setAftertasteLabels((prev) => prev.filter((label) => label.name !== name));
-  };
 
   const handleClick1 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories([
-        "전체 선택",
-        "칵테일",
-        "위스키",
-        "진,럼,데낄라",
-        "맥주",
-        "기타",
-      ]);
+      setCategories(["칵테일", "위스키", "진,럼,데낄라"]);
     }, 0);
     setShowSlideBar(false);
-  };
+    
+    setShowAllVariety(true);
+    setShowAllAroma(false);
+    setShowAllFlavor(false);
+    setShowAllMood(false);
 
+    setShowEtcVariety(true);
+    setShowEtcAroma(false);
+    setShowEtcFlavor(false);
+    setShowEtcMood(false);
+  };
+  
   const handleClick2 = () => {
     setShowSlideBar(true);
     setCategories([]);
@@ -128,7 +210,6 @@ const SearchPage: React.FC = () => {
     setCategories([]);
     setTimeout(() => {
       setCategories([
-        "전체 선택",
         "시트러스",
         "베리/열대과일",
         "꿀/시럽",
@@ -138,44 +219,57 @@ const SearchPage: React.FC = () => {
         "허브(민트 등)",
         "향신료(시나몬 등)",
         "스모키",
-        "기타",
       ]);
     }, 0);
     setShowSlideBar(false);
-  };
+  
+    setShowAllVariety(false);
+    setShowAllAroma(true);
+    setShowAllFlavor(false);
+    setShowAllMood(false);
 
+    setShowEtcVariety(false);
+    setShowEtcAroma(true);
+    setShowEtcFlavor(false);
+    setShowEtcMood(false);
+  };
+  
   const handleClick4 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories([
-        "전체 선택",
-        "단맛",
-        "신맛",
-        "쓴맛",
-        "드라이",
-        "부드러움",
-        "묵직함",
-        "기타",
-      ]);
+      setCategories(["단맛", "신맛", "쓴맛", "드라이", "부드러움", "묵직함"]);
     }, 0);
     setShowSlideBar(false);
-  };
+  
+    setShowAllVariety(false);
+    setShowAllAroma(false);
+    setShowAllFlavor(true);
+    setShowAllMood(false);
 
+    setShowEtcVariety(false);
+    setShowEtcAroma(false);
+    setShowEtcFlavor(true);
+    setShowEtcMood(false);
+  };
+  
   const handleClick5 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories([
-        "전체 선택",
-        "깔끔한",
-        "달콤하게 남는",
-        "씁쓸하게 남는",
-        "오래가는",
-        "짧은",
-        "기타",
-      ]);
+      setCategories(["깔끔한", "달콤하게 남는", "씁쓸하게 남는", "오래가는", "짧은"]);
     }, 0);
     setShowSlideBar(false);
+  
+    setShowAllVariety(false);
+    setShowAllAroma(false);
+    setShowAllFlavor(false);
+    setShowAllMood(true);
+
+    setShowEtcVariety(false);
+    setShowEtcAroma(false);
+    setShowEtcFlavor(false);
+    setShowEtcMood(true);
   };
+  
   
   return(
     <>
@@ -183,8 +277,8 @@ const SearchPage: React.FC = () => {
         <div
           className="popup"
           style={{
-            top: '250px',
-            left: '300px',
+            top: '220px',
+            left: '370px',
             position: 'fixed',
           }}
         >
@@ -194,7 +288,7 @@ const SearchPage: React.FC = () => {
         </div>
       )}
       <div className="body">
-      <div className="container2">
+        <div className="set-up">
           <div className="greetings">어떤 Taste를 찾고 계신가요?</div>
           <SearchBar />
           <SearchCategory
@@ -206,20 +300,98 @@ const SearchPage: React.FC = () => {
           />
         </div>
 
+
+
         {categories.length > 0 && (
           <div className="category-container">
+
+          {showAllVariety && (
+            <CategoryType 
+              key="allVariety"
+              type="전체 선택" 
+              onClick={() => handleCategoryTypeClick("allVariety")} 
+              isActive={activeCategories.includes("allVariety")} 
+            />
+          )}
+
+          {showAllAroma && (
+            <CategoryType 
+              key="allAroma"
+              type="전체 선택" 
+              onClick={() => handleCategoryTypeClick("allAroma")} 
+              isActive={activeCategories.includes("allAroma")} 
+            />
+          )}
+
+          {showAllFlavor && (
+            <CategoryType 
+              key="allFlavor"
+              type="전체 선택" 
+              onClick={() => handleCategoryTypeClick("allFlavor")} 
+              isActive={activeCategories.includes("allFlavor")} 
+            />
+          )}
+
+          {showAllMood && (
+            <CategoryType 
+              key="allMood"
+              type="전체 선택" 
+              onClick={() => handleCategoryTypeClick("allMood")} 
+              isActive={activeCategories.includes("allMood")} 
+            />
+          )}
+
+
             {categories.map((category, index) => (
               <CategoryType
                 key={index}
                 type={category}
                 onClick={() => handleCategoryTypeClick(category)}
+                isActive={activeCategories.includes(category)}
               />
             ))}
+
+          {showEtcVariety && (
+            <CategoryType 
+              key="etcVariety"
+              type="기타" 
+              onClick={() => handleCategoryTypeClick("etcVariety")} 
+              isActive={activeCategories.includes("etcVariety")} 
+            />
+          )}
+
+          {showEtcAroma && (
+            <CategoryType 
+              key="etcAroma"
+              type="기타" 
+              onClick={() => handleCategoryTypeClick("etcAroma")} 
+              isActive={activeCategories.includes("etcAroma")} 
+            />
+          )}
+
+          {showEtcFlavor && (
+            <CategoryType 
+              key="etcFlavor"
+              type="기타" 
+              onClick={() => handleCategoryTypeClick("etcFlavor")} 
+              isActive={activeCategories.includes("etcFlavor")} 
+            />
+          )}
+
+          {showEtcMood && (
+            <CategoryType 
+              key="etclMood"
+              type="기타" 
+              onClick={() => handleCategoryTypeClick("etcMood")} 
+              isActive={activeCategories.includes("etcMood")} 
+            />
+          )}
           </div>
         )}
 
-        {showSlideBar && <AlcoholSlideBar addClick={handleAddClick} />}
 
+        {showSlideBar && <AlcoholSlideBar addClick={handleAddClick} />}
+        
         <div className="labels-container">
           {varietyLabels.map((label, index) => {
             let imgSrc;
@@ -292,12 +464,12 @@ const SearchPage: React.FC = () => {
               />
             ))}
 
-            {aftertasteLabels.map((label, index) => (
+            {moodLabels.map((label, index) => (
               <TypeLabel
-                key={`aftertaste-${index}`}
+                key={`mood-${index}`}
                 name={label.name}
                 onDelete={() => handleDelete(label.name)}
-                category="aftertaste"
+                category="mood"
               />
             ))}
           </div>

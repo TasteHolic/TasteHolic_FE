@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './signupForm.css';
 import TermsAgreement from './TermsAgreement';
+import { Routes, Route, useNavigate } from "react-router-dom";
+import SignupNextPage from './SignupNextPage';
 
 const SignupForm: React.FC = () => {
     const [form, setForm] = useState({
@@ -34,11 +36,25 @@ const SignupForm: React.FC = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isAllRequiredChecked, setIsAllRequiredChecked] = useState(false); // 약관 동의 상태
     const [hasInteracted, setHasInteracted] = useState(false);
-
+    
     const idInputRef = useRef<HTMLInputElement>(null);
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
     const nicknameInputRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 추가
+
+    useEffect(() => {
+        const dummyUsers = [
+            { id: 'testUser1', nickname: '테스트닉1' },
+            { id: 'sampleUser2', nickname: '샘플닉2' },
+            { id: 'demoUser3', nickname: '데모닉3' },
+            { id: 'umcmember', nickname: 'UMC' }
+        ];
+        
+        if (!localStorage.getItem('registeredUsers')) {
+            localStorage.setItem('registeredUsers', JSON.stringify(dummyUsers));
+        }
+    }, []);
 
     const toggleShowPassword = () => {
         setShowPassword((prev) => !prev);
@@ -183,7 +199,8 @@ const SignupForm: React.FC = () => {
             const newUser = { id: form.id, nickname: form.nickname };
             localStorage.setItem('registeredUsers', JSON.stringify([...storedUsers, newUser]));
     
-            alert('회원가입 성공!');
+            
+            navigate('/signup-next');
         } else {
             // 유효성 검사 실패 시 메시지
             if (!isAllRequiredChecked) {
@@ -197,21 +214,23 @@ const SignupForm: React.FC = () => {
     const isIdValid = validation.idLength;
 
     return (
+     <Routes>
+      <Route path="/signup" element={
         <form className="signup-form" onSubmit={handleSubmit}>
-            <div className="inform">
-                <div className="informbox">
-                    <div className="imgbox">
+            <div className="signup-inform">
+                <div className="signup-informbox">
+                    <div className="signup-imgbox">
                         <img src="src\components\icons\signupIcons\logo.png" alt="logo" />
                     </div>
                     <h1>회원가입</h1>
-                    <h6><span className="starcolor">*</span> 필수 입력 사항</h6>
+                    <h4><span className="starcolor">*</span> 필수 입력 사항</h4>
                 </div>
             </div>
 
-            <div className="form-group">
-                <div className="input-group">
+            <div className="signup-form-group">
+                <div className="signup-input-group">
                     <label>아이디 <span className="starcolor">*</span></label>
-                    <div className="input-container">
+                    <div className="signup-input-container">
                         <input
                             type="text"
                             name="id"
@@ -226,7 +245,7 @@ const SignupForm: React.FC = () => {
                             <img className="check-icon" src="src\components\icons\signupIcons\v-circle.png" alt="checkicon"/>
                         )}
                         <img
-                            className="clear-icon"
+                            className="signup-clear-icon"
                             src="src\components\icons\signupIcons\x-circle.png"
                             alt="clearicon"
                             onClick={() => {
@@ -248,10 +267,10 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         form.id === ''
-                        ? 'default-text'
+                        ? 'signup-default-text'
                         : validation.idLength
-                        ? 'valid-text'
-                        : 'error-text'
+                        ? 'signup-valid-text'
+                        : 'signup-error-text'
                     }
                 >
                     {messages.idLength}
@@ -259,26 +278,26 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         !form.id || !isIdChecked
-                            ? 'default-text'
+                            ? 'signup-default-text'
                             : validation.idDuplicate
-                            ? 'valid-text'
-                            : 'error-text'
+                            ? 'signup-valid-text'
+                            : 'signup-error-text'
                     }
                 >
                     {messages.idDuplicate}
                 </small>
             </div>
 
-            <div className="form-group">
-                <div className="input-group">
+            <div className="signup-form-group">
+                <div className="signup-input-group">
                     <label>비밀번호 <span className="starcolor">*</span></label>
-                    <div className="input-container">
+                    <div className="signup-input-container">
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            // onFocus={() => handleFocus('password')}
+                            onFocus={() => handleFocus('password')}
                             ref={passwordInputRef}
                             className={validation.passwordLength && validation.passwordComplexity ? 'valid' : ''}
                             placeholder="비밀번호를 입력해주세요."
@@ -286,11 +305,11 @@ const SignupForm: React.FC = () => {
                         <img
                             src={showPassword ? 'src/components/icons/signupIcons/eye.png' : 'src/components/icons/signupIcons/eye-off.png'}
                             alt={showPassword ? '보기' : '숨기기'}
-                            className="toggle-password-icon"
+                            className="signup-toggle-password-icon"
                             onClick={toggleShowPassword}
                         />
                         <img
-                            className="clear-icon-us"
+                            className="signup-clear-icon-us"
                             src="src\components\icons\signupIcons\x-circle.png"
                             alt="clearicon"
                             onClick={() => {
@@ -304,10 +323,10 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         form.password === ''
-                        ? 'default-text'
+                        ? 'signup-default-text'
                         : validation.passwordComplexity
-                        ? 'valid-text'
-                        : 'error-text'
+                        ? 'signup-valid-text'
+                        : 'signup-error-text'
                     }                    
                 >
                     {messages.passwordComplexity}
@@ -316,20 +335,20 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         form.password === ''
-                        ? 'default-text'
+                        ? 'signup-default-text'
                         : validation.passwordLength
-                        ? 'valid-text'
-                        : 'error-text'
+                        ? 'signup-valid-text'
+                        : 'signup-error-text'
                     }
                 >
                     {messages.passwordLength}
                 </small>
             </div>
 
-            <div className="form-group">
-                <div className="input-group">
+            <div className="signup-form-group">
+                <div className="signup-input-group">
                     <label>비밀번호 확인 <span className="starcolor">*</span></label>
-                        <div className="input-container">
+                        <div className="signup-input-container">
                         <input
                             type={showConfirmPassword ? 'text' : 'password'}
                             name="confirmPassword"
@@ -343,11 +362,11 @@ const SignupForm: React.FC = () => {
                         <img
                             src={showConfirmPassword ? 'src/components/icons/signupIcons/eye.png' : 'src/components/icons/signupIcons/eye-off.png'}
                             alt={showConfirmPassword ? '보기' : '숨기기'}
-                            className="toggle-password-icon"
+                            className="signup-toggle-password-icon"
                             onClick={toggleShowConfirmPassword}
                         />
                         <img
-                            className="clear-icon-us"
+                            className="signup-clear-icon-us"
                             src="src\components\icons\signupIcons\x-circle.png"
                             alt="clearicon"
                             onClick={() => {
@@ -362,20 +381,20 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         form.confirmPassword === ''
-                        ? 'default-text'
+                        ? 'signup-default-text'
                         : validation.confirmPassword
-                        ? 'valid-text'
-                        : 'error-text'
+                        ? 'signup-valid-text'
+                        : 'signup-error-text'
                     }
                 >
                     {messages.confirmPassword}
                 </small>
             </div>
 
-            <div className="form-group">
-                <div className="input-group">
+            <div className="signup-form-group">
+                <div className="signup-input-group">
                     <label>닉네임 </label>
-                    <div className="input-container">
+                    <div className="signup-input-container">
                         <input
                             type="text"
                             name="nickname"
@@ -387,7 +406,7 @@ const SignupForm: React.FC = () => {
                             placeholder="닉네임을 입력해주세요."
                         />
                         <img
-                            className="clear-icon-us"
+                            className="signup-clear-icon-us"
                             src="src\components\icons\signupIcons\x-circle.png"
                             alt="clearicon"
                             onClick={() => {
@@ -402,10 +421,10 @@ const SignupForm: React.FC = () => {
                 <small
                     className={
                         form.nickname === ''
-                        ? 'default-text'
+                        ? 'signup-default-text'
                         : validation.nickname
-                        ? 'valid-text'
-                        : 'error-text'
+                        ? 'signup-valid-text'
+                        : 'signup-error-text'
                     }
                 >
                     {messages.nickname}
@@ -422,13 +441,16 @@ const SignupForm: React.FC = () => {
                 }}
             />
             {!isAllRequiredChecked && hasInteracted && (
-                <div className="error-message">필수 항목 체크를 다시 확인해주세요.</div>
+                <div className="signup-error-message">필수 항목 체크를 다시 확인해주세요.</div>
             )}
-            <div className="button-container">
-                <button className="back-button">뒤로가기</button>
-                <button type="submit" className="submit-button">가입하기</button>
+            <div className="signup-button-container">
+                <button className="signup-back-button">뒤로가기</button>
+                <button type="submit" className="signup-submit-button">가입하기</button>
             </div>
         </form>
+      } />
+      <Route path="/signup-next" element={<SignupNextPage />} />
+     </Routes>
     );
 };
 
