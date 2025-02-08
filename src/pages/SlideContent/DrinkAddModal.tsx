@@ -105,7 +105,6 @@ const DrinkAddModal: React.FC<AddDrinkModalProps> = ({
     ? ReactDOM.createPortal(
         <div className="add-drink-modal">
           <div className="modal-content">
-            {/* 주종 선택 */}
             <div className="form-group">
               <label>어떤 종류인가요?</label>
               <div

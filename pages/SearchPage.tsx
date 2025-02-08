@@ -1,11 +1,12 @@
 import React from "react";
 import SearchBar from "../src/components/search/searchBar";
-import Header from "../src/components/Header";
+import SearchHeader from "../src/components/Header/SearchHeader";
 import SearchCategory from "../src/components/search/searchCategory";
 import "../src/index.css";
 import RecommandCard from "../src/components/Category/RecommandCard";
 import CategoryCard from "../src/components/Category/CategoryCard";
 import Footer from "../src/components/Footer";
+import SearchPageUp from "../src/pages/SearchPageUp";
 import {
   TopSection,
   TopTitle,
@@ -24,43 +25,42 @@ import {
 const SearchPage = () => {
   return (
     <Container>
-      <Header />
+      <SearchHeader />
       <TopSection>
-        <TopTitle>어떤 Taste를 찾고 계신가요?</TopTitle>
-        <SearchBarWrapper>
-          <SearchBar />
-        </SearchBarWrapper>
-        <SearchCategoryWrapper>
-          <SearchCategory />
-        </SearchCategoryWrapper>
+        <SearchPageUp />
       </TopSection>
       <CategorySection>
-        <SectionTitle>원하는 주류를 빠르게 찾아보세요.</SectionTitle>
+        <SectionTitle>원하는 레시피를 빠르게 찾아보세요.</SectionTitle>
         <CardWrapper>
           <CategoryCard
             icon="/image/cocktail-icon.svg"
-            title="칵테일"
-            description="나만의 특별한 한 잔"
+            title="모든 레시피"
+            description="최신 레시피를 한눈에"
           />
           <CategoryCard
-            icon="/image/whiskey-icon.svg"
-            title="위스키"
-            description="시간이 선물한 깊이"
-          />
-          <CategoryCard
-            icon="/image/gin-rum-teq-icon.svg"
-            title="진, 럼, 데킬라"
-            description="화려한 변주의 시작"
-          />
-          <CategoryCard
-            icon="/image/beer-icon.svg"
-            title="맥주"
-            description="일상을 채우는 한 모금"
+            icon="/image/Sign Up.svg"
+            title="유저 등록"
+            description="유저들이 직접 공유한 특별한 한 잔"
           />
           <CategoryCard
             icon="/image/etc-icon.svg"
-            title="기타"
-            description="새로운 맛의 순간"
+            title="논알콜"
+            description="알코올 없이도 즐길 수 있는"
+          />
+          <CategoryCard
+            icon="/image/high.svg"
+            title="고도수"
+            description="강렬한 한 잔, 깊은 풍미"
+          />
+          <CategoryCard
+            icon="/image/fruit.svg"
+            title="프루티"
+            description="상큼한 과일의 향이 가득한 한 잔"
+          />
+          <CategoryCard
+            icon="/image/check.svg"
+            title="재료 2개 이하"
+            description="적은 재료로 완성하는"
           />
         </CardWrapper>
       </CategorySection>

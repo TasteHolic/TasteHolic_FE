@@ -1,4 +1,4 @@
-.modal-overlay {
+.tasting-note-modal.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.modal-wrapper {
+.tasting-note-modal.modal-wrapper {
   position: absolute;
   transform: translate(-50%, -50%);
   width: 782px;
@@ -27,7 +27,7 @@
   justify-content: center;
   box-sizing: border-box;
 }
-.modal-background {
+.tasting-note-modal.modal-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -36,7 +36,7 @@
   z-index: 0; /* 가장 아래 배치 */
 }
 
-.modal-content {
+.tasting-note-modal.modal-content {
   width: 782px;
   height: 564px;
   position: relative;
@@ -47,7 +47,7 @@
   justify-content: center;
 }
 
-h2 {
+.tasting-note-modal h2 {
   position: absolute;
   top: 138px;
   left: 50%;
@@ -63,7 +63,7 @@ h2 {
   text-transform: capitalize;
   margin: 0px;
 }
-.intro-text {
+.tasting-note-modal.intro-text {
   color: #fff;
   font-family: Pretendard;
   font-size: 24px;
@@ -76,7 +76,7 @@ h2 {
   margin: 0px;
 }
 
-.second-component {
+.tasting-note-modal.second-component {
   position: absolute;
   flex-direction: column;
   align-items: center;
@@ -86,7 +86,7 @@ h2 {
   display: flex;
 }
 
-.modal-footer {
+.tasting-note-modal.modal-footer {
   position: absolute;
   bottom: 31px;
   left: 50%;
@@ -96,7 +96,7 @@ h2 {
   justify-content: space-between;
 }
 
-button {
+.tasting-note-modal button {
   display: flex;
   padding: 12px 24px;
   justify-content: center;
@@ -113,18 +113,18 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.tasting-note-modal button:hover {
   background: #fff;
   color: #000;
 }
 
-button:disabled {
+.tasting-note-modal button:disabled {
   background: #444;
   cursor: not-allowed;
 }
 
 /* 🔥 드롭다운 중앙 정렬 */
-.custom-dropdown {
+.tasting-note-modal .custom-dropdown {
   position: relative;
   display: flex;
   width: 180px;
@@ -141,17 +141,17 @@ button:disabled {
   z-index: 1000;
   box-sizing: border-box;
 }
-.name-dropdown {
+.tasting-note-modal.name-dropdown {
   width: 320px;
 }
-.custom-dropdown.is-valid {
+.tasting-note-modal.custom-dropdown.is-valid {
   border: 1px solid var(--subgreen-400-main, #4ece95) !important;
   color: #4ece95 !important;
 }
-.custom-dropdown.has-error {
+.tasting-note-modal.custom-dropdown.has-error {
   border: 1px solid var(--primary-rose-500-main, #f42b72) !important;
 }
-.dropdown-menu {
+.tasting-note-modal.dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -167,7 +167,7 @@ button:disabled {
   overflow-y: auto;
 }
 
-.dropdown-item {
+.tasting-note-modal.dropdown-item {
   height: 41px;
   display: flex;
   align-items: center;
@@ -177,23 +177,23 @@ button:disabled {
   cursor: pointer;
 }
 
-.dropdown-item:hover {
+.tasting-note-modal.dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.search-box {
+.tasting-note-modal.search-box {
   display: flex;
   align-items: center;
   position: relative;
 }
-.dropdown-item.search-box {
+.tasting-note-modal.dropdown-item.search-box {
   height: 60px !important;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 12px;
 }
-.search-box .search-icon {
+.tasting-note-modal.search-box .search-icon {
   position: absolute;
   left: 28px;
   width: 20px;
@@ -202,7 +202,7 @@ button:disabled {
   background-size: cover;
 }
 
-.search-box input {
+.tasting-note-modal.search-box input {
   width: 296px;
   height: 36px;
   flex-shrink: 0;
@@ -219,11 +219,11 @@ button:disabled {
   font-size: 16px;
 }
 
-.search-box input::placeholder {
+.tasting-note-modal.search-box input::placeholder {
   color: #999;
 }
 
-.error-text {
+.tasting-note-modal.error-text {
   position: absolute;
   top: 65.5px;
   color: var(--primary-rose-400, #fb6ba2);
@@ -240,7 +240,7 @@ button:disabled {
   margin: 0px;
 }
 
-.show-error {
+.tasting-note-modal.show-error {
   visibility: visible;
   opacity: 1;
 }

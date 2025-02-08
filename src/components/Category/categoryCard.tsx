@@ -20,7 +20,7 @@ const CategoryButton = styled.button`
     rgba(255, 255, 255, 0) 79.98%,
     rgba(255, 255, 255, 0.4) 97.92%
   );
-  box-shadow: 0px 1.49px 14.92px 1.12px rgba(255, 255, 255, 0.28); /* 그림자 값 반영 */
+  box-shadow: 0px 1.49px 14.92px 1.12px rgba(255, 255, 255, 0.28);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -30,23 +30,35 @@ const CategoryButton = styled.button`
   outline: none;
   position: relative;
   overflow: hidden;
+
   &:hover {
     background: rgba(255, 255, 255, 0.2);
   }
 `;
-const Icon = styled.img`
+
+/* 아이콘 원 컨테이너 (60x60) */
+const IconContainer = styled.div`
   width: 60px;
   height: 60px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.5);
-  background-color:#2a2a2a;
-  box-shadow: 0 0 12px rgba(255,255,255,0.3)
-margin-bottom:10px;
-position:absolute;
-backdrop-filter: blur(50px);
-top:24px;
-gap:0px
-opacity: 1;`;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: #2a2a2a;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  position: absolute;
+  top: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(50px);
+  opacity: 1;
+`;
+
+/* 실제 아이콘 이미지 (42x42) */
+const IconImage = styled.img`
+  width: 42px;
+  height: 42px;
+`;
+
 const Title = styled.h3`
   font-size: 20px;
   font-family: Pretendard;
@@ -57,16 +69,14 @@ const Title = styled.h3`
   margin: 0px;
   text-transform: capitalize;
   text-align: center;
-
   height: 24px;
   position: absolute;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
   top: 112px;
 `;
+
 const Description = styled.p`
   font-size: 12px;
-  font-family: pretendard;
+  font-family: Pretendard;
   font-weight: 400;
   line-height: 14.32px;
   letter-spacing: -0.48px;
@@ -77,6 +87,7 @@ const Description = styled.p`
   position: absolute;
   top: 141px;
 `;
+
 interface CategoryCardProps {
   icon: string;
   title: string;
@@ -92,10 +103,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 }) => {
   return (
     <CategoryButton onClick={onClick}>
-      <Icon src={icon} alt="Icon" />
+      <IconContainer>
+        <IconImage src={icon} alt="Icon" />
+      </IconContainer>
       <Title>{title}</Title>
       <Description>{description}</Description>
     </CategoryButton>
   );
 };
+
 export default CategoryCard;

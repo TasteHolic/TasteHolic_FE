@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import TastingNoteModalBackground from "../components/TastingNoteModalBackground";
+import TastingNoteModalBackground from "../components/TastingNoteModalBackground";
 import "./TastingNoteModal.css";
 
 type Step = "intro" | "category" | "name";
@@ -71,7 +71,7 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay tasting-note-modal">
       <motion.div
         className="modal-wrapper"
         initial={{ opacity: 0, y: 20 }}

@@ -1,0 +1,285 @@
+body {
+    font-family: 'Pretendard', sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+.profile-edit-page {
+    margin-top: 81px;
+    margin-bottom: 348px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 688px;
+    min-width: 688px;
+}
+
+.profile-edit-image-container {
+    position: relative;
+    width: 114px;
+    height: 114px;
+    margin-top: 32px;
+    margin-left: 32px;
+}
+
+.profile-edit-image-container img{
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.custom-file-upload {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    margin-top: 82px;
+    margin-left: -114px;
+}
+
+.profile-edit-info {
+    position: relative;
+    width: 483px;
+    height: 36px;
+    margin-top: 39px;
+    margin-left: 31px;
+    gap: 10px;
+}
+
+.edit-info-text1 input, .edit-info-text2 textarea {
+    width: 400px;
+    border-radius: 10px;
+    border: none;
+    border: 1px solid #737373;
+    background-color: #00000000;
+    padding: 8px 18px;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Pretendard', sans-serif;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.edit-info-text1 input:focus, .edit-info-text2 input:focus {
+    outline: none;
+}
+.edit-info-text1 {
+    margin: 0 0 10px 0;
+}
+
+.edit-info-text1 input{
+    height: 36px;
+}
+
+.edit-info-text1 input::placeholder {
+    color: #4ECE9599;
+}
+
+.edit-info-text1 button, .edit-info-text2 button{
+    margin-left: 35px;
+    width: 48px;
+    height: 33px;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #8080804D;
+    color: #FFFFFF;
+    box-sizing: border-box;
+}
+
+.edit-info-text1 button:hover, .edit-info-text2 button:hover {
+    background-color: #000000B2;
+}
+
+.edit-info-text2 textarea:focus {
+    outline: none;
+}
+
+.edit-info-text2 button {
+    position: absolute;
+    margin-left: 35px;
+}
+
+.profile-edit-section, .security-section {
+    background-color: #1C1D1D;
+    display: flex;
+}
+
+.profile-edit-section {
+    width: 100%;
+    height: 219px;
+    margin: 0;
+    border-radius: 16px;
+    border: 1px solid #D7D7D7;
+}
+
+.profile-security-text {
+    margin: 40px 0 17px 25px;
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+    color: #FFFFFF;
+}
+
+.profile-security-text img {
+    padding-top: auto;
+    padding-bottom: auto;
+    padding-right: 0;
+    padding-left: 5px;
+    width: 16px;
+    height: 15.54px;
+    transform: translateY(20%);
+}
+
+.security-section {
+    width: 100%;
+    height: 308px;
+    border-radius: 16px;
+    border: 1px solid #D7D7D7;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+}
+
+.edit-toggle-password-icon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: 430px;
+    cursor: pointer;
+    transform: translateY(25%);
+}
+
+.edit-clear-icon-us {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 405px;
+    cursor: pointer;
+    transform: translateY(40%);
+}
+
+.email-fixed {
+    margin-top: 35px;
+    margin-left: 28px;
+}
+
+.email-fixed span {
+    margin-left: 110px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.71px;
+    letter-spacing: -0.56px;
+}
+
+.profile-edit-container, .profile-edit-check-container {
+    margin-left: 28px;
+    margin-top: 14px;
+}
+
+.profile-edit-container span, .profile-edit-check-container span {
+    color: #F42B72;
+}
+
+.profile-edit-container input {
+    margin-left: 64.5px;
+    width: 400px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #737373;
+    background-color: #00000000;
+    color: #F3F5F6;
+    padding: 8px 18px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.71px;
+    letter-spacing: -0.56px;
+}
+
+.profile-edit-container input:focus {
+    outline: none;
+}
+
+.profile-edit-container button, .profile-edit-check-container button {
+    width: 48px;
+    height: 33px;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #8080804D;
+    color: #FFFFFF;
+    box-sizing: border-box;
+    margin-left: 35px;
+}
+
+.profile-edit-container button:hover, .profile-edit-check-container button:hover {
+    background-color: #000000B2;
+}
+
+.profile-edit-check-container input {
+    margin-left: 50.5px;
+    width: 400px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #737373;
+    background-color: #00000000;
+    color: #F3F5F6;
+    padding: 8px 18px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.71px;
+    letter-spacing: -0.56px;
+}
+
+.profile-edit-check-container input:focus {
+    outline: none;
+}
+
+.edit-done-btn {
+    margin-top: 31px;
+    margin-bottom: 0px;
+    width: 100%;
+    height: 33px;
+    display: flex;
+}
+
+.edit-done-button {
+    margin: 0 auto;
+    width: 48px;
+    height: 33px;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #8080804D;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.71px;
+    letter-spacing: -0.56px;
+    color: #FFFFFF;
+}
+
+.edit-done-button:hover {
+    background-color: #000000B2;
+}
+
+.profile-edit-container input[type="password"]::-ms-reveal {
+	display: none;
+}
+
+.profile-edit-check-container input[type="password"]::-ms-reveal {
+	display: none;
+}
+
+.edit-error-message {
+    margin: 12px 0 0 178px;
+}
+
+.edit-error-message p {
+    margin: 0;
+}

@@ -1,28 +1,36 @@
-body{
+body {
   border-radius: 0px 0px 32px 32px;
   background: #181818;
-  box-shadow: 0px 4px 20px 0px rgba(255, 255, 255, 0.10);
+  box-shadow: 0px 4px 20px 0px rgba(255, 255, 255, 0.1);
 }
-.body{
+.body {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 30px;
 }
-.container2{
+.set-up {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.container2 {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 .greetings {
-  margin-top: 88px;
-  color: #FFF;
+  margin-top: 160px;
+  margin-bottom: 5px;
+  color: #fff;
   font-family: "Pretendard", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   letter-spacing: -1.28px;
+  text-align: center;
   text-transform: capitalize;
 }
 
@@ -41,13 +49,20 @@ body{
 }
 .popup {
   position: fixed;
-  padding: 10px 20px;
-  background-color: #fff;
+  top: 229px !important;
+  left: 244px !important;
+  box-sizing: border-box;
+  width: 215px !important;
+  height: 78px !important;
+  padding: 8px 11px !important;
+  background-color: #fff !important;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+  opacity: 1 !important;
+  transition: opacity 0.5s ease-in-out !important;
+  overflow: visible !important;
 }
+
 .popup-strong {
   color: #000;
 
@@ -69,7 +84,7 @@ body{
   font-style: normal;
   font-weight: 500;
   line-height: 140%; /* 19.6px */
-  letter-spacing: -0.56px;;
+  letter-spacing: -0.56px;
 }
 .popup.hidden {
   opacity: 0;
@@ -85,4 +100,3 @@ body{
   height: 8px;
   background-color: #fff;
 }
-

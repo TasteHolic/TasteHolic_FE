@@ -1,151 +1,152 @@
-.container{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 648px;
-    height: 157px;
-    border-radius: 8px;
-    background: var(--grayscale-gray800, #242525);
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25) inset, 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 648px;
+  height: 157px;
+  border-radius: 8px;
+  background: var(--grayscale-gray800, #242525);
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
-.val{
-    position: absolute;
-    display: flex;
-    align-items: center;
-    width: 500px;
-    margin-bottom: 80px;
-    margin-right: 52px;
+.val {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  width: 500px;
+  margin-bottom: 80px;
+  margin-right: 52px;
 }
 .container input[type="number"] {
-    
-    background: none;
-    border: none;
-    color: var(--grayscale-gray200, #C8CACB);
-    font-family: Pretendard;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.48px;
-    text-transform: capitalize;
-    text-align: center;
-    /* box-shadow: 2px 2px 5px 0px rgba(255, 255, 255, 0.825) */
+  background: none;
+  border: none;
+  color: var(--grayscale-gray200, #c8cacb);
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  text-transform: capitalize;
+  text-align: center;
+  /* box-shadow: 2px 2px 5px 0px rgba(255, 255, 255, 0.825) */
 }
-.percentage-symbol{
-    margin-left: -20px;
-    background: none;
-    border: none;
-    color: var(--grayscale-gray200, #C8CACB);
-    font-family: Pretendard;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.48px;
-    text-transform: capitalize;
-    text-align: center; 
-} 
+.percentage-symbol {
+  margin-left: -2px;
+  background: none;
+  border: none;
+  color: var(--grayscale-gray200, #c8cacb);
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  text-transform: capitalize;
+  text-align: center;
+}
 
 .numberVal {
-    display: flex;
-    align-items: center;
-  }
-
-.minVal, .maxVal{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
-.anchor{
-    margin-left: 20px;
+
+.minVal,
+.maxVal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.anchor {
+  margin-left: 20px;
 }
 
 .container input[type="number"]::-webkit-outer-spin-button,
-.container input[type="number"]::-webkit-inner-spin-button{
-    -webkit-appearance: none;
+.container input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
-.container .range-slider{
-    position: relative;
-    width: 500px;
-    height: 18px;
-    border-radius: 24px;
-    background: #454545;
-    outline: none;
-    top: 1px;
-    margin: 25px;
+.container .range-slider {
+  position: relative;
+  width: 500px;
+  height: 18px;
+  border-radius: 24px;
+  background: #454545;
+  outline: none;
+  top: 1px;
+  margin: 25px;
 }
 .container .range-slider .progress {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, #FDA4C7 0%, #E51D5A 100%);
-    border-radius: 24px;
-    clip-path: inset(0 var(--right) 0 var(--left));
-    --left: 0%;
-    --right: 0%;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #fda4c7 0%, #e51d5a 100%);
+  border-radius: 24px;
+  clip-path: inset(0 var(--right) 0 var(--left));
+  --left: 0%;
+  --right: 0%;
 }
-.container .range-slider input[type="range"]{
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 101%;
-    -webkit-appearance: none;
-    pointer-events: none;
-    background: none;
-    outline: none;
+.container .range-slider input[type="range"] {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 101%;
+  -webkit-appearance: none;
+  pointer-events: none;
+  background: none;
+  outline: none;
 }
-.container .range-slider input::-webkit-slider-thumb{
-    pointer-events: auto;
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #F3F5F6;
-    border-radius: 50px;
-    cursor: pointer;
+.container .range-slider input::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #f3f5f6;
+  border-radius: 50px;
+  cursor: pointer;
 }
-.addButton{
-    position: relative;
-    display: inline-flex;
-    padding: 8px 24px;
-    justify-content: center;
-    align-items: center;
+.addButton {
+  position: relative;
+  display: inline-flex;
+  padding: 8px 24px;
+  justify-content: center;
+  align-items: center;
 
-    border-radius: 50px;
-    border: none;
-    background: #FFF;
+  border-radius: 50px;
+  border: none;
+  background: #fff;
 
-    color: #000;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%; /* 21px */
-    letter-spacing: -0.56px;
-    text-transform: capitalize;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 21px */
+  letter-spacing: -0.56px;
+  text-transform: capitalize;
 }
-.addButton:hover{
-    border: none;
-    outline: none;
+.addButton:hover {
+  border: none;
+  outline: none;
 }
-.addButton:focus{
-    border: none;
-    outline: none;
+.addButton:focus {
+  border: none;
+  outline: none;
 }
-.activeButton{
-    border: 1px solid rgba(0, 0, 0, 0.20);
-    background: var(--grayscale-gray500, #727475);
-    color: #FFF;
-    pointer-events: none;
+.activeButton {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--grayscale-gray500, #727475);
+  color: #fff;
+  pointer-events: none;
 }
-.activeButton:hover{
-    border: none;
-    outline: none;
+.activeButton:hover {
+  border: none;
+  outline: none;
 }
-.activeButton:focus{
-    border: none;
-    outline: none;
+.activeButton:focus {
+  border: none;
+  outline: none;
 }

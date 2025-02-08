@@ -1,206 +1,207 @@
 body {
-    font-family: "Pretendard", sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
 
 button {
-    cursor: pointer;
-    font-family: "Pretendard", sans-serif;
+  cursor: pointer;
+  font-family: "Pretendard", sans-serif;
 }
 
 .my-recipe-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 2px auto;
-    color: white;
+  width: 100%;
+  max-width: 800px;
+  margin: 2px auto;
+  color: white;
 }
 
-.dropdown button {
-    background-color: rgba(0,0,0,0);
-    border: none;
+.my-recipe-dropdown button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
 }
 
-.dropdown {
-    width: 180px;
-    height: 43px;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 16px;
-    line-height: 19.09px;
-    letter-spacing: -0.64px;
-    border: 1px solid #F3F5F6;
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
+.my-recipe-dropdown {
+  width: 180px;
+  height: 43px;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  line-height: 19.09px;
+  letter-spacing: -0.64px;
+  border: 1px solid #f3f5f6;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
-.dropdown-btn {
-    border: none;
-    color: #8D8F90;
-    font-size: 16px;
-    line-height: 19.09px;
-    letter-spacing: -0.64px;
-    cursor: pointer;
-    transition: background 0.3s;
+.my-recipe-dropdown-btn {
+  border: none;
+  color: #8d8f90;
+  font-size: 16px;
+  line-height: 19.09px;
+  letter-spacing: -0.64px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.dropdown-menu {
-    position: absolute;
-    top: 40px;
-    width: 180px;
-    height: 139px;
-    background-color: #242525;
-    list-style: none;
-    margin: 3px 0 0 -20px;
-    border-radius: 8px;
-    border: 1px solid #F3F5F6;
-    box-shadow: 0 4px 10px 2px #00000082;
-    width: 140px;
-    height: 123px;
-    padding: 8px 20px;
-    color: #FFFFFF;
-    font-size: 14px;
-    line-height: 16.71px;
-    letter-spacing: -0.56px;
+.my-recipe-dropdown-menu {
+  position: absolute;
+  top: 40px;
+  width: 180px;
+  height: 123px;
+  background-color: #242525;
+  list-style: none;
+  margin: 3px 0 0 -20px;
+  border-radius: 8px;
+  border: 1px solid #f3f5f6;
+  box-shadow: 0 4px 10px 2px #00000082;
+  padding: 8px 20px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 16.71px;
+  letter-spacing: -0.56px;
 }
 
-.dropdown-item {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #383939;
+.my-recipe-dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #383939;
 }
 
-.dropdown-item:hover {
-    background: #666;
+.my-recipe-dropdown-item:hover {
+  background: #666;
 }
 
 .recipe-list {
-    margin-top: 32px;
+  margin-top: 32px;
 }
 
 .recipe-card {
-    background: #242525;
-    padding: 40px;
-    margin-bottom: 20px;
-    border-radius: 16px;
+  background: #242525;
+  padding: 40px;
+  margin-bottom: 20px;
+  border-radius: 16px;
 }
 
 .recipe-header {
-    font-size: 14px;
-    line-height: 16.71px;
-    letter-spacing: -0.56px;
-    color: #8D8F90;
-    margin-bottom: 14px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  font-size: 14px;
+  line-height: 16.71px;
+  letter-spacing: -0.56px;
+  color: #8d8f90;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .recipe-header img {
-    width: 16px;
-    height: 16px;
-    margin: 0 4px;
+  width: 16px;
+  height: 16px;
+  margin: 0 4px;
 }
 
 .views-likes-container {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .views-likes-container img {
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
 }
 
 .recipe-title {
-    font-size: 16px;
-    line-height: 19.09px;
-    letter-spacing: -0.64px;
-    margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 19.09px;
+  letter-spacing: -0.64px;
+  margin-bottom: 20px;
 }
 
 .recipe-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .recipe-details {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
-.feature1, .feature2, .feature3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    border-radius: 50px;
-    padding: 8px 12px;
-    font-size: 13px;
-    line-height: 16.71px;
-    letter-spacing: -0.52px;
-    color: #FFFFFF;
-    min-width: 60px;
-    height: 60px;
-    text-align: center;
-    border: 0.8px solid #515253;
-    box-sizing: border-box;
+.feature1,
+.feature2,
+.feature3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 50px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 16.71px;
+  letter-spacing: -0.52px;
+  color: #ffffff;
+  min-width: 60px;
+  height: 60px;
+  text-align: center;
+  border: 0.8px solid #515253;
+  box-sizing: border-box;
 }
 
 .feature-circle {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .feature-circle img {
-    width: 16px;
-    height: 16px;
+  width: 16px;
+  height: 16px;
 }
 
-
 .feature1 {
-    width: 91px;
-    height: 36px;
+  width: 91px;
+  height: 36px;
 }
 
 .feature2 {
-    width: 76px;
-    height: 36px;
+  width: 76px;
+  height: 36px;
 }
 
 .feature3 {
-    width: 100px;
-    height: 36px;
+  width: 100px;
+  height: 36px;
 }
 
 .recipe-footer {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .view-btn,
 .edit-btn {
-    border-radius: 40px;
-    border: 1px solid #00000033;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 16.71px;
-    letter-spacing: -0.56px;
+  border-radius: 40px;
+  border: 1px solid #00000033;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  letter-spacing: -0.56px;
 }
 
 .view-btn {
-    width: 110px;
-    height: 41px;
-    margin-right: 8px;
-    background: #555555;
-    color: #F3F5F6;
+  width: 110px;
+  height: 41px;
+  margin-right: 8px;
+  background: #555555;
+  color: #f3f5f6;
 }
 
 .edit-btn {
-    background: #FFFFFF;
-    color: #000000;
+  width: 95px;
+  height: 41px;
+  background: #ffffff;
+  color: #000000;
 }

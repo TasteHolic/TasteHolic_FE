@@ -1,0 +1,64 @@
+body {
+    font-family: 'Pretendard', sans-serif;
+    background-color: #161616;
+}
+
+.editnextpage {
+    margin-top: 369px;
+    margin-bottom: 317px;
+}
+
+.editnextpage-top {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.editnextpage-topimage {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+}
+
+.editnextpage-toptext {
+    margin-top: 39px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+}
+
+.editnextpage-bottom {
+    margin-top: 101px;
+    display: flex;
+}
+
+.editnextpage-btnall {
+    margin: 0 auto;
+}
+
+.editnextpage-btnall button {
+    border: none;
+    border: 1px solid #00000033;
+    border-radius: 40px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+}
+
+.editnextpage-btn1 {
+    background-color: rgb(55, 55, 55);
+    color: #FFFFFF;
+    width: 92px;
+    height: 51px;
+    margin: 0 21px 0 0;
+}
+
+.editnextpage-btn2 {
+    background-color: #FFFFFF;
+    color: #000000;
+}

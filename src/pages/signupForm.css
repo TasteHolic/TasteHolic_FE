@@ -1,261 +1,264 @@
 body {
-    margin: 0;
-    font-family: 'Pretendard', sans-serif;
+  margin: 0;
+  font-family: "Pretendard", sans-serif;
 }
 
 .signup-form {
-    width: 100%;
-    min-width: 671px;
-    min-height: 100vh;
-    background-color: #161616;
-    border-radius: 8px;
-    color: #fff;
+  width: 100%;
+  min-width: 671px;
+  min-height: 100vh;
+  background-color: #161616;
+  border-radius: 8px;
+  color: #fff;
 }
 
 .starcolor {
-    color: #f42b72;
+  color: #f42b72;
 }
 
 .signup-inform {
-    height: 332px;
-    min-width: 671px;
-    margin-bottom: 70px;
-    background-color: #121212;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 3px 15px rgb(45, 45, 45);
+  height: 332px;
+  min-width: 671px;
+  margin-bottom: 70px;
+  background-color: #121212;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 3px 15px rgb(45, 45, 45);
 }
 
 .signup-informbox {
-    width: 671px;
-    margin: 0 auto;
-    padding-top: 80px;
+  width: 671px;
+  margin: 0 auto;
+  padding-top: 80px;
 }
 
 .signup-imgbox {
-    text-align: center;
+  text-align: center;
 }
 
 .signup-imgbox img {
-    width: 90px;
-    height: 90px;
+  width: 90px;
+  height: 90px;
 }
 
 .signup-informbox h1 {
-    padding-top: 24px;
-    margin: 0;
-    text-align: center;
-    font-size: 40px;
-    font-weight: 300;
+  padding-top: 24px;
+  margin: 0;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 300;
 }
 
 .signup-informbox h4 {
-    font-weight: 500;
-    text-align: end;
-    line-height: 19.09px;
-    color: rgb(207, 207, 207);
+  font-weight: 500;
+  text-align: end;
+  line-height: 19.09px;
+  color: rgb(207, 207, 207);
 }
 
 .signup-form-group {
-    width: 600px;
-    margin: 35px auto;
+  width: 600px;
+  margin: 35px auto;
 }
 
 .signup-input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #ccc;
-    width: 120px;
+  display: block;
+  margin-bottom: 5px;
+  color: #ccc;
+  width: 120px;
 }
 
 .signup-input-group {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .signup-input-container {
-    position: relative;
-    flex: 1; /* input을 넓게 만들기 위해 flex 사용 */
-    cursor: text;
+  position: relative;
+  flex: 1; /* input을 넓게 만들기 위해 flex 사용 */
+  cursor: text;
 }
 
 .signup-input-container input {
-    width:300px;
-    height:35px;
-    padding-right: 35px;
-    margin-left: 20px;
-    border: none;
-    border-radius: 2px; /* 애니메이션 자연스럽게 나타내기 위해서 추가 */
-    border-bottom: 2px solid #ffffff; /* 하단에만 테두리 추가 */
-    font-size: 1rem;
-    background-color: #161616;
-    color: #fff;
-    transition: background-color 0.3s, border-color 0.3s;
+  width: 300px;
+  height: 35px;
+  padding-right: 35px;
+  margin-left: 20px;
+  border: none;
+  border-radius: 2px; /* 애니메이션 자연스럽게 나타내기 위해서 추가 */
+  border-bottom: 2px solid #ffffff; /* 하단에만 테두리 추가 */
+  font-size: 1rem;
+  background-color: #161616;
+  color: #fff;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .signup-input-container input:focus {
-    border-radius: 5px;
-    background-color: rgba(169, 169, 169, 0.2); /* 회색 불투명 배경 */
-    outline:none;
+  border-radius: 5px;
+  background-color: rgba(169, 169, 169, 0.2); /* 회색 불투명 배경 */
+  outline: none;
 }
 
 .signup-clear-icon {
-    position: absolute;
-    width:1.2rem;
-    height: 1.2rem;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    opacity: 0;
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0;
 }
 
-.signup-clear-icon-us{
-    position: absolute;
-    width:1.2rem;
-    height: 1.2rem;
-    right: 132px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    opacity: 0;
+.signup-clear-icon-us {
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  right: 132px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0;
 }
 
-.signup-toggle-password-icon{
-    position: absolute;
-    width:1.2rem;
-    height: 1.2rem;
-    right: 160px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    opacity: 0;
+.signup-toggle-password-icon {
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  right: 160px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0;
 }
 
-.signup-input-container:focus-within .signup-clear-icon, 
-.signup-input-container:focus-within .signup-clear-icon-us, 
-.signup-input-container:focus-within .signup-toggle-password-icon{
-    opacity: 100;
+.signup-input-container:focus-within .signup-clear-icon,
+.signup-input-container:focus-within .signup-clear-icon-us,
+.signup-input-container:focus-within .signup-toggle-password-icon {
+  opacity: 100;
 }
 
-.signup-input-container.focused .signup-clear-icon, 
-.signup-input-container.focused .signup-clear-icon-us, 
-.signup-input-container:focused .signup-toggle-password-icon{
-    opacity: 100;
+.signup-input-container.focused .signup-clear-icon,
+.signup-input-container.focused .signup-clear-icon-us,
+.signup-input-container:focused .signup-toggle-password-icon {
+  opacity: 100;
 }
 
 .check-icon {
-    position: absolute;
-    width:1.2rem;
-    height: 1.2rem;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 button {
-    border: none;
-    cursor: pointer;
+  border: none;
+  cursor: pointer;
 }
 
 button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 small {
-    display: block;
-    margin-top: 0.5rem;
-    margin-left: 145px;
-    font-size: 12px;
+  display: block;
+  margin-top: 0.5rem;
+  margin-left: 145px;
+  font-size: 12px;
 }
 
 small.signup-error-text {
-    color: #fda4c7;
-    font-size: 12px;
+  color: #fda4c7;
+  font-size: 12px;
 }
 
 small.signup-valid-text {
-    color: #4ece95;
+  color: #4ece95;
 }
 
 small.signup-default-text {
-    color: #a9a9a9;
+  color: #a9a9a9;
 }
 
 .signup-back-button {
-    padding: 10px 20px;
-    background-color: rgb(39, 38, 38);
-    color: #FFF;
-    border: none;
-    border-radius: 30px;
-    font-size: 14px;
+  widows: 118px;
+  height: 51px;
+  padding: 16px 32px;
+  background-color: rgb(39, 38, 38);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
 }
 
 .signup-submit-button {
-    padding: 10px 20px;
-    background-color: white;
-    color: black;
-    border: none;
-    border-radius: 30px;
-    font-size: 14px;
+  widows: 118px;
+  height: 51px;
+  padding: 16px 32px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 40px;
 }
 
 .submit-button:hover {
-    background-color: gray;
-    color: white;
+  background-color: gray;
+  color: white;
 }
 
 .signup-error-text {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    color: red;
-    font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: red;
+  font-size: 14px;
 }
 
-.signup-form button[type='button'] {
-    
-    color: white;
-    padding: 10px 20px;
-    border-radius: 7px;
-    font-size: 14px;
+.signup-form button[type="button"] {
+  color: white;
+  padding: 10px 20px;
+  border-radius: 7px;
+  font-size: 14px;
 }
 
-.idbutton{
-    background-color: rgb(91, 91, 91);
+.idbutton {
+  background-color: rgb(91, 91, 91);
 }
 /* 이렇게 분리 안하면 타입이 버튼인 약관보기버튼색이 영향을 받아서 분리합니다. */
 
-.signup-form button[type='button']:disabled {
-    background-color: rgb(39, 38, 38);
-    cursor: not-allowed;
+.signup-form button[type="button"]:disabled {
+  background-color: rgb(39, 38, 38);
+  cursor: not-allowed;
 }
 
 .signup-form .signup-input-group button {
-    margin-left: 1rem;
+  margin-left: 1rem;
 }
 
-.contour{
-    width:800px;
-    border:1.5px solid white;
+.contour {
+  width: 800px;
+  border: 1.5px solid white;
+  margin: 0 auto;
 }
 
 /* 기본 브라우저 제공 아이콘 숨기기 */
 .signup-input-container input[type="password"]::-ms-reveal,
 .signup-input-container input[type="password"]::-webkit-clear-button,
-.signup-input-container input[type="password"]::-webkit-textfield-decoration-container {
-    display: none;
+.signup-input-container
+  input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
 }
 
-.signup-error-message{
-    display: flex;
-    justify-content: center;
-    padding: 14px 0px;
-    color: var(--primary-rose-300, #FDA4C7);
+.signup-error-message {
+  display: flex;
+  justify-content: center;
+  padding: 14px 0px;
+  color: var(--primary-rose-300, #fda4c7);
 }
 
-.signup-button-container{
-    display: flex;
-    padding: 14px;
-    justify-content: center;
-    gap: 33px;
+.signup-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 33px;
+  padding-bottom: 20px;
 }

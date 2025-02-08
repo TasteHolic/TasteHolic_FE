@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import "./Header.css";
-import HeaderSearchBar from "./search/headerSearchBar";
+import "./MainHeader.css";
+import HeaderSearchBar from "../search/headerSearchBar";
 
-const Header: React.FC = () => {
+const MainHeader: React.FC = () => {
   const [isRecipeHovered, setIsRecipeHovered] = useState(false);
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isMyHovered, setIsMyHovered] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 여부 관리
 
   const handleRecipeMouseEnter = () => setIsRecipeHovered(true);
   const handleRecipeMouseLeave = () => setIsRecipeHovered(false);
@@ -33,9 +33,7 @@ const Header: React.FC = () => {
           onMouseEnter={handleRecipeMouseEnter}
           onMouseLeave={handleRecipeMouseLeave}
         >
-          <a href="/recipe" className="nav-link">
-            RECIPE
-          </a>
+          <p className="nav-link recipeWord">RECIPE</p>
           {isRecipeHovered && (
             <div className="recipe-dropdown-menu">
               <a href="/user-recipe" className="recipe-item">
@@ -59,9 +57,7 @@ const Header: React.FC = () => {
           onMouseEnter={handleNoteMouseEnter}
           onMouseLeave={handleNoteMouseLeave}
         >
-          <a href="/note" className="nav-link">
-            NOTE
-          </a>
+          <p className="nav-link">NOTE</p>
           {isNoteHovered && (
             <div className="note-dropdown-menu">
               <a href="/write-note" className="note-item">
@@ -81,9 +77,7 @@ const Header: React.FC = () => {
           onMouseEnter={handleMyMouseEnter}
           onMouseLeave={handleMyMouseLeave}
         >
-          <a href="/my" className="nav-link">
-            MY
-          </a>
+          <p className="nav-link">MY</p>
           {isMyHovered && (
             <div
               className={
@@ -94,15 +88,15 @@ const Header: React.FC = () => {
             >
               {isLoggedIn ? (
                 <>
-                  <a href="/my-page" className="my-item">
+                  <a href="/profile/account" className="my-item">
                     마이페이지
                   </a>
                   <hr className="my-divider" />
-                  <a href="/my-recipes" className="my-item">
+                  <a href="/profile/myrecipes" className="my-item">
                     작성한 레시피
                   </a>
                   <hr className="my-divider" />
-                  <a href="/my-bar" className="my-item">
+                  <a href="/profile/mybar" className="my-item">
                     내 바
                   </a>
                   <hr className="my-divider" />
@@ -129,4 +123,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default MainHeader;

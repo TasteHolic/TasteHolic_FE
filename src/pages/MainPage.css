@@ -1,6 +1,6 @@
 /* taste-mood.css */
-body{
-  margin:0;
+body {
+  margin: 0;
   background: #161616;
 }
 /* 전체 배경 설정 */
@@ -9,7 +9,7 @@ body{
   flex-direction: column;
   align-items: center;
   width: 100%;
-  
+
   background: #161616;
   color: #ffffff;
   padding: 36px 0 41px 0;
@@ -33,7 +33,7 @@ body{
   position: absolute;
   width: 80%;
   height: 87%;
-  background-image:url("/image/maintastemoodcard.png"); 
+  background-image: url("/image/maintastemoodcard.png");
   background-size: cover;
   border-radius: 16px;
   overflow: hidden;
@@ -41,12 +41,11 @@ body{
   text-align: center;
   z-index: 5;
 }
- /* 카드 이미지 스타일링 */
- .taste-mood-card-image {
+/* 카드 이미지 스타일링 */
+.taste-mood-card-image {
   height: 70%;
   object-fit: cover; /* 이미지가 카드에 맞게 조정 */
   margin-top: 20px;
-  
 }
 .card-hover-buttons {
   display: none;
@@ -68,13 +67,11 @@ body{
   transform: scale(1.05);
   transition: transform 0.3s ease;
   background-image: url("/image/maintastemoodhover.png");
- }
- 
+}
 
 .taste-mood-card.center {
   z-index: 10;
 }
-
 
 /* 카드 텍스트 스타일 */
 .taste-mood-card-title {
@@ -127,43 +124,40 @@ body{
   background-color: #ffffff;
 }
 
-.leftarrow-image  {
+.leftarrow-image {
   width: 48px; /* 버튼 이미지의 크기 */
   height: 48px;
   object-fit: contain;
 }
-.rightarrow-image  {
+.rightarrow-image {
   width: 48px; /* 버튼 이미지의 크기 */
   height: 48px;
   object-fit: contain;
 }
-.holicNow-container{
+.holicNow-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  background: #121212;;
+  background: #121212;
   color: #ffffff;
   padding: 4rem 0 14rem 0;
-
 }
 .holic-container {
   width: 80%;
   display: flex;
-  
+
   font-size: 16px;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-  
 }
 
-.holicLabel{
+.holicLabel {
   display: inline-block;
-  
 }
 /*  */
-.pick-container{
+.pick-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -171,13 +165,13 @@ body{
   width: 100%;
   margin-bottom: 84px;
 }
-.picking-container{
+.picking-container {
   margin-top: 35px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.pick-arrow{
+.pick-arrow {
   margin-top: 200px;
   position: absolute;
   top: 50%;
@@ -187,19 +181,19 @@ body{
   cursor: pointer;
   z-index: 15;
 }
-.pick-arrow-left{
+.pick-arrow-left {
   left: 120px;
 }
-.pick-arrow-right{
+.pick-arrow-right {
   right: 120px;
 }
-.pick-content{
+.pick-content {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.drink-name{
-  color: #F5F5F5;
+.drink-name {
+  color: #f5f5f5;
 
   font-family: Pretendard;
   font-size: 24px;
@@ -211,8 +205,8 @@ body{
   margin-top: 25px;
   margin-bottom: 24px;
 }
-.drink-description{
-  color: #F5F5F5;
+.drink-description {
+  color: #f5f5f5;
 
   text-align: center;
   font-family: Pretendard;
@@ -225,7 +219,7 @@ body{
 
   width: 130px;
 }
-.drink-img{
+.drink-img {
   width: 431px;
   height: 431px;
   transform: rotate(0.921deg);
@@ -233,17 +227,19 @@ body{
   margin-top: 45px;
   margin-bottom: 65px;
 }
-.taste-notes{
+.taste-notes {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 32px;
 }
-.taste-note{
-  /*  */
+.taste-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.taste-note-name{
-  color: #FFF;
+.taste-note-name {
+  color: #fff;
 
   font-family: Pretendard;
   font-size: 20px;
@@ -252,13 +248,13 @@ body{
   line-height: normal;
   letter-spacing: -0.8px;
   text-transform: capitalize;
-  
+
   margin-bottom: 26px;
 }
 /*  */
 
 /*  */
-.best-taste-container{
+.best-taste-container {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -268,7 +264,7 @@ body{
   left: 0;
   padding: 8rem 0 14rem 0;
 }
-.best-tastes{
+.best-tastes {
   width: 1040px;
 }
 .best-taste-title {
@@ -276,17 +272,16 @@ body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;  
+  margin-bottom: 30px;
 }
 
-.best-taste-label{
+.best-taste-label {
   display: inline-block;
-  
 }
-.best-taste-description{
+.best-taste-description {
   margin-right: 0;
 
-  color: #B1B1B1;
+  color: #b1b1b1;
 
   font-family: Pretendard;
   font-size: 16px;

@@ -1,0 +1,344 @@
+.header {
+  position: relative;
+  width: 1280px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background: rgba(21, 21, 21, 0.8);
+  backdrop-filter: blur(15px);
+  flex-shrink: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.logo {
+  position: absolute;
+  top: 21px;
+  left: 189px;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  text-decoration: none;
+}
+
+.logo img {
+  width: 25px;
+  height: 26.57px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  color: var(--grayscale-gray50, #f3f5f6);
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.96px;
+  text-transform: capitalize;
+}
+
+.header-search-bar {
+  position: absolute;
+  top: 20px;
+  left: 558px;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  position: absolute;
+  margin: 0;
+  top: 20px;
+  right: 208px;
+  gap: 16px;
+  list-style: none;
+}
+
+.nav-item {
+  display: flex;
+  width: 72px;
+  padding: 8px 0px;
+  flex-direction: flex-start;
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 15.623px;
+  letter-spacing: -0.64px;
+  text-transform: uppercase;
+  justify-content: center;
+  text-decoration: none;
+  position: relative;
+}
+.nav-item > a {
+  color: inherit; /* 부모의 색상을 상속 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+.nav-item:hover {
+  background-color: #444;
+  color: var(--primary-rose-500-main, #f42b72);
+  font-weight: 700;
+}
+.nav-item:hover > a {
+  color: inherit; /* 부모의 호버 색상 상속 */
+}
+
+.recipe-dropdown-menu {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  width: 161px;
+  height: 156px;
+  background: #1c1d1d;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  animation: slideDown 0.3s ease-out;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.recipe-item {
+  color: var(--grayscale-gray100, #e2e4e6);
+  position: relative;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.623px;
+  letter-spacing: -0.64px;
+  text-transform: uppercase;
+  text-decoration: none;
+  left: 24px;
+}
+.recipe-item:first-child {
+  top: 24px;
+  width: 70px;
+  height: 16px;
+}
+
+.recipe-item:nth-child(3) {
+  top: 52px;
+  width: 87px;
+  height: 16px;
+}
+
+.recipe-item:nth-child(5) {
+  top: 80px;
+  width: 97px;
+  height: 16px;
+}
+.recipe-item:hover {
+  color: var(--primary-rose-500-main, #f42b72);
+}
+
+.dropdown-divider {
+  border: none;
+  width: 113px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.dropdown-divider:first-of-type {
+  position: absolute;
+  top: 52px;
+  left: 24px;
+  width: 113px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+}
+
+.dropdown-divider:nth-of-type(2) {
+  position: absolute;
+  top: 98px;
+  left: 24px;
+  width: 113px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+}
+.dropdown-item:hover {
+  color: var(--primary-rose-500-main, #f42b72);
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.note-dropdown-menu {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  left: 24;
+  width: 161px;
+  height: 110px;
+  background: #1c1d1d;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  animation: slideDown 0.3s ease-out;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.note-item {
+  color: var(--grayscale-gray100, #e2e4e6);
+  position: relative;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.623px;
+  letter-spacing: -0.64px;
+  text-transform: uppercase;
+  text-decoration: none;
+  left: 24px;
+}
+
+.note-item:first-child {
+  width: 113px;
+  height: 16px;
+  top: 24px;
+}
+
+.note-item:nth-child(3) {
+  width: 87px;
+  height: 16px;
+  top: 54px;
+}
+.note-divider {
+  position: absolute;
+  top: 55px;
+  left: 24px;
+  width: 113px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+}
+
+.note-item:hover {
+  color: var(--primary-rose-500-main, #f42b72);
+}
+.my-dropdown-menu {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 161px;
+  background: #1c1d1d;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  animation: slideDown 0.3s ease-out;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.my-item {
+  color: var(--grayscale-gray100, #e2e4e6);
+  position: relative;
+  text-align: center;
+  font-family: Pretendard, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.623px;
+  letter-spacing: -0.64px;
+  text-transform: uppercase;
+  text-decoration: none;
+  left: 24px;
+}
+/* 로그인 상태 스타일 */
+.my-dropdown-menu.logged-in {
+  height: 196px;
+}
+
+.my-dropdown-menu.logged-in .my-item:first-child {
+  width: 67px;
+  height: 16px;
+  top: 24px;
+}
+.my-dropdown-menu.logged-in .my-item:nth-child(3) {
+  width: 84px;
+  height: 16px;
+  top: 54px;
+}
+.my-dropdown-menu.logged-in .my-item:nth-child(5) {
+  width: 30px;
+  height: 16px;
+  top: 80px;
+}
+.my-dropdown-menu.logged-in .my-item:nth-child(7) {
+  width: 54px;
+  height: 16px;
+  top: 108px;
+}
+.my-dropdown-menu.logged-in .my-divider:first-of-type {
+  top: 54px;
+}
+
+.my-dropdown-menu.logged-in .my-divider:nth-of-type(2) {
+  top: 98px;
+}
+
+.my-dropdown-menu.logged-in .my-divider:nth-of-type(3) {
+  top: 142px;
+}
+
+/* 비로그인 상태 스타일 */
+.my-dropdown-menu.logged-out {
+  height: 108px;
+}
+.my-dropdown-menu.logged-out .my-item:first-child {
+  width: 41px;
+  height: 16px;
+  top: 24px;
+}
+.my-dropdown-menu.logged-out .my-item:nth-child(3) {
+  width: 54px;
+  height: 16px;
+  top: 52px;
+}
+.my-dropdown-menu.logged-out .my-divider:first-of-type {
+  top: 54px;
+}
+
+/* 호버 상태 */
+.my-item:hover {
+  color: var(--primary-rose-500-main, #f42b72);
+}
+
+/* 드롭다운 메뉴 구분선 */
+.my-divider {
+  position: absolute;
+  border: none;
+  width: 113px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  left: 24px;
+}
+.myWord {
+  color: var(--primary-rose-500-main, #f42b72);
+}

@@ -9,32 +9,12 @@ export const Container = styled.div`
 `;
 export const TopSection = styled.div`
   width: 1280px;
-  height: 599px;
+  padding-bottom: 160px;
   background: #181818;
   border-radius: 0px, 0px, 32px, 32px;
   box-shadow: 0px 4px 20px 0px rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column; /* 자식 요소들을 세로 정렬 */
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
 `;
 
-export const TopTitle = styled.h1`
-  color: #fff;
-  font-family: "Pretendard", sans-serif;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: -1.28px;
-  text-transform: capitalize;
-  margin-bottom: 33px;
-`;
-
-export const SearchBarWrapper = styled.div`
-  margin-bottom: 28px;
-`;
 export const SearchCategoryWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -68,29 +48,9 @@ export const CardWrapper = styled.div`
   max-width: 1032px;
   margin: 0 auto;
   justify-content: center;
-
-  grid-template-columns: repeat(6, 1fr);
-
-  & > :nth-child(1) {
-    grid-column: 2 / 4;
-  }
-
-  & > :nth-child(2) {
-    grid-column: 4 / 7;
-  }
-
-  & > :nth-child(3) {
-    grid-column: 1 / 3;
-  }
-
-  & > :nth-child(4) {
-    grid-column: 3 / 5;
-  }
-
-  & > :nth-child(5) {
-    grid-column: 5 / 7;
-  }
+  grid-template-columns: repeat(3, 1fr);
 `;
+
 export const RecommandSection = styled.div`
   width: 1280px;
   height: 800px;
