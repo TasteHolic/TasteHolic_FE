@@ -125,6 +125,10 @@
 }
 .amount {
     width: 90px;
+    display: flex;
+    align-items: center;
+    
+    text-align: left;
 
     color: var(--grayscale-gray50, #F3F5F6);
     text-align: center;
