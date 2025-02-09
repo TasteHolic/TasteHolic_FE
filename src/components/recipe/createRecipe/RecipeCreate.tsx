@@ -37,7 +37,7 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
             <div className="container">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
-                    <VarietyItem options={["Cocktails"]}/>
+                    <p className="cocktail">Cocktail</p>
                 </div>
 
                 <div className="categories">
