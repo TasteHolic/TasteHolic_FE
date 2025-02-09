@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const DropdownContainer = styled.div`
     width: 320px;
-    max-height: 433px;
+    //max-height: 433px;
     flex-shrink: 0;
     border-radius: 8px;
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
