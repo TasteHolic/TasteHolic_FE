@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React from 'react';
 import "pretendard/dist/web/static/pretendard.css";
 
 const RecipeLines = styled.div`
@@ -9,16 +9,13 @@ const RecipeLines = styled.div`
     gap: 10px;
 `;
 
-const RecipeLine = styled.input`
+const RecipeLine = styled.div`
     display: flex;
     width: 470px;
     height: 38px;
     padding-left: 18px;
     padding-right: 18px;
     align-items: center;
-    align-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
     border-radius: 16px;
     border: 1px solid #8B8B8B;
     background: rgba(162, 162, 162, 0.10);
@@ -29,10 +26,6 @@ const RecipeLine = styled.input`
     line-height: 24px;
     letter-spacing: -0.8px;
     text-transform: capitalize;
-
-    &:focus {
-        outline: none;
-    }
 `;
 
 interface WriteRecipeProps {
@@ -42,45 +35,11 @@ interface WriteRecipeProps {
 }
 
 const ViewWriteRecipe: React.FC<WriteRecipeProps> = ({ line1, line2, line3 }) => {
-    const [inputValues, setInputValues] = useState({
-        line1: line1 || '',
-        line2: line2 || '',
-        line3: line3 || '',
-    });
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: 'line1' | 'line2' | 'line3') => {
-        setInputValues((prev) => ({
-            ...prev,
-            [field]: event.target.value
-        }));
-    };
-
     return (
         <RecipeLines>
-            {inputValues.line1 && (
-                <RecipeLine
-                    type="text"
-                    placeholder="레시피를 채워보세요."
-                    value={inputValues.line1}
-                    onChange={(e) => handleInputChange(e, 'line1')}
-                />
-            )}
-            {inputValues.line2 && (
-                <RecipeLine
-                    type="text"
-                    placeholder="레시피를 채워보세요."
-                    value={inputValues.line2}
-                    onChange={(e) => handleInputChange(e, 'line2')}
-                />
-            )}
-            {inputValues.line3 && (
-                <RecipeLine
-                    type="text"
-                    placeholder="레시피를 채워보세요."
-                    value={inputValues.line3}
-                    onChange={(e) => handleInputChange(e, 'line3')}
-                />
-            )}
+            {line1 && <RecipeLine>{line1}</RecipeLine>}
+            {line2 && <RecipeLine>{line2}</RecipeLine>}
+            {line3 && <RecipeLine>{line3}</RecipeLine>}
         </RecipeLines>
     );
 };
