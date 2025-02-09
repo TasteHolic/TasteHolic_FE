@@ -1,4 +1,4 @@
-import "./RecipeInput.css"
+import "./RecipeEdit.css"
 import ItemList from "./ItemList";
 import RecipeDropdown from "./RecipeDropdown";
 import WriteRecipe from "./WriteRecipe";
