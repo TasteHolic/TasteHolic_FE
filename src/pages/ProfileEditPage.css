@@ -147,21 +147,21 @@ button {
 }
 
 .edit-toggle-password-icon {
-    position: absolute;
+    position: relative;
     width: 24px;
     height: 24px;
-    right: 430px;
+    right: 60px;
     cursor: pointer;
     transform: translateY(25%);
 }
 
 .edit-clear-icon-us {
-    position: absolute;
+    position: relative;
     width: 20px;
     height: 20px;
-    right: 405px;
+    right: 55px;
     cursor: pointer;
-    transform: translateY(40%);
+    transform: translateY(25%);
 }
 
 .email-fixed {
@@ -215,7 +215,7 @@ button {
     background-color: #8080804D;
     color: #FFFFFF;
     box-sizing: border-box;
-    margin-left: 35px;
+    margin-left: -10px;
 }
 
 .profile-edit-container button:hover, .profile-edit-check-container button:hover {
