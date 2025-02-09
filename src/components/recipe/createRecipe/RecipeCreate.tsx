@@ -7,7 +7,7 @@ import CreateWriteRecipe from "./CreateWriteRecipe";
 
 interface RecipeInputProps {
     drinkName: string;
-    onReadMore: () => void;
+    onReadMore?: () => void;
     onCancel: () => void;
     onSave: () => void;
 }
@@ -34,7 +34,7 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
 
     return (
         <>
-            <div className="container">
+            <div className="ycontainer">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
                     <p className="cocktail">Cocktail</p>
