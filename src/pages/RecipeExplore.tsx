@@ -118,26 +118,29 @@ const RecipeExplore: React.FC = () => {
       </div>
       <FloatingButton/>
       {selectedRecipe && (
-        <div className="explore-recipe-container">
-          <ExploreRecipe
-            exploreTitle={selectedRecipe.name}
-            drinkName={selectedRecipe}
-            imgSrc={selectedRecipe.image}
-            viewCount={selectedRecipe.views}
-            favoriteCount={selectedRecipe.likes}
-            amount1={selectedRecipe.amount1}
-            amount2={selectedRecipe.amount2}
-            amount3={selectedRecipe.amount3}
-            ingredient1={selectedRecipe.ingredient1}
-            ingredient2={selectedRecipe.ingredient2}
-            ingredient3={selectedRecipe.ingredient3}
-            recipeLine1={selectedRecipe.recipeLine1}
-            recipeLine2={selectedRecipe.recipeLine2}
-            recipeLine3={selectedRecipe.recipeLine3}
-            onCancel={handleCloseExploreRecipe}
-            onSave={() => toggleSaveRecipe(selectedRecipe.id)}
-          />
+        <div className="explore-recipe-background">
+          <div className="explore-recipe">
+            <ExploreRecipe
+              exploreTitle={selectedRecipe.name}
+              drinkName={selectedRecipe}
+              imgSrc={selectedRecipe.image}
+              viewCount={selectedRecipe.views}
+              favoriteCount={selectedRecipe.likes}
+              amount1={selectedRecipe.amount1}
+              amount2={selectedRecipe.amount2}
+              amount3={selectedRecipe.amount3}
+              ingredient1={selectedRecipe.ingredient1}
+              ingredient2={selectedRecipe.ingredient2}
+              ingredient3={selectedRecipe.ingredient3}
+              recipeLine1={selectedRecipe.recipeLine1}
+              recipeLine2={selectedRecipe.recipeLine2}
+              recipeLine3={selectedRecipe.recipeLine3}
+              onCancel={handleCloseExploreRecipe}
+              onSave={() => toggleSaveRecipe(selectedRecipe.id)}
+            />
+          </div>
         </div>
+
       )}
     </div>
     <Footer/>
