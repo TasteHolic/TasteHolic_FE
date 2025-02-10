@@ -47,7 +47,7 @@ const SearchHeader: React.FC = () => {
           <p className="nav-link">RECIPE</p>
           {isRecipeHovered && (
             <div className="recipe-dropdown-menu">
-              <a href="/user-recipe" className="recipe-item">
+              <a href="/recipe" className="recipe-item">
                 유저 레시피
               </a>
               <hr className="dropdown-divider" />

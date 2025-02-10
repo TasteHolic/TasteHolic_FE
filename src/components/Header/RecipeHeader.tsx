@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./MainHeader.css";
+import "./RecipeHeader.css";
 import HeaderSearchBar from "../search/headerSearchBar";
 
-const MainHeader: React.FC = () => {
+const RecipeHeader: React.FC = () => {
   const [isRecipeHovered, setIsRecipeHovered] = useState(false);
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isMyHovered, setIsMyHovered] = useState(false);
@@ -36,7 +36,7 @@ const MainHeader: React.FC = () => {
           <p className="nav-link recipeWord">RECIPE</p>
           {isRecipeHovered && (
             <div className="recipe-dropdown-menu">
-              <a href="/user-recipe" className="recipe-item">
+              <a href="/recipe" className="recipe-item">
                 유저 레시피
               </a>
               <hr className="dropdown-divider" />
@@ -123,4 +123,4 @@ const MainHeader: React.FC = () => {
   );
 };
 
-export default MainHeader;
+export default RecipeHeader;

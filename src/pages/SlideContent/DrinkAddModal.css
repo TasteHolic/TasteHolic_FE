@@ -116,6 +116,7 @@
   letter-spacing: -0.64px;
   text-transform: capitalize;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .add-drink-modal .cancel-button:hover {
@@ -271,10 +272,7 @@
 }
 /* 추가 옵션 */
 .add-drink-modal .add-new {
-  color: var(
-    --accent-lavendar-500-main,
-    #be61eb
-  ) !important; /* 색상 강제 적용 */
+  color: var(--accent-lavendar-500-main, #be61eb) !important;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
