@@ -1,23 +1,108 @@
-import React,  { useState } from "react";
+import React,  { useState , useEffect} from "react";
 import './MyRecipePage.css';
-import { useNavigate } from "react-router-dom";
 import MainHeader from "../components/Header/MainHeader";
 import CocktailCard from "../components/CocktailCard";
 import { image } from "framer-motion/client";
 import RecipeModal from "../components/WriteRecipe";
 import FloatingButton from "../components/FloatingButton";
 import Footer from "../components/Footer";
+import RecipeInput from "../components/recipe/viewRecipe/RecipeView";
+import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
 
 const cocktails = [
-    { name: "Old Fashioned", image: "/image/recipeimage1.png" },
-    { name: "Black Russian", image: "/image/recipeimage2.png" },
-    { name: "Margarita", image: "/image/recipeimage3.png" },
-    { name: "Mojito", image: "/image/recipeimage4.png" },
-    { name: "yellow", image: "/image/recipeimage5.png"},
-    { name: "whisky shower", image: "/image/recipeimage6.png"},
-    { name: "whisky sho", image: "/image/recipeimage7.png"},
-    { name: "whisky showe", image: "/image/recipeimage8.png"},
-    { name: "whisky show", image: "/image/recipeimage9.png"},
+    { name: "Old Fashioned", 
+      image: "/image/recipeimage1.png", 
+      flavor: ["달콤함", "드라이함"], 
+      aroma: ["바닐라", "오크"], 
+      ingredients: ["위스키", "설탕", "비터스"], 
+      alcoholPer: ["40% 이상"], 
+      glass: ["올드패션드 글라스"], 
+      recipeLine1: "설탕과 비터스를 녹인다.", 
+      recipeLine2: "위스키를 추가하고 저어준다.", 
+      recipeLine3: "얼음과 함께 제공한다." },
+    { name: "Black Russian", 
+      image: "/image/recipeimage2.png",
+      flavor: ["시트러스", "상쾌함"], 
+      aroma: ["라임", "오렌지"], 
+      ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+      alcoholPer: ["30-40%"], 
+      glass: ["마가리타 글라스"], 
+      recipeLine1: "모든 재료를 섞는다.", 
+      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+      recipeLine3: "라임 조각을 올려 장식한다." 
+    },
+    { name: "Margarita",
+       image: "/image/recipeimage3.png",
+       flavor: ["시트러스", "상쾌함"], 
+       aroma: ["라임", "오렌지"], 
+       ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+       alcoholPer: ["30-40%"], 
+       glass: ["마가리타 글라스"], 
+       recipeLine1: "모든 재료를 섞는다.", 
+       recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+       recipeLine3: "라임 조각을 올려 장식한다." },
+    { name: "Mojito",
+       image: "/image/recipeimage4.png",
+       flavor: ["시트러스", "상쾌함"], 
+       aroma: ["라임", "오렌지"], 
+       ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+       alcoholPer: ["30-40%"], 
+       glass: ["마가리타 글라스"], 
+       recipeLine1: "모든 재료를 섞는다.", 
+       recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+       recipeLine3: "라임 조각을 올려 장식한다." },
+    { name: "yellow", 
+      image: "/image/recipeimage5.png",
+      flavor: ["시트러스", "상쾌함"], 
+      aroma: ["라임", "오렌지"], 
+      ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+      alcoholPer: ["30-40%"], 
+      glass: ["마가리타 글라스"], 
+      recipeLine1: "모든 재료를 섞는다.", 
+      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+      recipeLine3: "라임 조각을 올려 장식한다."},
+    { name: "whisky shower",
+       image: "/image/recipeimage6.png",
+       flavor: ["시트러스", "상쾌함"], 
+    aroma: ["라임", "오렌지"], 
+    ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+    alcoholPer: ["30-40%"], 
+    glass: ["마가리타 글라스"], 
+    recipeLine1: "모든 재료를 섞는다.", 
+    recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+    recipeLine3: "라임 조각을 올려 장식한다."
+
+    },
+    { name: "whisky sho", 
+      image: "/image/recipeimage7.png",
+      flavor: ["시트러스", "상쾌함"], 
+      aroma: ["라임", "오렌지"], 
+      ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+      alcoholPer: ["30-40%"], 
+      glass: ["마가리타 글라스"], 
+      recipeLine1: "모든 재료를 섞는다.", 
+      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+      recipeLine3: "라임 조각을 올려 장식한다."},
+    { name: "whisky showe", 
+      image: "/image/recipeimage8.png",
+      flavor: ["시트러스", "상쾌함"], 
+      aroma: ["라임", "오렌지"], 
+      ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+      alcoholPer: ["30-40%"], 
+      glass: ["마가리타 글라스"], 
+      recipeLine1: "모든 재료를 섞는다.", 
+      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+      recipeLine3: "라임 조각을 올려 장식한다."},
+    { name: "whisky show", 
+      image: "/image/recipeimage9.png",
+      flavor: ["시트러스", "상쾌함"], 
+      aroma: ["라임", "오렌지"], 
+      ingredients: ["데킬라", "트리플 섹", "라임 주스"], 
+      alcoholPer: ["30-40%"], 
+      glass: ["마가리타 글라스"], 
+      recipeLine1: "모든 재료를 섞는다.", 
+      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.", 
+      recipeLine3: "라임 조각을 올려 장식한다."},
 
   ];
 
@@ -27,7 +112,10 @@ interface MyRecipePageProps {
   }
   
   const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
-    const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false); // 팝업 상태
+    const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
+    const [selectedCocktail, setSelectedCocktail] = useState<typeof cocktails[0] | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
+
     return (
       <>
         <MainHeader/>
@@ -51,17 +139,60 @@ interface MyRecipePageProps {
                 레시피 등록하기
             </button>
         </div>
+        
         {isRecipeModalOpen && <RecipeModal isOpen={isRecipeModalOpen} onClose={() => setIsRecipeModalOpen(false)} />}
         <div className="recipes-container">
           {cocktails.map((cocktail) => (
             <CocktailCard
-              key={cocktail.name}
-              name={cocktail.name}
-              image={cocktail.image}
-              onClick={() => onCocktailSelect?.(cocktail)} // 클릭 시 부모로 데이터 전달
-            />
+            key={cocktail.name}
+            name={cocktail.name}
+            image={cocktail.image}
+            onClick={() => setSelectedCocktail(cocktail)}
+            isSelected={selectedCocktail?.name === cocktail.name} // ✅ 선택된 칵테일인지 체크
+          />
           ))}
         </div>
+        {selectedCocktail && (
+  isEditMode ? (
+    <RecipeEdit
+      drinkName={selectedCocktail.name}
+      flavor={selectedCocktail.flavor}
+      aroma={selectedCocktail.aroma}
+      ingredients={selectedCocktail.ingredients}
+      alcoholPer={selectedCocktail.alcoholPer ? selectedCocktail.alcoholPer[0] : ""}
+      glass={selectedCocktail.glass ? selectedCocktail.glass[0] :""}
+      recipeLine1={selectedCocktail.recipeLine1}
+      recipeLine2={selectedCocktail.recipeLine2}
+      recipeLine3={selectedCocktail.recipeLine3}
+      onReadMore={() => console.log("자세히 보기 클릭")}
+      onCancel={() => {
+        setIsEditMode(false);
+      }}
+      onSave={() => {
+        console.log("레시피 저장 완료");
+        setIsEditMode(false);
+      }}
+    />
+  ) : (
+    <RecipeInput
+      drinkName={selectedCocktail.name}
+      flavor={selectedCocktail.flavor}
+      aroma={selectedCocktail.aroma}
+      ingredients={selectedCocktail.ingredients}
+      alcoholPer={selectedCocktail.alcoholPer}
+      glass={selectedCocktail.glass}
+      recipeLine1={selectedCocktail.recipeLine1}
+      recipeLine2={selectedCocktail.recipeLine2}
+      recipeLine3={selectedCocktail.recipeLine3}
+      onReadMore={() => console.log("자세히 보기 클릭")}
+      onCancel={() => setSelectedCocktail(null)} // 모달 닫기
+      onEdit={() => setIsEditMode(true)}
+    />
+  )
+)}
+
+      
+
         <FloatingButton/>
         <Footer/>
       </>

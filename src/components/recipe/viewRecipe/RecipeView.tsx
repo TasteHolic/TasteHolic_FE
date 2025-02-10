@@ -33,7 +33,7 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
 }) => {
     return (
         <>
-            <div className="container">
+            <div className="viewcontainer">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
                     <button className="read-more-button" onClick={onReadMore}>

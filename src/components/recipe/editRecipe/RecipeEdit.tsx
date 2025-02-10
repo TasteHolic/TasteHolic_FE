@@ -18,7 +18,7 @@ interface RecipeInputProps {
     onSave: () => void; //저장하기 클릭 시
 }
 
-const RecipeInput: React.FC<RecipeInputProps> = ({
+const RecipeEdit: React.FC<RecipeInputProps> = ({
     drinkName,
     flavor,
     aroma,
@@ -34,7 +34,7 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
 }) => {
     return (
         <>
-            <div className="container">
+            <div className="editcontainer">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
                     <button className="read-more-button" onClick={onReadMore}>
@@ -146,4 +146,4 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
     );
 };
 
-export default RecipeInput;
+export default RecipeEdit;
