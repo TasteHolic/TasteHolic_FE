@@ -283,3 +283,9 @@ button {
 .edit-error-message p {
     margin: 0;
 }
+
+.edit-done-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

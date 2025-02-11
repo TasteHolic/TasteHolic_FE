@@ -30,6 +30,9 @@ const ProfileEditPage: React.FC = () => {
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
 
+    const isPasswordChangeRequired = password.length > 0; // 비밀번호 변경 여부 확인
+    const isFormValid = (!isPasswordChangeRequired || (validation.passwordLength && validation.passwordComplexity && validation.confirmPassword));
+
     useEffect(() => {
         // 로컬스토리지에서 최신 정보 불러오기 및 검증
         const storedNickname = localStorage.getItem("nickname");
@@ -257,7 +260,25 @@ const ProfileEditPage: React.FC = () => {
             </div>
 
             <div className="edit-done-btn">
-                <button onClick={() => navigate("/mypage/edit-profile/done")} className="edit-done-button">완료</button>
+                <button
+                    onClick={() => {
+                        if (isFormValid) {
+                            if (isPasswordChangeRequired) {
+                                localStorage.setItem("password", password);
+                            }
+                            localStorage.setItem("nickname", nickname);
+                            localStorage.setItem("introText", introText);
+                            alert("변경 사항이 저장되었습니다.");
+                            navigate("/mypage/edit-profile/done");
+                        } else {
+                            alert("비밀번호 변경 조건을 확인해주세요.");
+                        }
+                    }}
+                    className={`edit-done-button ${isFormValid ? "" : "disabled"}`} // 버튼 비활성화 스타일 추가 가능
+                    disabled={!isFormValid}
+                >
+                    완료
+                </button>
             </div>
         </div>
     );
