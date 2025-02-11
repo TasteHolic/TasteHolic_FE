@@ -9,14 +9,14 @@ const DeleteAccountNextPage: React.FC = () => {
     };
 
     return (
-        <div className="signup-form">
-            <div className="inform">
-                <div className="informbox">
+        <div className="delete-account-form">
+            <div className="delete-account-inform">
+                <div className="delete-account-informbox">
                     <h1>회원 탈퇴</h1>
                 </div>
             </div>
 
-            <div className="form-group">
+            <div className="delete-form-group">
                 <div className="imgbox2">
                     <img src="\image\deleteimg2.png" alt="삭제 안내 내용" />
                 </div>

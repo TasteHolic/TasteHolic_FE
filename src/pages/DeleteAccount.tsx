@@ -57,13 +57,13 @@ const DeleteAccount: React.FC = () => {
     };
 
     const handleDeleteAccount = () => {
-        navigate('/mypage/delete-account-next'); // 탈퇴 완료 후 이동할 페이지
+        navigate('/mypage/delete-account/done'); // 탈퇴 완료 후 이동할 페이지
     };
 
     return (
-        <div className="signup-form">
-            <div className="inform">
-                <div className="informbox">
+        <div className="delete-account-form">
+            <div className="delete-account-inform">
+                <div className="delete-account-informbox">
                     <h1>회원 탈퇴</h1>
                     <h2>잠깐! 탈퇴하시기 전에 아래 내용을 확인해주세요</h2>
                 </div>
@@ -80,13 +80,14 @@ const DeleteAccount: React.FC = () => {
                 </h1>
             </div>
 
-            <div className="pwdcheck">
-                <h4>비밀번호<span className="starcolor"> *</span></h4>
+            <div className="delete-pwdcheck">
+                <h4>비밀번호<span className="delete-account-starcolor"> *</span></h4>
                 <div style={{ position: 'relative' }}>
                     <input
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={form.password}
+                        onFocus={() => validateField('password', form.password)}
                         onChange={(e) => {
                             setForm({ ...form, password: e.target.value });
                             validateField('password', e.target.value);
@@ -110,14 +111,14 @@ const DeleteAccount: React.FC = () => {
                         }}
                     />
                 </div>
-                <p className="error-message">{message.password}</p>
+                <p className="delete-account-error-message">{message.password}</p>
 
-                <div className="agreement-container">
-                    <span className={isAgreed ? 'agreed-text' : ''}>
+                <div className="delete-account-agreement-container">
+                    <span className={isAgreed ? 'delete-account-agreed-text' : ''}>
                         위 주의사항을 모두 숙지했고, 탈퇴에 동의합니다.
                     </span>
                     <button
-                        className={`agree-button ${isAgreed ? 'active' : ''}`}
+                        className={`delete-account-agree-button ${isAgreed ? 'active' : ''}`}
                         onClick={() => setIsAgreed(!isAgreed)}
                     >
                         동의
@@ -125,7 +126,7 @@ const DeleteAccount: React.FC = () => {
                 </div>
             </div>
 
-            <div className="button-container">
+            <div className="delete-account-button-container">
                 <button className="back-button" onClick={() => navigate(-1)}>
                     뒤로가기
                 </button>

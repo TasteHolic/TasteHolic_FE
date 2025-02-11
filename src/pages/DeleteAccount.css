@@ -9,40 +9,41 @@ button {
     cursor: pointer;
 }
 
-.signup-form {
+.delete-account-form {
     width: 100%;
     min-height: 100vh;
     background-color: #161616;
     border-radius: 8px;
 }
 
-.starcolor {
+.delete-account-starcolor {
     color: #F42B72;
 }
 
-.inform {
+.delete-account-inform {
     height: 332px;
     background-color: #121212;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 3px 15px rgb(45, 45, 45);
 }
 
-.informbox {
+.delete-account-informbox {
     width: 671px;
     margin: 0 auto;
     padding-top: 130px;
 }
 
-.informbox h1{
+.delete-account-informbox h1{
     color: #F3F5F6;
     margin: 0;
     line-height: 47.73px;
     letter-spacing: -1.6px;
     text-align: center;
     font-size: 40px;
+    font-weight: 500;
 }
 
-.informbox h2{
+.delete-account-informbox h2{
     width: 229px;
     height: 58px;
     margin: 0 auto;
@@ -55,14 +56,14 @@ button {
     word-break: keep-all;
 }
 
-.form-group {
+.delete-form-group {
     width: 913px;
     height: 210.93px;
     margin: 0 auto;
-    padding-top: 199px;
+    margin-top: 199px;
 }
 
-.form-group h1 {
+.delete-form-group h1 {
     margin: 0;
     line-height: 40px;
     letter-spacing: -1.2px;
@@ -70,22 +71,22 @@ button {
     text-align: center;
 }
 
-.form-group #before-delete {
+.delete-form-group #before-delete {
     color: #737373;
 }
 
-.form-group #after-delete {
+.delete-form-group #after-delete {
     color: #F5F6F7;
 }
 
-.pwdcheck {
+.delete-pwdcheck {
     width: 935px;
     padding-top: 225px;
     margin: 0 auto;
     position: relative;
 }
 
-.pwdcheck h4 {
+.delete-pwdcheck h4 {
     margin: 0 0 14px 0;
     color: #F3F5F6;
     font-size: 16px;
@@ -94,7 +95,7 @@ button {
     letter-spacing: -0.64px;
 }
 
-.pwdcheck input, .agreement-container {
+.delete-pwdcheck input, .delete-account-agreement-container {
     width: 935px;
     height: 60px;
     padding: 10px 60px 10px 30px;
@@ -108,24 +109,25 @@ button {
     box-sizing: border-box;
 }
 
-.agreement-container {
+.delete-account-agreement-container {
     display: flex;
+    margin-top: 21px;
 }
 
-.pwdcheck input {
+.delete-pwdcheck input {
     color: #FFFFFF;
 }
 
-.agreement-container span {
+.delete-account-agreement-container span {
     color: #737373;
     /* transition: color 0.3s ease-in-out; */
 }
 
-.agreement-container span.agreed-text {
+.delete-account-agreement-container span.delete-account-agreed-text {
     color: #FFFFFF;
 }
 
-.agree-button {
+.delete-account-agree-button {
     border: none;
     border-radius: 8px;
     padding: 8px 12px;
@@ -134,11 +136,11 @@ button {
     color: #FFFFFF;
 }
 
-.agree-button:hover {
+.delete-account-agree-button:hover {
     background-color: #000000B2;
 }
 
-.agree-button.active {
+.delete-account-agree-button.active {
     border: none;
     background-color: #0E8D5C;
 }
@@ -161,7 +163,8 @@ button {
     right: 44px;
 }
 
-.error-message {
+.delete-account-error-message {
+    margin-top: 21px;
     font-size: 20px;
     line-height: 23.87px;
     letter-spacing: -0.8px;
@@ -169,24 +172,24 @@ button {
     color: #FDA4C7;
 }
 
-.imgbox2 {
+.delete-form-group .imgbox2 {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.imgbox2 img {
+.delete-form-group .imgbox2 img {
     width: 48px;
     height: 46.62px;
 }
 
-.button-container {
+.delete-account-button-container {
     padding: 60px 0 77px 0;
     display: flex;
     justify-content: center;
     gap: 35px;
 }
 
-.button-container button {
+.delete-account-button-container button {
     border: 1px solid #00000033;
     border-radius: 40px;
     padding: 16px 32px;
@@ -196,12 +199,12 @@ button {
     letter-spacing: -0.64px;
 }
 
-.button-container .back-button {
+.delete-account-button-container .back-button {
     color: #FFFFFF;
     background-color: #2d2d2d;
 }
 
-.button-container .submit-button {
+.delete-account-button-container .submit-button {
     color: black;
     background-color: white;
 }
