@@ -1,11 +1,22 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import TastingNoteModalBackground from "../components/TastingNoteModalBackground";
+
 import "./TastingNoteModal.css";
 
 type Step = "intro" | "category" | "name";
 
-const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+interface TastingNoteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAddDrink: (drink: { category: string; name: string }) => void;
+}
+
+const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
+  isOpen,
+  onClose,
+  onAddDrink,
+}) => {
   const [step, setStep] = useState<Step>("intro");
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
@@ -15,9 +26,21 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isNameOpen, setIsNameOpen] = useState(false);
 
+  const [hasAddedNewDrink, setHasAddedNewDrink] = useState(false);
+
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
   const nameDropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
   const drinkCategories = ["Beer", "Gin", "Rum", "Tequila", "Whiskey"];
   const [drinkNames, setDrinkNames] = useState([
     "Heineken",
@@ -26,7 +49,6 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     "Jose Cuervo",
     "Jack Daniel's",
   ]);
-
   // 검색어 필터링
   const filteredNames = searchTerm
     ? drinkNames.filter((n) =>
@@ -42,26 +64,25 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (!searchTerm.trim()) return;
     setDrinkNames((prev) => [...prev, searchTerm]);
     setName(searchTerm);
+    setHasAddedNewDrink(true);
     setSearchTerm("");
     setIsNameOpen(false);
+
+    const dropdownMenu = document.querySelector(
+      ".name-dropdown .dropdown-menu"
+    );
+    if (dropdownMenu) {
+      dropdownMenu.classList.add("highlight-border");
+    }
   };
 
   const nextStep = () => {
-    if (step === "intro") {
-      setStep("category");
-    } else if (step === "category") {
-      if (!category) {
-        setError(true);
-        return;
-      }
-      setStep("name");
-    } else if (step === "name") {
-      if (!name) {
-        setError(true);
-        return;
-      }
+    if (step === "intro") setStep("category");
+    else if (step === "category" && category) setStep("name");
+    else if (step === "name" && name) {
+      onAddDrink({ category, name });
       onClose();
-    }
+    } else setError(true);
   };
 
   const prevStep = () => {
@@ -70,16 +91,20 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     else if (step === "category") setStep("intro");
   };
 
-  return (
+  if (!isOpen) return null;
+
+  return createPortal(
     <div className="modal-overlay tasting-note-modal">
+      <div className="modal-background">
+        <div className="blur-circle yellow"></div>
+        <div className="blur-circle white"></div>
+      </div>
       <motion.div
         className="modal-wrapper"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
       >
-        <TastingNoteModalBackground />
-
         <AnimatePresence mode="wait">
           {step === "intro" && (
             <motion.div key="intro" className="modal-content">
@@ -126,7 +151,7 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </div>
 
                 {isCategoryOpen && (
-                  <ul className="dropdown-menu">
+                  <ul className="dropdown-menu type-dropdown">
                     {drinkCategories.map((type, index) => (
                       <li
                         key={index}
@@ -164,26 +189,55 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           {step === "name" && (
             <motion.div key="name" className="modal-content">
               <h2>무슨 이름인가요?</h2>
-              <div className="second-component">
-                <div
-                  ref={nameDropdownRef}
-                  className={`custom-dropdown name-dropdown ${
-                    isNameOpen ? "open" : ""
-                  } ${error && !name ? "has-error" : name ? "is-valid" : ""}`}
-                  onClick={() => setIsNameOpen(!isNameOpen)}
-                >
-                  <span>{name || "술 이름 찾기..."}</span>
-                  <img
-                    src={isNameOpen ? "/image/Up.svg" : "/image/DropDown.svg"}
-                    alt="dropdown-icon"
-                    className="dropdown-icon"
-                  />
+              <div className="second-component name-step-container">
+                {/* 드롭다운과 메시지를 감싸는 래퍼 */}
+                <div className="dropdown-message-wrapper">
+                  <div
+                    ref={nameDropdownRef}
+                    className={`custom-dropdown name-dropdown ${
+                      isNameOpen ? "open" : ""
+                    } ${
+                      error && !name
+                        ? "has-error"
+                        : hasAddedNewDrink
+                        ? "added-drink"
+                        : name
+                        ? "is-valid"
+                        : ""
+                    }`}
+                    onClick={() => setIsNameOpen(!isNameOpen)}
+                  >
+                    <span>{name || "술 이름 찾기..."}</span>
+                    <img
+                      src={isNameOpen ? "/image/Up.svg" : "/image/DropDown.svg"}
+                      alt="dropdown-icon"
+                      className="dropdown-icon"
+                    />
+                  </div>
+                  <p
+                    className={`message-text ${
+                      error && !name
+                        ? "error"
+                        : hasAddedNewDrink
+                        ? "added-drink"
+                        : ""
+                    }`}
+                  >
+                    {error && !name
+                      ? "옵션을 선택해주세요."
+                      : hasAddedNewDrink
+                      ? "새로운 술 추가 시, 전문 테이스팅 노트가 준비되지 않을 수 있습니다."
+                      : ""}
+                  </p>
                 </div>
 
                 {isNameOpen && (
-                  <ul className="dropdown-menu name-dropdown">
+                  <ul
+                    className="dropdown-menu name-dropdown"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <li className="dropdown-item search-box">
-                      <span className="search-icon"></span>
+                      <div className="search-icon"></div>
                       <input
                         type="text"
                         placeholder="검색 또는 새로 입력"
@@ -197,21 +251,21 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         }}
                       />
                     </li>
-
-                    {filteredNames.map((name, index) => (
-                      <li
-                        key={index}
-                        className="dropdown-item"
-                        onClick={() => {
-                          setName(name);
-                          setIsNameOpen(false);
-                          setError(false);
-                        }}
-                      >
-                        {name}
-                      </li>
-                    ))}
-
+                    <div className="scroll-container">
+                      {filteredNames.map((n, index) => (
+                        <li
+                          key={index}
+                          className="dropdown-item"
+                          onClick={() => {
+                            setName(n);
+                            setIsNameOpen(false);
+                            setError(false);
+                          }}
+                        >
+                          {n}
+                        </li>
+                      ))}
+                    </div>
                     {searchTerm && !filteredNames.includes(searchTerm) && (
                       <li
                         className="dropdown-item add-new"
@@ -221,18 +275,12 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                           src="/image/add.svg"
                           alt="add-icon"
                           className="add-icon"
-                        />
+                        />{" "}
                         "{searchTerm}" 추가하기
                       </li>
                     )}
                   </ul>
                 )}
-
-                <p
-                  className={`error-text ${error && !name ? "show-error" : ""}`}
-                >
-                  옵션을 선택해주세요.
-                </p>
               </div>
               <div className="modal-footer">
                 <button className="prev-btn" onClick={prevStep}>
@@ -246,7 +294,8 @@ const TastingNoteModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

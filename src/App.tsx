@@ -6,6 +6,7 @@ import SignupForm from "./pages/signupForm";
 import MyRecipePage from "./pages/MyRecipePage";
 import RecipeExplore from "./pages/RecipeExplore";
 import TasteNote from "./pages/TastingNote";
+import ProfileEditPage from "./pages/ProfileEditPage";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App: React.FC = () => {
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/my-recipe" element={<MyRecipePage />} />
         <Route path="/recipe" element={<RecipeExplore />} />
         <Route path="/view-notes" element={<TasteNote />} />
+        <Route path="/mypage/edit-profile" element={<ProfileEditPage />} />
       </Routes>
     </Router>
   );

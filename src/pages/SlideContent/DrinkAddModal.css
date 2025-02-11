@@ -10,7 +10,6 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(10px);
 }
 
 .add-drink-modal .modal-content {
@@ -159,6 +158,8 @@
   padding: 0;
   z-index: 1001;
   margin-top: 8px;
+  max-height: 213px;
+  overflow-y: auto;
 }
 .add-drink-modal .name-dropdown {
   width: 320px;
@@ -254,6 +255,7 @@ search-box input::placeholder {
 /* 검색 아이콘 */
 .search-box .search-icon {
   position: absolute;
+  top: 17px;
   left: 28px;
   width: 16px;
   height: 16px;

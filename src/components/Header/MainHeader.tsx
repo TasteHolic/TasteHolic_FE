@@ -6,7 +6,7 @@ const MainHeader: React.FC = () => {
   const [isRecipeHovered, setIsRecipeHovered] = useState(false);
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isMyHovered, setIsMyHovered] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 여부 관리
 
   const handleRecipeMouseEnter = () => setIsRecipeHovered(true);
   const handleRecipeMouseLeave = () => setIsRecipeHovered(false);
