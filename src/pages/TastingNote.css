@@ -21,117 +21,67 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 112px;
+    height: 65px;
 }
-
-/* .taste-note-dropdown {
-    position: relative;
-}
-
-.taste-note-dropdown-btn {
-    height: 44px;
-    width: 122px;
-    background-color: #8080804d;
-    color: #F5F5F5;
-    border-radius: 8px;
-    padding: 10px 12px;
-    line-height: 1.5;
-    text-align: center;
-    cursor: pointer;
-}
-
-.taste-note-dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #8080804d;
-    color: #F5F5F5;
-    border-radius: 8px;
-    display: none;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-}
-
-.taste-note-dropdown-menu.open {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    margin-top: -15px;
-}
-
-.taste-note-dropdown-menu li {
-    list-style: none;
-    font-size: 14px;
-    text-align: center;
-    padding: 10px 12px;
-    line-height: 1.5;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.taste-note-dropdown-menu li:hover {
-    background-color:  #8080804d;
-} */
 
 .taste-note-dropdown {
     position: relative;
-    display: inline-block;
-    max-height: 50px; /* 기본 높이 */
-    overflow: hidden; /* 메뉴가 열릴 때만 보이도록 */
-    transition: max-height 0.3s ease-in-out; /* 박스가 늘어나는 애니메이션 */
-}
-
-.taste-note-dropdown.open {
-    max-height: 200px; /* 드롭다운 메뉴가 열리면 박스가 커지도록 */
-}
-
-.taste-note-dropdown-btn {
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 200px;
-    text-align: left;
 }
 
 .taste-note-dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: 50px;
     left: 0;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: none;
+    width: 122px;
+    background-color: #3b3b3b;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 10;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(0px);
 }
 
-.taste-note-dropdown.open .taste-note-dropdown-menu {
-    display: block;
+.taste-note-dropdown-menu.open {
+    position: relative;
     opacity: 1;
-    visibility: visible; /* 드롭다운이 보이도록 설정 */
+    visibility: visible;
+    transform: translateY(-88px);
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .taste-note-dropdown-menu li {
-    padding: 10px;
-    cursor: pointer;
     list-style: none;
+    padding: 10px;
+    color: #F5F5F5;
+    cursor: pointer;
+    border-radius: 16px;
 }
 
-.taste-note-dropdown-menu li:hover {
-    background-color: #f4f4f4;
+.taste-note-dropdown-menu li.selected-option {
+    font-weight: bold;
+    background-color: #3b3b3b;
+    cursor: default;
 }
 
+.taste-note-dropdown-btn {
+    width: 122px;
+    background-color: #3b3b3b;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+    border-radius: 8px;
+    text-align: start;
+    padding: 10px 12px;
+    display: flex;
+}
+
+.taste-note-dropdown img {
+    margin-left: auto;
+}
 
 .taste-note-drink-categories {
     width: 1038px;
@@ -192,7 +142,6 @@ body {
 
 }
 
-
 .taste-note-drink-item:hover {
     border-radius: 16px;
     border: 1px solid transparent;
@@ -228,7 +177,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.877) 100%); /* 위는 투명, 아래는 검정색 */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.877) 100%);
     visibility: hidden;
 }
 
