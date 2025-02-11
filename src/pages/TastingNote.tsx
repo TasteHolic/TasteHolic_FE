@@ -106,7 +106,7 @@ const TasteNote: React.FC = () => {
                 )}
                 {sortedDrinks.length > 0 ? (
                     sortedDrinks.map((drink) => (
-                        <div key={drink.id} className="taste-note-drink-item">
+                        <div key={drink.id} className="taste-note-drink-item" onClick={() => setIsEditModalOpen(true)}>
                             <div className="taste-note-drink-hover-container">
                                 <div className="change-item-to-blur-hover"></div>
                                 <img src={drink.image} alt={drink.name} onClick={() => { setEditTarget(drink); setIsEditModalOpen(true); }} />

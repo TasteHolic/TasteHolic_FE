@@ -42,10 +42,9 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 16px;
-  text-align: left;
 }
 
-.add-drink-modal .error-text {
+.error-text {
   color: var(--primary-rose-400, #fb6ba2);
   font-family: Pretendard;
   font-size: 14px;
@@ -58,9 +57,8 @@
   height: 17px;
   visibility: hidden;
   opacity: 0;
-  text-align: left;
 }
-.add-drink-modal .show-error {
+.show-error {
   visibility: visible;
   opacity: 1;
 }
@@ -116,7 +114,6 @@
   letter-spacing: -0.64px;
   text-transform: capitalize;
   box-sizing: border-box;
-  white-space: nowrap;
 }
 
 .add-drink-modal .cancel-button:hover {
@@ -138,7 +135,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
 }
 
 .add-drink-modal .custom-dropdown.open {
@@ -162,18 +158,12 @@
   list-style: none;
   padding: 0;
   z-index: 1001;
-  margin: 0px;
   margin-top: 8px;
-  height: 213px;
-  overflow-y: auto;
 }
 .add-drink-modal .name-dropdown {
   width: 320px;
   box-sizing: border-box;
 }
-.add-drink-modal .name-dropdown.dropdown-menu {
-  height: 275px;
-}
 .add-drink-modal .dropdown-item {
   height: 41px;
   display: flex;
@@ -209,16 +199,16 @@
 .add-drink-modal .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-.add-drink-modal .custom-dropdown.has-error {
+.custom-dropdown.has-error {
   border: 1px solid var(--primary-rose-500-main, #f42b72) !important;
 }
 
-.add-drink-modal .custom-dropdown.is-valid {
+.custom-dropdown.is-valid {
   border: 1px solid var(--subgreen-400-main, #4ece95) !important;
   color: #4ece95 !important;
 }
 /* 검색창 스타일 */
-.add-drink-modal .search-box {
+.search-box {
   display: flex;
   width: 318px;
   height: 60px;
@@ -233,7 +223,7 @@
   box-sizing: border-box;
 }
 
-.add-drink-modal .search-box input {
+.search-box input {
   width: 296px;
   height: 36px;
   flex-shrink: 0;
@@ -251,18 +241,18 @@
   outline: none;
   box-sizing: border-box;
 }
-.add-drink-modal search-box input::placeholder {
+search-box input::placeholder {
   color: var(--grayscale-gray400, #8d8f90);
   font-size: 14px;
   font-weight: 500;
   text-transform: capitalize;
   letter-spacing: -0.56px;
 }
-.add-drink-modal .dropdown-menu .search-box {
+.dropdown-menu .search-box {
   height: 60px !important; /* 검색창을 포함한 드롭다운 아이템 높이 조정 */
 }
 /* 검색 아이콘 */
-.add-drink-modal .search-box .search-icon {
+.search-box .search-icon {
   position: absolute;
   left: 28px;
   width: 16px;
@@ -271,8 +261,11 @@
   background-size: cover;
 }
 /* 추가 옵션 */
-.add-drink-modal .add-new {
-  color: var(--accent-lavendar-500-main, #be61eb) !important;
+.add-new {
+  color: var(
+    --accent-lavendar-500-main,
+    #be61eb
+  ) !important; /* 색상 강제 적용 */
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
@@ -287,10 +280,10 @@
   cursor: pointer;
 }
 
-.add-drink-modal .add-new:hover {
+.add-new:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-.add-drink-modal .dropdown-item .add-icon {
+.dropdown-item .add-icon {
   width: 20px;
   height: 20px;
   margin-left: 4px;

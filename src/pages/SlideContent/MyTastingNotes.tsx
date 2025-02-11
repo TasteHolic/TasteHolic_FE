@@ -53,7 +53,7 @@ const MyTastingNotes: React.FC = () => {
 
       <button
         className="view-all-button"
-        onClick={() => navigate("/view-notes")}
+        onClick={() => navigate("/tastingnote")}
       >
         테이스팅 노트에서 전체보기
         <img src="/image/Arrow.svg" className="button-icon" />
