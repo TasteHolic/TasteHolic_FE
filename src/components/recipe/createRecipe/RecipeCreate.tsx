@@ -6,14 +6,14 @@ import RecipeDropdown from "./RecipeDropdown";
 import CreateWriteRecipe from "./CreateWriteRecipe";
 import ColorPicker from "../ColorPicker";
 
-interface RecipeInputProps {
+interface RecipeCreateProps {
     drinkName: string;
     onReadMore: () => void;
     onCancel: () => void;
     onSave: () => void;
 }
 
-const RecipeInput: React.FC<RecipeInputProps> = ({
+const RecipeCreate: React.FC<RecipeCreateProps> = ({
     drinkName,
     onCancel,
     onSave
@@ -138,4 +138,4 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
     );
 };
 
-export default RecipeInput;
+export default RecipeCreate;
