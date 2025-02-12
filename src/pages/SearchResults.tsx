@@ -26,6 +26,9 @@ const cocktails = [
       ingredients: ["위스키", "설탕", "비터스"],
       alcoholPer: ["40% 이상"],
       glass: ["올드패션드 글라스"],
+      hexColor1: "#3C2005",
+      hexColor2: "#AE8560",
+      hexColor3: "",
       recipeLine1: "설탕과 비터스를 녹인다.",
       recipeLine2: "위스키를 추가하고 저어준다.",
       recipeLine3: "얼음과 함께 제공한다.",
@@ -39,6 +42,9 @@ const cocktails = [
       ingredients: ["데킬라", "트리플 섹", "라임 주스"],
       alcoholPer: ["30-40%"],
       glass: ["마가리타 글라스"],
+      hexColor1: "#3C2005",
+      hexColor2: "#AE8560",
+      hexColor3: "",
       recipeLine1: "모든 재료를 섞는다.",
       recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
       recipeLine3: "라임 조각을 올려 장식한다.",
@@ -52,6 +58,9 @@ const cocktails = [
       ingredients: ["데킬라", "트리플 섹", "라임 주스"],
       alcoholPer: ["30-40%"],
       glass: ["마가리타 글라스"],
+      hexColor1: "#3C2005",
+      hexColor2: "#AE8560",
+      hexColor3: "",
       recipeLine1: "모든 재료를 섞는다.",
       recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
       recipeLine3: "라임 조각을 올려 장식한다.",
@@ -220,6 +229,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 selectedCocktail.alcoholPer ? selectedCocktail.alcoholPer[0] : ""
                                 }
                                 glass={selectedCocktail.glass ? selectedCocktail.glass[0] : ""}
+                                hexColor1={selectedCocktail.hexColor1}
+                                hexColor2={selectedCocktail.hexColor2}
+                                hexColor3={selectedCocktail.hexColor3}
                                 recipeLine1={selectedCocktail.recipeLine1}
                                 recipeLine2={selectedCocktail.recipeLine2}
                                 recipeLine3={selectedCocktail.recipeLine3}
@@ -243,6 +255,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 ingredients={selectedCocktail.ingredients}
                                 alcoholPer={selectedCocktail.alcoholPer}
                                 glass={selectedCocktail.glass}
+                                hexColor1={selectedCocktail.hexColor1}
+                                hexColor2={selectedCocktail.hexColor2}
+                                hexColor3={selectedCocktail.hexColor3}
                                 recipeLine1={selectedCocktail.recipeLine1}
                                 recipeLine2={selectedCocktail.recipeLine2}
                                 recipeLine3={selectedCocktail.recipeLine3}
