@@ -6,7 +6,7 @@ import { image } from "framer-motion/client";
 import RecipeModal from "../components/WriteRecipe";
 import FloatingButton from "../components/FloatingButton";
 import Footer from "../components/Footer";
-import RecipeInput from "../components/recipe/viewRecipe/RecipeView";
+import RecipeView from "../components/recipe/viewRecipe/RecipeView";
 import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
 
 const cocktails = [
@@ -210,7 +210,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             }}
           />
         ) : (
-          <RecipeInput
+          <RecipeView
             drinkName={selectedCocktail.name}
             flavor={selectedCocktail.flavor}
             aroma={selectedCocktail.aroma}
