@@ -118,16 +118,13 @@
     border: 0.676px solid #FFF; 
     background: rgba(16, 16, 16);
     box-shadow: 0px 2.705px 2.705px 0px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
-    position: relative; /* 자식 요소의 절대 위치 기준 */
-    padding: 20px; /* 내부 여백 */
+    position: absolute;
+    padding: 40.58px; /* 내부 여백 */
     overflow: hidden; /* 텍스트 박스가 넘칠 경우 잘리도록 설정 */
 }
 
 .title-container {
-    position: absolute;
-    top: 20.58px; 
-    left: 40.58px; /* 팝업 왼쪽에서 20px */
-
+    position: relative;
     color: var(--grayscale-gray50, #F3F5F6);
     font-family: Pretendard;
     font-size: 16px;
@@ -139,19 +136,19 @@
 }
 
 .popup-content {
-    width: calc(100% - 40px); /* 양쪽 여백을 고려한 너비 */
-    height: 450px; /* 텍스트 상자의 높이 */
-    margin: 76.68px 20px 50px 20px; /* 위에 타이틀 공간과 아래 버튼을 위한 여백 */
+    width: 424.7px; /* 양쪽 여백을 고려한 너비 */
+    height: 422.64px; /* 텍스트 상자의 높이 */
+    margin-top: 21px;
     resize: none;
     padding: 21.23px 1px 21px 21px;
     border-radius: 10.82px;
     border: 0.676px solid #8B8B8B;
     background: rgba(162, 162, 162, 0.10);
     backdrop-filter: blur(33.81374740600586px);
-    
     color: #C8CACB;
     box-sizing: border-box; /* 패딩 포함 크기 계산 */
     overflow: auto;
+    font-family: Pretendard sans-serif;
 }
 
 .popup-close-button {
@@ -188,4 +185,8 @@
 .popup-content::-webkit-scrollbar-track {
     background-color:#1F1F1F; /* 트랙의 색상 */
     border-radius: 33.814px; /* 둥근 모서리 */
+}
+
+.popup-title {
+
 }
