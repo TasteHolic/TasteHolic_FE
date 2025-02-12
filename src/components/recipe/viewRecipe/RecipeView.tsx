@@ -3,7 +3,7 @@ import ItemList from "./ViewItemList";
 import ViewWriteRecipe from "./ViewWriteRecipe";
 import ColorPicker from "../ColorPicker";
 
-interface RecipeInputProps {
+interface RecipeViewProps {
     drinkName: string; //술 이름
     flavor?: string[]; //맛 종류들
     aroma?: string[]; //향 종류들
@@ -18,7 +18,7 @@ interface RecipeInputProps {
     onEdit: () => void; //저장하기 클릭 시
 }
 
-const RecipeInput: React.FC<RecipeInputProps> = ({
+const RecipeView: React.FC<RecipeViewProps> = ({
     drinkName,
     flavor,
     aroma,
@@ -90,4 +90,4 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
     );
 };
 
-export default RecipeInput;
+export default RecipeView;
