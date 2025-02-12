@@ -1,0 +1,208 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    margin-bottom: 255px;
+  }
+  
+  .login-info {
+    text-align: center;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    width: 100%;
+    border-radius: 0px 0px 32px 32px;
+    background: #121212;
+    box-shadow: 0px 4px 20px 0px rgba(255, 255, 255, 0.10);
+  }
+  .login-input-groups{
+    
+    margin-bottom: 47px;
+  }
+  .login-input-group{
+    display: flex;
+    align-items:  baseline;
+    justify-content: space-between;
+  }
+
+  .login-input-group label{
+    
+    display: flex;
+    color: var(--grayscale-gray50, #F3F5F6);
+    font-weight: 500;
+  }
+  .input-wrapper{
+    display: flex;
+    width: 308px;
+    
+  }
+  .login-form{
+    margin-top: 84px;
+  }
+  .login-form input {
+    all: unset; 
+    width: 100%;
+    font-size: 16px;
+    border: none;
+    background: transparent;
+    outline: none; 
+    
+  }
+  /* 이메일 또는 비밀번호가 입력되지 않았거나, 기타 오류 발생 시 */
+  .login-form input.error-input {
+    border-radius: 8px;
+    border: 1px solid var(--grayscale-gray50, #F3F5F6);
+    background: var(--grayscale-gray700, #383939);
+
+  }
+  /* 비밀번호 오류 (비밀번호가 맞지 않을 때) */
+  .login-form input.error-password {
+    border-radius: 8px;
+    border: 1px solid var(--primary-rose-500-main, #F42B72);
+    background: var(--grayscale-gray700, #383939);
+  }
+  .login-form input:focus {
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .login-imgbox img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 24px;
+  }
+  .clear-icon{
+    position: absolute;
+    transform: translate(-32px, 8px);
+  }
+  .pwclear-icon{
+    position: absolute;
+    transform: translate(-32px, 8px);
+  }
+  .toggle-password-icon{
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    transform: translate(-62px, 8px);
+  }
+  h1 {
+    color: var(--grayscale-gray50, #F3F5F6);
+    font-size: 40px;
+    font-weight: 300;
+  }
+  
+  .loginerror-message {
+    color: var(--primary-rose-300, #FDA4C7);
+    font-size: 16px;
+    margin: 0 auto 28px auto;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 404px;
+    margin-bottom: 0px;
+  }
+  
+  .login-form input {
+    
+    padding: 10px;
+    margin-bottom: 33px;
+    border: none;
+    border-radius: 2px;
+    border-bottom: 1.5px solid #ffffff;
+    font-size: 1rem;
+    width: 308px;
+    box-sizing: border-box;
+  }
+  
+  .login-btn {
+
+    width: 147px;
+    height: 56px;
+    color: #000;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    background: #FFF;
+    
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px 0 24px 0;
+    width: 408px;
+    
+  }
+  .divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background: var(--grayscale-gray300, #FFF);
+    margin: 0; 
+  }
+  
+  .divider-text {
+    color: var(--grayscale-gray300, #A8AAAB);
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: 500;
+    
+  }
+  
+  .signup-text {
+    color: var(--grayscale-gray50, #F3F5F6);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .signup-link {
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  
+  
+  .kakao-login, .google-login {
+    padding-bottom: 4px;
+    width: 404px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  .kakao-login {
+    
+    margin-top: 30px;
+    padding-left: 108px ;
+    background: #FEE500;
+    color:  rgba(0, 0, 0, 0.85);
+  }
+  
+  .google-login {
+    margin-top: 20px;
+    padding-left: 102px ;
+    background: #FFF;
+    color: #000;
+  }
+  
+  .kakaoicon {
+    position: absolute;
+    transform: translate(-51px, 1px);
+  }
+  .googleicon{
+    position: absolute;
+    transform: translate(-60px, 2px);
+  }
+  

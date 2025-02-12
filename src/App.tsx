@@ -5,8 +5,12 @@ import ProfilePage from "./pages/ProfilePage";
 import SignupForm from "./pages/signupForm";
 import MyRecipePage from "./pages/MyRecipePage";
 import RecipeExplore from "./pages/RecipeExplore";
+<<<<<<< HEAD
 import TasteNote from "./pages/TastingNote";
 import ProfileEditPage from "./pages/ProfileEditPage";
+=======
+import LoginPage from "./pages/LoginPage";
+>>>>>>> 61048b3 (feat loginpage)
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App: React.FC = () => {
@@ -16,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/profile/*" element={<ProfilePage />} />
+        <Route path="/login" element={<LoginPage/>}/>
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/my-recipe" element={<MyRecipePage />} />
         <Route path="/recipe" element={<RecipeExplore />} />
