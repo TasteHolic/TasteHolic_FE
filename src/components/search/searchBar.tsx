@@ -4,9 +4,10 @@ import "pretendard/dist/web/static/pretendard.css"
 interface MainSearch {
     myBarClick: () => void; //My Bar 일시 호출
     searchClick: () => void; //검색 시 호출
+    searched?: string;
 }
 
-const searchBar: React.FC<MainSearch> = ({myBarClick}, {searchClick}) => {
+const searchBar: React.FC<MainSearch> = ({myBarClick, searchClick, searched}) => {
   const [isMyBar, setIsMyBar] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -161,7 +162,7 @@ const searchBar: React.FC<MainSearch> = ({myBarClick}, {searchClick}) => {
             type="text"
             placeholder={placeholderText}
             className="search-iinput"
-            value={inputValue}
+            value={searched ?? inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
           {inputValue && (
