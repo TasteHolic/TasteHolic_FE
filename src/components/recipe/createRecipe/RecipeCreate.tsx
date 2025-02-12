@@ -110,8 +110,8 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                         <div className="category-name">색상</div>
                         <div className="colors">
                             <ColorPicker
-                            color1="#3C2005"
-                            color2="#AE8560"
+                            color1=""
+                            color2=""
                             color3=""/>
                         </div>
                     </div>
