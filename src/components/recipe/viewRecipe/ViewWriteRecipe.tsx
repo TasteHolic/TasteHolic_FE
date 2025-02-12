@@ -12,7 +12,7 @@ const RecipeLines = styled.div`
 const RecipeLine = styled.div`
     display: flex;
     width: 470px;
-    height: 38px;
+    height: 42px;
     padding-left: 18px;
     padding-right: 18px;
     align-items: center;
