@@ -79,54 +79,58 @@ const MyBar: React.FC = () => {
   // 음료 추가 핸들러
   const handleAddDrink = async (newDrink: { type: string; name: string }) => {
     try {
-      // 서버에서 이미지를 받아오기 위한 API 호출 (더미 로직 추가)
+      const token = localStorage.getItem("authToken");
+      console.log("저장된 토큰:", token);
+      if (!token) {
+        alert("먼저 로그인을 해주세요.");
+        return;
+      }
+
       const response = await fetch(
-        `/api/drinks/image?category=${newDrink.type}&name=${newDrink.name}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        const drinkImage = data.image || "/image/new.png"; // 이미지가 없으면 기본 이미지 사용
-
-        // 음료 추가
-        const nextId = drinks.length + 1;
-        setDrinks((prev) => [
-          ...prev,
-          {
-            id: nextId,
-            name: newDrink.name,
-            category: newDrink.type,
-            image: drinkImage,
+        "http://54.180.45.230:3000/api/v1/users/my-bar/post",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // 로그인 토큰 사용
           },
-        ]);
-      } else {
-        // 서버에서 이미지가 없거나 에러 발생 시 기본 이미지 설정
-        console.warn("이미지를 불러오지 못했습니다. 기본 이미지로 설정합니다.");
+          body: JSON.stringify({
+            name: newDrink.name,
+            category: newDrink.type,
+          }),
+        }
+      );
 
-        const nextId = drinks.length + 1;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          message: "JSON 파싱 실패 - 서버 응답이 올바르지 않습니다.",
+        }));
+
+        console.error("서버 에러 상태 코드:", response.status);
+        console.error("서버 에러 응답:", JSON.stringify(errorData, null, 2));
+        throw new Error(
+          errorData.error?.message ||
+            `서버 응답 에러 (상태 코드: ${response.status})`
+        );
+      }
+
+      const result = await response.json();
+      console.log("서버 응답 성공:", result);
+
+      const addedDrink = result.success;
+      if (addedDrink) {
         setDrinks((prev) => [
           ...prev,
           {
-            id: nextId,
-            name: newDrink.name,
-            category: newDrink.type,
-            image: "/image/new.png", // 기본 이미지
+            id: addedDrink.id,
+            name: addedDrink.name,
+            category: addedDrink.category,
+            image: "/image/new.png",
           },
         ]);
       }
-    } catch (error) {
-      console.error("서버 요청 중 에러 발생:", error);
-
-      // 서버 오류 시 기본 이미지 설정
-      const nextId = drinks.length + 1;
-      setDrinks((prev) => [
-        ...prev,
-        {
-          id: nextId,
-          name: newDrink.name,
-          category: newDrink.type,
-          image: "/image/DrinkProps.svg", // 기본 이미지
-        },
-      ]);
+    } catch (error: any) {
+      console.error("추가 중 에러 발생:", error.message || error);
     } finally {
       closeAddModal();
     }
@@ -137,9 +141,47 @@ const MyBar: React.FC = () => {
   for (let i = 0; i < drinks.length; i += 4) {
     containers.push(drinks.slice(i, i + 4));
   }
+  //임시 로그인
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(
+        "http://54.180.45.230:3000/api/v1/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: "test@example.com", // 실제 이메일과 비밀번호 입력
+            password: "password123",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("로그인 실패:", errorData);
+        return;
+      }
+
+      const result = await response.json();
+      console.log("로그인 성공:", result);
+      const token = result.token;
+
+      // 토큰을 localStorage에 저장
+      localStorage.setItem("authToken", token);
+      alert("로그인 성공! 이제 MyBar에 음료를 추가할 수 있습니다.");
+      console.log(token);
+    } catch (error) {
+      console.error("로그인 중 오류 발생:", error);
+    }
+  };
 
   return (
     <div className="mybar-component">
+      <button onClick={handleLogin} className="login-button">
+        로그인
+      </button>
       <button
         className="add-drink-button"
         onMouseEnter={() => setIsHovered(true)}

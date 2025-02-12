@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Header from "../components/Header/NoteHeader";
+import NoteHeader from "../components/Header/NoteHeader";
 import Footer from "../components/Footer";
 import AddPage from "./AddPage";
 import EditPage from "./EditPage";
 import "./TastingNote.css";
-
+import TastingNoteModal from "./TastingNoteModal";
 interface Drink {
   id: number;
   name: string;
@@ -108,8 +108,16 @@ const TasteNote: React.FC = () => {
     setIsOpen(false);
   };
 
-  const handleAddDrink = (drink: Drink) => {
-    setDrinks([...drinks, { ...drink, id: Date.now(), createdAt: new Date() }]);
+  const handleAddDrink = (drink: { category: string; name: string }) => {
+    const newDrink: Drink = {
+      id: Date.now(),
+      name: drink.name,
+      image: "/image/default.png", // 기본 이미지로 설정 (원하는 이미지로 변경 가능)
+      rating: 0, // 기본 평점 (필요에 따라 수정)
+      createdAt: new Date(),
+      category: drink.category,
+    };
+    setDrinks([...drinks, newDrink]);
     setIsModalOpen(false);
   };
 
@@ -145,7 +153,7 @@ const TasteNote: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <NoteHeader />
       <div className={`taste-note-container ${deleteTarget ? "blurred" : ""}`}>
         <header>
           <div className="taste-note-header">
@@ -260,7 +268,7 @@ const TasteNote: React.FC = () => {
 
       {/* 추가 모달 */}
       {isModalOpen && (
-        <AddPage
+        <TastingNoteModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onAddDrink={handleAddDrink}

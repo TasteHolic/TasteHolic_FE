@@ -85,7 +85,6 @@ const DrinkAddModal: React.FC<AddDrinkModalProps> = ({
   // 새 항목 추가
   const handleAddNewDrink = () => {
     if (!searchTerm.trim()) return;
-
     setDrinkNames((prev) => [...prev, searchTerm]); // 기존 리스트 유지하며 추가
     setDrinkName(searchTerm);
     setSearchTerm("");
