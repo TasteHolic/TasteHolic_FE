@@ -8,7 +8,6 @@ import ColorPicker from "../ColorPicker";
 
 interface RecipeCreateProps {
     drinkName: string;
-    onReadMore: () => void;
     onCancel: () => void;
     onSave: () => void;
 }
