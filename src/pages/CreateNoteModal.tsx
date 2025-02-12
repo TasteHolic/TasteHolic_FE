@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./CreateNoteModal.css";
+import { Plus, MagnifyingGlass } from "@phosphor-icons/react";
 
 interface CreateNoteModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [step, setStep] = useState<"create" | "complete">("create");
   const [isFlavorDropdownOpen, setIsFlavorDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const flavors = [
     "달콤함 (Sweet)",
@@ -80,6 +82,27 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     if (!isOpen) resetFields();
   }, [isOpen]);
 
+  // 외부 클릭 감지를 위한 이벤트 리스너
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsFlavorDropdownOpen(false);
+        setSearchTerm("");
+      }
+    };
+
+    if (isFlavorDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isFlavorDropdownOpen]);
+
   // 키워드 추가 및 제거
   const toggleSelection = (
     item: string,
@@ -98,6 +121,18 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     } else if (selectedColors.length < maxColors) {
       setSelectedColors([...selectedColors, color]);
     }
+  };
+
+  // 맛 키워드 선택 처리
+  const handleFlavorSelect = (flavor: string) => {
+    setSelectedFlavors((prev) => [...prev, flavor]);
+    setIsFlavorDropdownOpen(false); // 선택 후 드롭다운 닫기
+    setSearchTerm(""); // 검색어 초기화
+  };
+
+  // 맛 태그 제거
+  const removeFlavorTag = (flavor: string) => {
+    setSelectedFlavors((prev) => prev.filter((f) => f !== flavor));
   };
 
   // 생성 버튼 클릭 → 완료 화면 전환
@@ -141,63 +176,65 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                         <span>{flavor}</span>
                         <button
                           className="remove-tag"
-                          onClick={() =>
-                            setSelectedFlavors((prev) =>
-                              prev.filter((f) => f !== flavor)
-                            )
-                          }
+                          onClick={() => removeFlavorTag(flavor)}
                         >
                           ✕
                         </button>
                       </div>
                     ))}
 
-                    <button
-                      className={`add-button ${
-                        isFlavorDropdownOpen ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        setIsFlavorDropdownOpen(!isFlavorDropdownOpen)
-                      }
-                    >
-                      +
-                    </button>
-
-                    {isFlavorDropdownOpen && (
-                      <div className="dropdown-menu">
-                        <div className="search-field">
-                          <span className="search-icon">🔍</span>
-                          <input
-                            type="text"
-                            placeholder="검색"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                          />
-                        </div>
-                        <div className="options-list">
-                          {filteredFlavors.map((flavor, index) => (
-                            <div
-                              key={flavor}
-                              className={`option ${
-                                selectedFlavors.includes(flavor)
-                                  ? "selected"
-                                  : ""
-                              }`}
-                              onClick={() => {
-                                if (!selectedFlavors.includes(flavor)) {
-                                  setSelectedFlavors((prev) => [
-                                    ...prev,
-                                    flavor,
-                                  ]);
-                                }
-                              }}
-                            >
-                              {flavor}
-                            </div>
-                          ))}
-                        </div>
+                    <div ref={dropdownRef}>
+                      <div
+                        className={`tag-chip add-flavor-button ${
+                          isFlavorDropdownOpen ? "open" : ""
+                        }`}
+                        onClick={() =>
+                          setIsFlavorDropdownOpen(!isFlavorDropdownOpen)
+                        }
+                      >
+                        <Plus size={12} weight="bold" />
                       </div>
-                    )}
+
+                      {isFlavorDropdownOpen && (
+                        <ul
+                          className="dropdown-menu"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="search-box">
+                            <div className="search-wrapper">
+                              <div className="search-input-container">
+                                <MagnifyingGlass size={12} weight="bold" />
+                                <input
+                                  type="text"
+                                  placeholder="검색"
+                                  value={searchTerm}
+                                  onChange={(e) =>
+                                    setSearchTerm(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="scroll-container">
+                            {filteredFlavors.map((flavor) => (
+                              <li
+                                key={flavor}
+                                className="dropdown-item"
+                                onClick={() => handleFlavorSelect(flavor)}
+                              >
+                                {flavor}
+                              </li>
+                            ))}
+                            {filteredFlavors.length === 0 && (
+                              <li className="dropdown-item no-match">
+                                일치하는 맛이 없습니다.
+                              </li>
+                            )}
+                          </div>
+                        </ul>
+                      )}
+                    </div>
                   </div>
                 </div>
 

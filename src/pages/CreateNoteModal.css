@@ -193,32 +193,26 @@
 
 .tag-chip {
   display: flex;
-  padding: 3.961px 4px 3.961px 7.921px;
-  justify-content: center;
+  padding: 4px 8px;
   align-items: center;
-  border-radius: 24.753px;
-  border: 0.495px solid #fff;
-  background: rgba(12, 12, 12, 0);
+  border-radius: 24px;
+  border: 0.5px solid #fff;
+  background: transparent;
 }
 
 .tag-chip span {
   color: #fff;
-  text-align: center;
-  font-family: "Pretendard", sans-serif;
-  font-size: 9.901px;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: -0.396px;
-  text-transform: capitalize;
 }
 
 .remove-tag {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.32);
-  font-size: 9.901px;
-  padding: 0 4px;
-  cursor: pointer;
+  font-size: 10px;
   margin-left: 4px;
+  cursor: pointer;
 }
 
 .add-button {
@@ -279,4 +273,151 @@
 
 .next-btn {
   margin-left: auto; /* 오른쪽 정렬 */
+}
+
+/* 드롭다운 관련 스타일 */
+.add-flavor-button {
+  cursor: pointer;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Plus 아이콘 색상 설정 */
+.add-flavor-button svg {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.add-flavor-button:hover svg {
+  color: #fff;
+}
+
+.add-flavor-button.open {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 123px;
+  border-radius: 8px;
+  border: 1px solid #f3f5f6;
+  background: #242525;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  z-index: 1002;
+}
+
+/* 검색박스 스타일 수정 */
+.search-box {
+  height: 32px; /* 32px에서 50px로 수정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3c3c3c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 0; /* 상하 패딩 추가 */
+}
+
+.search-wrapper {
+  width: 127px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 14px 0 7px;
+}
+
+.search-input-container {
+  display: flex;
+  width: 102px;
+  height: 18px;
+  align-items: center;
+  gap: 4px;
+  border-radius: 24px;
+  border: 0.4px solid #fff;
+  padding: 0 0 0 6px;
+}
+
+.search-input-container input {
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Pretendard;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  padding: 0 8px;
+  outline: none;
+  margin-bottom: -0.8px;
+  margin-left: -7px;
+}
+
+.search-input-container input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.scroll-container {
+  max-height: 170px;
+  overflow-y: auto;
+  background: transparent; /* 배경 투명하게 */
+}
+
+/* 스크롤바 스타일링 */
+.scroll-container::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 배경 투명하게 */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* 스크롤바 색상 */
+  border-radius: 4px; /* 스크롤바 모서리 둥글게 */
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5); /* 호버 시 스크롤바 색상 */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Pretendard;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.4px;
+  text-transform: capitalize;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.4px;
+  text-transform: capitalize;
+}
+
+.dropdown-item.no-match {
+  justify-content: center;
+  color: #999;
+  cursor: default;
 }
