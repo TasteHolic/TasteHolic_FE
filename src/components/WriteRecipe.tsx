@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./WriteRecipe.css";
-import RecipeInput from "./recipe/createRecipe/RecipeCreate";
+import RecipeCreate from "./recipe/createRecipe/RecipeCreate";
 
 function Modal({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) {
     if (!isOpen) return null;
@@ -189,7 +189,7 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
           </div>
         )}
         {step === 3 &&(
-          <RecipeInput drinkName={cocktailName} onCancel={onClose} onSave={() => { alert("레시피 저장 완료!"); onClose(); }} />
+          <RecipeCreate drinkName={cocktailName} onCancel={onClose} onSave={() => { alert("레시피 저장 완료!"); onClose(); }} />
         )}
       </Modal>
     </div>
