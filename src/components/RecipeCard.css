@@ -1,0 +1,121 @@
+.recipe-card {
+    width: 503px;
+    height: 288px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    border: 1px solid #999;
+    
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 100%); 
+
+    position: relative;
+    cursor: pointer;
+}
+
+.recipe-card.selected::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(162, 162, 162, 0.40);
+    border-radius: 16px;
+    z-index: 1; /* Ensures it overlays everything */
+}
+.gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 100%); 
+    z-index: 0;
+}
+
+.cocktail-image {
+    width: 503px;
+    height: 288px;
+    z-index: -1;
+}
+
+.my-bar-tag {
+    display: inline-flex;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--stroke, rgba(255, 255, 255, 0.40));
+    background: linear-gradient(0deg, rgba(128, 128, 128, 0.30) 0%, rgba(128, 128, 128, 0.30) 100%), rgba(0, 0, 0, 0.70);
+    position: absolute;
+    right: 24px;
+    top: 24px;
+}
+.done-img {
+    width: 20px;
+    height: 20px;
+}
+.name {
+    color: var(--grayscale-gray50, #F3F5F6);
+    font-family: Pretendard;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    text-transform: capitalize;
+    position:absolute;
+    bottom: 74px;
+    left: 24px;
+    margin: 0px;
+}
+.keywords-container {
+    width: 455px;
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    position: absolute;
+    bottom: 25px;
+    left: 24px;
+}
+.icon {
+    width: 24px;
+    height: 24px;
+}
+.keyword {
+    display: inline-flex;
+    height: 36px;
+    padding: 0 12px 0 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    border-radius: 50px;
+
+    color: #0E0E0E;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.64px;
+    text-transform: capitalize;
+
+    border: 0.8px solid #999;
+    background: rgba(153, 153, 153, 0.60);
+}
+.aroma {
+    border: 0.8px solid #D393F4;
+    background: rgba(211, 147, 244, 0.60);   
+}
+.flavor {
+    border: 0.8px solid var(--primary-rose-400, #FB6BA2);
+    background: rgba(251, 107, 162, 0.60);
+}
+.mood {
+    border: 0.8px solid var(--subgreen-400-main, #4ECE95);
+    background: rgba(78, 206, 149, 0.60);
+}
