@@ -4,10 +4,11 @@ import ItemList from "./ItemList";
 import VarietyItem from "./VarietyItem";
 import RecipeDropdown from "./RecipeDropdown";
 import CreateWriteRecipe from "./CreateWriteRecipe";
+import ColorPicker from "../ColorPicker";
 
 interface RecipeInputProps {
     drinkName: string;
-    onReadMore?: () => void;
+    onReadMore: () => void;
     onCancel: () => void;
     onSave: () => void;
 }
@@ -34,7 +35,7 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
 
     return (
         <>
-            <div className="ycontainer">
+            <div className="container">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
                     <p className="cocktail">Cocktail</p>
@@ -109,21 +110,10 @@ const RecipeInput: React.FC<RecipeInputProps> = ({
                     <div className="category">
                         <div className="category-name">색상</div>
                         <div className="colors">
-                            <div className="color1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                    <circle cx="13" cy="13" r="12.5" fill="#3C2005" stroke="white" />
-                                </svg>
-                            </div>
-                            <div className="color2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                    <circle cx="13" cy="13" r="12.5" fill="#AE8560" stroke="white" />
-                                </svg>
-                            </div>
-                            <div className="color3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                    <circle cx="13" cy="13" r="13" fill="#636363" />
-                                </svg>
-                            </div>
+                            <ColorPicker
+                            color1="#3C2005"
+                            color2="#AE8560"
+                            color3=""/>
                         </div>
                     </div>
                     <div className="category2">
