@@ -10,7 +10,7 @@ interface RecipeViewProps {
     ingredients?: string[]; //재료 종류들
     alcoholPer?: string[]; //도수 
     glass?: string[]; //잔
-    hexColor1?: string;
+    hexColor1?: string; //#여섯자리숫자
     hexColor2?: string;
     hexColor3?: string;
     recipeLine1: string; //레시피 작성 3줄
