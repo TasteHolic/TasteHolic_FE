@@ -17,8 +17,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   drinkName = "Merlot",
   category = "Wine",
 }) => {
-  console.log("CreateNoteModal 렌더링됨, isOpen:", isOpen);
-
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [selectedAromas, setSelectedAromas] = useState<string[]>([]);
   const [selectedAlcohol, setSelectedAlcohol] = useState<string | null>(null);
@@ -78,7 +76,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
   // 모달 닫을 때 초기화
   useEffect(() => {
-    console.log("CreateNoteModal isOpen 변경됨:", isOpen);
     if (!isOpen) resetFields();
   }, [isOpen]);
 
@@ -125,9 +122,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
   // 맛 키워드 선택 처리
   const handleFlavorSelect = (flavor: string) => {
-    setSelectedFlavors((prev) => [...prev, flavor]);
-    setIsFlavorDropdownOpen(false); // 선택 후 드롭다운 닫기
-    setSearchTerm(""); // 검색어 초기화
+    if (!selectedFlavors.includes(flavor)) {
+      setSelectedFlavors((prev) => [...prev, flavor]);
+      setIsFlavorDropdownOpen(false); // 선택 후 드롭다운 닫기
+      setSearchTerm(""); // 검색어 초기화
+    }
   };
 
   // 맛 태그 제거
@@ -137,13 +136,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
   // 생성 버튼 클릭 → 완료 화면 전환
   const handleCreate = () => {
-    console.log("API 전송", {
-      selectedFlavors,
-      selectedAromas,
-      selectedAlcohol,
-      selectedColors,
-      tastingNote,
-    });
     setStep("complete");
   };
 
@@ -220,8 +212,15 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                             {filteredFlavors.map((flavor) => (
                               <li
                                 key={flavor}
-                                className="dropdown-item"
-                                onClick={() => handleFlavorSelect(flavor)}
+                                className={`dropdown-item ${
+                                  selectedFlavors.includes(flavor)
+                                    ? "disabled"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  !selectedFlavors.includes(flavor) &&
+                                  handleFlavorSelect(flavor)
+                                }
                               >
                                 {flavor}
                               </li>

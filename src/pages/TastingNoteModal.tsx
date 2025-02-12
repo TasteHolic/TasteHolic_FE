@@ -334,6 +334,8 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
             setIsCreateNoteOpen(false);
             onClose();
           }}
+          drinkName={name}
+          category={category}
         />
       )}
     </AnimatePresence>
