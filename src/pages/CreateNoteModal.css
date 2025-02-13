@@ -48,17 +48,18 @@
   background: rgba(0, 0, 0, 0.4);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(50px);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .modal-bg-circles {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .blur-circle {
@@ -137,6 +138,23 @@
   align-items: flex-start;
 }
 
+.fields-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 28px;
+  max-height: 252.14px;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Chrome, Safari and Opera */
+.fields-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 .section-label {
   align-self: center;
   display: inline-flex;
@@ -152,19 +170,15 @@
   text-transform: capitalize;
 }
 
-.fields-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  margin-top: 28px;
-}
-
 .field-container {
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
+}
+
+.field-container.last-field {
+  align-items: flex-start;
 }
 
 .field-container label {
@@ -176,30 +190,35 @@
   font-weight: 500;
   letter-spacing: -0.475px;
   text-transform: capitalize;
-  margin-right: 34px;
+  margin-right: 0px;
   text-align: left;
   display: inline-block;
 }
 
 .input-field {
-  flex: 1;
   display: flex;
+  flex-wrap: wrap;
   padding: 4px;
   align-items: center;
   gap: 5px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.3);
-  position: relative;
-  flex-wrap: wrap;
+  min-height: 28.29px;
+  max-width: 100%;
 }
 
 .tag-chip {
   display: flex;
-  padding: 4px 8px;
   align-items: center;
+  padding: 4px 8px;
   border-radius: 24px;
   border: 0.5px solid #fff;
   background: transparent;
+  margin: 2px;
+  max-width: 100%; /* 칩이 한 줄을 유지하도록 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag-chip span {
@@ -283,6 +302,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.add-flavor-button.active {
+  border-radius: 24.753px;
+  border: 0.495px solid #fff;
+  background: #737373;
 }
 
 .add-flavor-button svg {
@@ -297,11 +323,15 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 5px);
-  right: 0;
-  width: 123px;
+  min-width: 123px;
   border-radius: 8px;
   border: 1px solid #f3f5f6;
   background: #242525;
@@ -365,10 +395,9 @@
 .scroll-container {
   max-height: 170px;
   overflow-y: auto;
-  background: transparent; /* 배경 투명하게 */
+  background: transparent;
 }
 
-/* 스크롤바 스타일링 */
 .scroll-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -430,4 +459,107 @@
 .dropdown-item.disabled:hover {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.6);
+}
+
+.tag-chip.add-flavor-button {
+  display: flex;
+  padding: 3.961px 7.921px;
+  justify-content: center;
+  align-items: center;
+  gap: 4.951px;
+  border-radius: 24.753px;
+  border: 0.495px solid #fff;
+  background: rgba(12, 12, 12, 0);
+  cursor: pointer;
+}
+
+/* user-note 스크롤바 스타일링 */
+.user-note::-webkit-scrollbar {
+  width: 8px;
+}
+
+.user-note::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-note::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.user-note::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* fields-wrapper 스크롤바 스타일링 */
+.fields-wrapper::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.fields-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fields-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.fields-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.one-line-field {
+  display: flex;
+  width: 262.385px;
+  height: 62.873px;
+  padding: 9px 10px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 7.921px;
+  border: 1px solid #8b8b8b;
+  background: rgba(162, 162, 162, 0.1);
+}
+
+.one-line-textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #fff;
+  font-family: "Pretendard", sans-serif;
+  font-size: 11.575px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.463px;
+  text-transform: capitalize;
+  overflow-y: auto;
+}
+
+.one-line-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+  font-family: "Pretendard", sans-serif;
+  font-size: 11.575px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.463px;
+  text-transform: capitalize;
+}
+
+/* 스크롤바 커스터마이징 */
+.one-line-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+.one-line-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.one-line-textarea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+.one-line-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }

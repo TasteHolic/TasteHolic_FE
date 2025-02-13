@@ -21,11 +21,16 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [selectedAromas, setSelectedAromas] = useState<string[]>([]);
   const [selectedAlcohol, setSelectedAlcohol] = useState<string | null>(null);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  // 한줄평 텍스트필드
   const [tastingNote, setTastingNote] = useState("");
+
   const [step, setStep] = useState<"create" | "complete">("create");
+
+  // 맛 드롭다운 상태
   const [isFlavorDropdownOpen, setIsFlavorDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isAddFlavorActive, setIsAddFlavorActive] = useState(false);
 
   const flavors = [
     "달콤함 (Sweet)",
@@ -57,15 +62,17 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "30%-40%",
     "40% 이상",
   ];
+
   const maxColors = 3;
 
+  // 맛 검색 필터
   const filteredFlavors = searchTerm
     ? flavors.filter((flavor) =>
         flavor.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : flavors;
 
-  // 초기화 함수
+  // 모달 닫힐 때 입력 필드들 초기화
   const resetFields = () => {
     setSelectedFlavors([]);
     setSelectedAromas([]);
@@ -74,12 +81,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setTastingNote("");
   };
 
-  // 모달 닫을 때 초기화
   useEffect(() => {
     if (!isOpen) resetFields();
   }, [isOpen]);
 
-  // 외부 클릭 감지를 위한 이벤트 리스너
+  // 외부 클릭 감지 → 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -87,6 +93,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsFlavorDropdownOpen(false);
+        setIsAddFlavorActive(false); // + 버튼의 활성화 상태 해제
         setSearchTerm("");
       }
     };
@@ -94,24 +101,25 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     if (isFlavorDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isFlavorDropdownOpen]);
 
-  // 키워드 추가 및 제거
-  const toggleSelection = (
-    item: string,
-    list: string[],
-    setList: React.Dispatch<React.SetStateAction<string[]>>
-  ) => {
-    setList((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
+  // 맛 추가/제거
+  const handleFlavorSelect = (flavor: string) => {
+    if (!selectedFlavors.includes(flavor)) {
+      setSelectedFlavors((prev) => [...prev, flavor]);
+      setIsFlavorDropdownOpen(false);
+      setIsAddFlavorActive(false);
+      setSearchTerm("");
+    }
+  };
+  const removeFlavorTag = (flavor: string) => {
+    setSelectedFlavors((prev) => prev.filter((f) => f !== flavor));
   };
 
-  // 색상 선택 로직 추가
+  // 색상 선택
   const toggleColorSelection = (color: string) => {
     if (selectedColors.includes(color)) {
       setSelectedColors(selectedColors.filter((c) => c !== color));
@@ -120,23 +128,17 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     }
   };
 
-  // 맛 키워드 선택 처리
-  const handleFlavorSelect = (flavor: string) => {
-    if (!selectedFlavors.includes(flavor)) {
-      setSelectedFlavors((prev) => [...prev, flavor]);
-      setIsFlavorDropdownOpen(false); // 선택 후 드롭다운 닫기
-      setSearchTerm(""); // 검색어 초기화
-    }
+  // 플러스 버튼 클릭 → 맛 드롭다운 열기
+  const handleAddFlavorClick = () => {
+    console.log("버튼 클릭!");
+    setIsAddFlavorActive(!isAddFlavorActive);
+    setIsFlavorDropdownOpen(!isFlavorDropdownOpen);
   };
 
-  // 맛 태그 제거
-  const removeFlavorTag = (flavor: string) => {
-    setSelectedFlavors((prev) => prev.filter((f) => f !== flavor));
-  };
-
-  // 생성 버튼 클릭 → 완료 화면 전환
+  // 생성하기 버튼 클릭 → 완료
   const handleCreate = () => {
     setStep("complete");
+    // 실제로는 onComplete() 등 API 전송 로직
   };
 
   if (!isOpen) return null;
@@ -144,22 +146,26 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   return (
     <motion.div className="modal-overlay">
       <motion.div className="modal-content">
+        {/* 배경 서클 */}
         <div className="modal-bg-circles">
           <div className="blur-circle yellow"></div>
           <div className="blur-circle white"></div>
         </div>
 
         <div className="modal-body">
+          {/* 제목 구역 */}
           <div className="title-section">
             <h2>{drinkName}</h2>
             <p className="subtitle">{category}</p>
           </div>
 
+          {/* 메인 컨테이너 */}
           <div className="tasting-note-container">
             <div className="user-note">
               <span className="section-label">나의 테이스팅 노트</span>
 
               <div className="fields-wrapper">
+                {/* 맛 필드 */}
                 <div className="field-container">
                   <label>맛</label>
                   <div className="input-field">
@@ -175,23 +181,24 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                       </div>
                     ))}
 
-                    <div ref={dropdownRef}>
+                    {/* 드롭다운 버튼 */}
+                    <div className="dropdown-container" ref={dropdownRef}>
                       <div
                         className={`tag-chip add-flavor-button ${
-                          isFlavorDropdownOpen ? "open" : ""
+                          isAddFlavorActive ? "active" : ""
                         }`}
-                        onClick={() =>
-                          setIsFlavorDropdownOpen(!isFlavorDropdownOpen)
-                        }
+                        onClick={handleAddFlavorClick}
                       >
                         <Plus size={12} weight="bold" />
                       </div>
 
+                      {/* 맛 드롭다운 */}
                       {isFlavorDropdownOpen && (
                         <ul
                           className="dropdown-menu"
                           onClick={(e) => e.stopPropagation()}
                         >
+                          {/* 검색창 */}
                           <div className="search-box">
                             <div className="search-wrapper">
                               <div className="search-input-container">
@@ -208,6 +215,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                             </div>
                           </div>
 
+                          {/* 검색 결과 목록 */}
                           <div className="scroll-container">
                             {filteredFlavors.map((flavor) => (
                               <li
@@ -237,35 +245,49 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                   </div>
                 </div>
 
+                {/* 향 필드 */}
                 <div className="field-container">
                   <label>향</label>
-                  <div className="input-field">{/* 향 필드 내용 */}</div>
+                  <div className="input-field">{/* ... */}</div>
                 </div>
 
+                {/* 도수 필드 */}
                 <div className="field-container">
                   <label>도수</label>
-                  <div className="input-field">{/* 도수 필드 내용 */}</div>
+                  <div className="input-field">{/* ... */}</div>
                 </div>
 
+                {/* 색상 필드 */}
                 <div className="field-container">
                   <label>색상</label>
-                  <div className="input-field">{/* 색상 필드 내용 */}</div>
+                  <div className="input-field">{/* ... */}</div>
                 </div>
 
-                <div className="field-container">
+                {/* 한줄평 필드 */}
+                <div className="field-container last-field">
                   <label>한줄평</label>
-                  <div className="input-field">{/* 한줄평 필드 내용 */}</div>
+                  {/* 한줄평 전용 영역 */}
+                  <div className="one-line-field">
+                    <textarea
+                      maxLength={200} // 200자 제한
+                      placeholder="한줄평을 남겨보세요."
+                      value={tastingNote}
+                      onChange={(e) => setTastingNote(e.target.value)}
+                      className="one-line-textarea"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* 세로 구분선 */}
             <div className="vertical-line" />
 
-            <div className="expert-note">
-              {/* 전문가 테이스팅 노트 섹션은 추후 구현 */}
-            </div>
+            {/* 전문가 노트 (미구현) */}
+            <div className="expert-note"></div>
           </div>
 
+          {/* 하단 버튼 */}
           <div className="modal-footer">
             <button className="prev-btn" onClick={onClose}>
               뒤로
