@@ -31,12 +31,14 @@ const LoginPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch("https://your-api.com/login", {
+      const response = await fetch("http://54.180.45.230:3000/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+           email,
+           password }),
       });
 
       if (!response.ok) {
@@ -52,12 +54,12 @@ const LoginPage: React.FC = () => {
 
       const data = await response.json();
       console.log("로그인 성공:", data);
-      // JWT 토큰 저장 (필요하면 사용)
+      
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      navigate("/");
 
     } catch (error) {
-      setErrorMessage("예기치 않은 오류가 발생했습니다. 다시 로그인해보세요.");
+      setErrorMessage("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 

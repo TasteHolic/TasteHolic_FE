@@ -9,13 +9,13 @@ const SignupForm: React.FC = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    id: "",
+    email: "",
     password: "",
     confirmPassword: "",
     nickname: "",
   });
   const [validation, setValidation] = useState({
-    id: false,
+    email: false,
     idLength: false,
     idDuplicate: false,
     password: false,
@@ -25,7 +25,7 @@ const SignupForm: React.FC = () => {
     nickname: false,
   });
   const [messages, setMessages] = useState({
-    id: "",
+    email: "",
     idLength: "",
     idDuplicate: "",
     passwordLength: "",
@@ -47,10 +47,10 @@ const SignupForm: React.FC = () => {
 
   useEffect(() => {
     const dummyUsers = [
-      { id: "testUser1", nickname: "테스트닉1" },
-      { id: "sampleUser2", nickname: "샘플닉2" },
-      { id: "demoUser3", nickname: "데모닉3" },
-      { id: "umcmember", nickname: "UMC" },
+      { email: "testUser1", nickname: "테스트닉1" },
+      { email: "sampleUser2", nickname: "샘플닉2" },
+      { email: "demoUser3", nickname: "데모닉3" },
+      { email: "umcmember", nickname: "UMC" },
     ];
 
     if (!localStorage.getItem("registeredUsers")) {
@@ -73,7 +73,7 @@ const SignupForm: React.FC = () => {
     setForm({ ...form, [name]: value });
     validateField(name, value);
 
-    if (name === "id") {
+    if (name === "email") {
       setIsIdChecked(false); // 아이디 수정 시 중복 여부 초기화
       setIsIdDuplicate(false); // 아이디 수정 시 중복 여부 초기화
     }
@@ -88,34 +88,35 @@ const SignupForm: React.FC = () => {
     let isValid = false;
 
     switch (name) {
-      case "id": {
-        const isLengthValid = value.length >= 6 && /^[a-zA-Z0-9]+$/.test(value); // 길이와 영문/숫자 조합
+      case "email": {
+        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         const isDuplicateValid = !isIdDuplicate; // 중복 검사 여부
 
         setMessages((prev) => ({
           ...prev,
-          idLength: isLengthValid
-            ? "* 6자 이상의 영문 혹은 영문과 숫자 조합"
-            : "* 6자 이상의 영문 혹은 영문과 숫자 조합",
+          idLength: isEmailValid
+            ? "* example@abc.com"
+            : "* example@abc.com",
           idDuplicate: isDuplicateValid
-            ? "* 아이디 중복 확인"
-            : "* 아이디 중복 확인",
+            ? "* 이메일 중복 확인"
+            : "* 이메일 중복 확인",
         }));
 
         setValidation((prev) => ({
           ...prev,
-          idLength: isLengthValid,
-          idDuplicate: isDuplicateValid,
+          id: isDuplicateValid && isEmailValid,
+          idLength: isEmailValid,
+          idDuplicate: isDuplicateValid &&isEmailValid,
         }));
         break;
       }
 
       case "password": {
         const isLengthValid = value.length >= 10; // 길이 조건
-        const isComplexValid =
-          (/[a-zA-Z]/.test(value) && /\d/.test(value)) || // 영문 + 숫자
-          (/[a-zA-Z]/.test(value) && /[!@#$%^&*()_+]/.test(value)) || // 영문 + 특수문자
-          (/\d/.test(value) && /[!@#$%^&*()_+]/.test(value)); // 숫자 + 특수문자
+        const hasLetters = /[a-zA-Z]/.test(value);
+        const hasNumbers = /\d/.test(value);
+        const hasSpecials = /[!@#$%^&*()_+]/.test(value);
+        const isComplexValid = (hasLetters && hasNumbers) || (hasLetters && hasSpecials) || (hasNumbers && hasSpecials);
 
         setMessages((prev) => ({
           ...prev,
@@ -126,12 +127,18 @@ const SignupForm: React.FC = () => {
             ? "* 영문·숫자·특수문자 중 2개 이상 조합(공백 불가)"
             : "* 영문·숫자·특수문자 중 2개 이상 조합(공백 불가)",
         }));
-
-        setValidation((prev) => ({
-          ...prev,
-          passwordLength: isLengthValid,
-          passwordComplexity: isComplexValid,
-        }));
+      
+        setValidation((prev) => {
+          const updatedValidation = {
+            ...prev,
+            passwordLength: isLengthValid,
+            passwordComplexity: isComplexValid,
+          };
+          updatedValidation.password =
+            updatedValidation.passwordLength && updatedValidation.passwordComplexity;
+          return updatedValidation;
+        });
+        
         break;
       }
 
@@ -155,7 +162,7 @@ const SignupForm: React.FC = () => {
       localStorage.getItem("registeredUsers") || "[]"
     );
     const isDuplicate = storedUsers.some(
-      (user: { id: string }) => user.id === form.id
+      (user: { email: string }) => user.email === form.email
     );
 
     if (isDuplicate) {
@@ -168,7 +175,7 @@ const SignupForm: React.FC = () => {
         ...prev,
         idDuplicate: false, // 중복된 경우 유효성 실패
       }));
-      alert("이미 사용 중인 아이디입니다.");
+      alert("이미 사용 중인 이메일입니다.");
     } else {
       setIsIdChecked(true);
       setIsIdDuplicate(false);
@@ -178,51 +185,62 @@ const SignupForm: React.FC = () => {
       setValidation((prev) => ({
         ...prev,
         idDuplicate: true, // 중복되지 않은 경우 유효성 성공
+        email: validation.idLength &&!isIdDuplicate,
       }));
-      alert("사용할 수 있는 아이디입니다.");
+      alert("사용할 수 있는 이메일입니다.");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // 아이디 중복 여부 확인
+    validation.password=validation.passwordComplexity&&validation.passwordLength;
+    console.log("현재 validation 상태", validation);
     if (!isIdChecked) {
-      alert("아이디 중복 확인을 완료해주세요.");
+      alert("이메일 중복 확인을 완료해주세요.");
       return;
     }
-
+  
     if (isIdDuplicate) {
-      alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
+      alert("이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.");
       return;
     }
-
-    // 필수 유효성 검사 통과 여부 확인
-    const { id, password, ...relevantValidation } = validation;
-
-    if (
-      Object.values(relevantValidation).every((v) => v) &&
-      !isIdDuplicate &&
-      isAllRequiredChecked
-    ) {
-      const storedUsers = JSON.parse(
-        localStorage.getItem("registeredUsers") || "[]"
-      );
-      const newUser = { id: form.id, nickname: form.nickname };
-      localStorage.setItem(
-        "registeredUsers",
-        JSON.stringify([...storedUsers, newUser])
-      );
-
-      alert("회원가입 성공!");
-      navigate("/signup/done");
-    } else {
-      // 유효성 검사 실패 시 메시지
-      if (!isAllRequiredChecked) {
-        alert("필수 약관을 모두 동의해주세요.");
-      } else {
-        alert("입력한 정보를 확인해주세요.");
+  
+    if (!isAllRequiredChecked) {
+      alert("필수 약관을 모두 동의해주세요.");
+      return;
+    }
+  
+    if (Object.values(validation).every((v) => v)) {
+      try {
+        const response = await fetch("http://54.180.45.230:3000/api/v1/users/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+            nickname: form.nickname,
+          }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.status === 201) {
+          alert(data.message); // "회원가입이 완료되었습니다."
+          console.log("회원가입성공");
+           navigate("/signup/done");
+        } else if (response.status === 400) {
+          alert(data.error || "잘못된 요청입니다."); // 예: "이메일 형식이 잘못되었습니다."
+        } else if (response.status === 500){
+          alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      } catch (error) {
+        console.error("회원가입 요청 실패:", error);
+        alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
       }
+    } else {
+      alert("입력한 정보를 확인해주세요.");
     }
   };
 
@@ -247,18 +265,18 @@ const SignupForm: React.FC = () => {
         <div className="signup-form-group">
           <div className="signup-input-group">
             <label>
-              아이디 <span className="starcolor">*</span>
+              이메일 <span className="starcolor">*</span>
             </label>
             <div className="signup-input-container">
               <input
                 type="text"
-                name="id"
-                value={form.id}
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                onFocus={() => handleFocus("id")}
+                onFocus={() => handleFocus("email")}
                 ref={idInputRef}
                 className={validation.idLength && !isIdDuplicate ? "valid" : ""}
-                placeholder="아이디를 입력해주세요."
+                placeholder="이메일을 입력해주세요."
               />
               {isIdChecked && !isIdDuplicate && (
                 <img
@@ -272,15 +290,17 @@ const SignupForm: React.FC = () => {
                 src="src\components\icons\signupIcons\x-circle.png"
                 alt="clearicon"
                 onClick={() => {
-                  setForm({ ...form, id: "" });
-                  idInputRef.current?.focus();
+                  if (!isIdChecked) { // 중복 확인이 완료된 경우에는 동작하지 않도록 함
+                    setForm({ ...form, email: "" });
+                    idInputRef.current?.focus();
+                  }
                 }}
               ></img>
             </div>
             <button
               type="button"
               onClick={handleIdCheck}
-              disabled={!isIdValid} // 유효하지 않으면 버튼 비활성화
+              disabled={!isIdValid||isIdChecked} // 유효하지 않으면 버튼 비활성화
               className="idbutton"
             >
               중복확인
@@ -288,7 +308,7 @@ const SignupForm: React.FC = () => {
           </div>
           <small
             className={
-              form.id === ""
+              form.email === ""
                 ? "signup-default-text"
                 : validation.idLength
                 ? "signup-valid-text"
@@ -299,7 +319,7 @@ const SignupForm: React.FC = () => {
           </small>
           <small
             className={
-              !form.id || !isIdChecked
+              !form.email || !isIdChecked
                 ? "signup-default-text"
                 : validation.idDuplicate
                 ? "signup-valid-text"

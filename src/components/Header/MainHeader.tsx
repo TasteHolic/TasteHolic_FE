@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./MainHeader.css";
 import HeaderSearchBar from "../search/headerSearchBar";
 
 const MainHeader: React.FC = () => {
+  const navigate =useNavigate();
   const [isRecipeHovered, setIsRecipeHovered] = useState(false);
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isMyHovered, setIsMyHovered] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 여부 관리
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // token이 있으면 true, 없으면 false
+  }, []);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://54.180.45.230:3000/api/v1/users/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // 토큰 포함
+        },
+      });
 
+      if (response.ok) {
+        console.log(" 로그아웃 성공");
+        localStorage.removeItem("token"); //토큰 삭제
+        setIsLoggedIn(false); //
+        navigate("/"); // main페이지 이동
+      } else {
+        console.error("로그아웃 실패:", response.status);
+      }
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+    }
+  };
   const handleRecipeMouseEnter = () => setIsRecipeHovered(true);
   const handleRecipeMouseLeave = () => setIsRecipeHovered(false);
 
@@ -100,9 +128,10 @@ const MainHeader: React.FC = () => {
                     내 바
                   </a>
                   <hr className="my-divider" />
-                  <a href="/logout" className="my-item">
+                  {/* <a href="/logout" className="my-item">
                     로그아웃
-                  </a>
+                  </a> */}
+                  <button onClick={handleLogout} className="my-item logout-button">로그아웃</button> 
                 </>
               ) : (
                 <>
