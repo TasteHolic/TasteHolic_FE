@@ -110,7 +110,7 @@
     z-index: 1000;
     backdrop-filter: blur(10px); /* 팝업 외부의 블러 효과 */
 }
-.popup {
+.termpopup {
     width: 500.443px;
     height: 610px; 
     flex-shrink: 0;
