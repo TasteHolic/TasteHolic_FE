@@ -10,34 +10,6 @@
   background: rgba(0, 0, 0, 0.4);
 }
 
-.background-circles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 10.076px;
-  z-index: 0;
-}
-
-.circle {
-  position: absolute;
-  width: 317px;
-  height: 317px;
-  border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.circle.left {
-  left: -158.5px;
-  background: rgba(230, 255, 139, 0.5);
-}
-
-.circle.right {
-  right: -158.5px;
-  background: rgba(244, 244, 244, 0.5);
-}
-
 .modal-content {
   position: relative;
   width: 782px;
@@ -63,11 +35,11 @@
 }
 
 .blur-circle {
-  position: absolute;
   width: 317px;
   height: 317px;
   border-radius: 317px;
   filter: blur(100px);
+  position: absolute;
 }
 
 .yellow {
@@ -146,11 +118,9 @@
   margin-top: 28px;
   max-height: 252.14px;
   overflow-y: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* Chrome, Safari and Opera */
 .fields-wrapper::-webkit-scrollbar {
   display: none;
 }
@@ -190,7 +160,7 @@
   font-weight: 500;
   letter-spacing: -0.475px;
   text-transform: capitalize;
-  margin-right: 0px;
+  margin-right: 0;
   text-align: left;
   display: inline-block;
 }
@@ -215,8 +185,7 @@
   border: 0.5px solid #fff;
   background: transparent;
   margin: 2px;
-  max-width: 100%; /* 칩이 한 줄을 유지하도록 */
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -234,66 +203,6 @@
   font-size: 10px;
   margin-left: 4px;
   cursor: pointer;
-}
-
-.add-button {
-  display: flex;
-  padding: 3.961px 7.921px;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  border-radius: 24.753px;
-  border: 0.495px solid #fff;
-  background: rgba(12, 12, 12, 0);
-  color: #fff;
-  cursor: pointer;
-}
-
-.completion-screen {
-  text-align: center;
-}
-
-.close-btn {
-  margin-top: 20px;
-}
-
-.modal-footer {
-  margin-top: auto;
-  padding-bottom: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-footer button {
-  display: flex;
-  padding: 12px 24px;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  border-radius: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-family: "Pretendard", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.8px;
-  text-transform: capitalize;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.modal-footer button:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.prev-btn {
-  margin-right: auto;
-}
-
-.next-btn {
-  margin-left: auto;
 }
 
 .add-flavor-button {
@@ -380,7 +289,6 @@
   color: rgba(255, 255, 255, 0.6);
   font-family: Pretendard;
   font-size: 10px;
-  font-style: normal;
   font-weight: 500;
   padding: 0 8px;
   outline: none;
@@ -423,9 +331,7 @@
   color: rgba(255, 255, 255, 0.6);
   font-family: Pretendard;
   font-size: 10px;
-  font-style: normal;
   font-weight: 500;
-  line-height: normal;
   letter-spacing: -0.4px;
   text-transform: capitalize;
   cursor: pointer;
@@ -435,13 +341,6 @@
 .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  font-family: Pretendard;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -0.4px;
-  text-transform: capitalize;
 }
 
 .dropdown-item.no-match {
@@ -461,53 +360,89 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.tag-chip.add-flavor-button {
+/* 색상 필드 스타일 */
+.color-picker-container {
   display: flex;
-  padding: 3.961px 7.921px;
-  justify-content: center;
   align-items: center;
-  gap: 4.951px;
-  border-radius: 24.753px;
+  gap: 8px;
+}
+
+.selected-colors {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-tag {
+  width: 12.872px;
+  height: 12.872px;
   border: 0.495px solid #fff;
-  background: rgba(12, 12, 12, 0);
+  border-radius: 50%;
   cursor: pointer;
+  position: relative;
 }
 
-/* user-note 스크롤바 스타일링 */
-.user-note::-webkit-scrollbar {
-  width: 8px;
+/* 기본 상태에서는 삭제 버튼 숨김 */
+.remove-color-button {
+  display: none;
+  position: absolute;
+  top: -2px; /* 기존보다 조금 더 안쪽 */
+  right: -2px;
+  width: 10px; /* 약간 작게 */
+  height: 10px;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 8px; /* 글씨 크기도 줄임 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.user-note::-webkit-scrollbar-track {
-  background: transparent;
+/* 색상 태그에 호버 시 삭제 버튼 보이기 */
+.color-tag:hover .remove-color-button {
+  display: flex;
 }
 
-.user-note::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+.color-picker-button {
+  width: 12.872px;
+  height: 12.872px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: #636363;
+  transition: background 0.2s ease;
+}
+
+.color-picker-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.color-picker-popover {
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-picker-confirm {
+  margin-top: 8px;
+  width: 100%;
+  padding: 4px;
+  background: #3c2005;
+  color: #fff;
+  border: none;
   border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s ease;
 }
 
-.user-note::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* fields-wrapper 스크롤바 스타일링 */
-.fields-wrapper::-webkit-scrollbar {
-  width: 8px;
-  background-color: transparent;
-}
-
-.fields-wrapper::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.fields-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-}
-
-.fields-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+.color-picker-confirm:hover {
+  background: #4c2a07;
 }
 
 .one-line-field {
@@ -549,17 +484,19 @@
   text-transform: capitalize;
 }
 
-/* 스크롤바 커스터마이징 */
 .one-line-textarea::-webkit-scrollbar {
   width: 6px;
 }
+
 .one-line-textarea::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .one-line-textarea::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
+
 .one-line-textarea::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }

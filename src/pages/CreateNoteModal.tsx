@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, MouseEvent } from "react";
 import { motion } from "framer-motion";
 import ReactDOM from "react-dom";
 import { Plus, MagnifyingGlass } from "@phosphor-icons/react";
+import { SketchPicker } from "react-color";
 import "./CreateNoteModal.css";
 
 interface CreateNoteModalProps {
@@ -88,8 +89,15 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "40% 이상",
   ];
 
-  // [색상] 관련 상태 (콤마로 구분하여 입력)
+  // [색상] 관련 상태 – 컬러피커 사용
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+  const colorPickerButtonRef = useRef<HTMLDivElement>(null);
+  const [colorPickerPos, setColorPickerPos] = useState({ x: 0, y: 0 });
+  const [editingColorIndex, setEditingColorIndex] = useState<number | null>(
+    null
+  );
+  const [tempColor, setTempColor] = useState<string>("#636363");
 
   // 모달 닫힐 때 모든 입력 초기화
   useEffect(() => {
@@ -107,6 +115,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       setSelectedAlcohol(null);
       setSelectedColors([]);
       setTastingNote("");
+      setEditingColorIndex(null);
+      setTempColor("#636363");
     }
   }, [isOpen]);
 
@@ -212,6 +222,50 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         y: rect.top + rect.height,
       });
     }
+  };
+
+  // 색상 필드 – 컬러피커 버튼 클릭 처리 (신규 색상 추가)
+  const handleColorPickerClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (selectedColors.length >= 3) {
+      alert("최대 3개까지만 지정할 수 있습니다. 기존 색상을 변경해주세요.");
+      return;
+    }
+    setEditingColorIndex(null);
+    setTempColor("#636363"); // 기본 색상
+    setIsColorPickerOpen(true);
+    if (colorPickerButtonRef.current) {
+      const rect = colorPickerButtonRef.current.getBoundingClientRect();
+      setColorPickerPos({
+        x: rect.left,
+        y: rect.top + rect.height,
+      });
+    }
+  };
+
+  // 색상 태그 클릭 시 – 기존 색상 수정
+  const handleColorTagClick = (
+    index: number,
+    e: MouseEvent<HTMLDivElement>
+  ) => {
+    e.stopPropagation();
+    setEditingColorIndex(index);
+    setTempColor(selectedColors[index]);
+    setIsColorPickerOpen(true);
+    const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+    setColorPickerPos({
+      x: rect.left,
+      y: rect.top + rect.height,
+    });
+  };
+
+  // 색상 삭제 처리
+  const handleColorRemove = (
+    index: number,
+    e: MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
+    setSelectedColors((prev) => prev.filter((_, i) => i !== index));
   };
 
   // 생성 버튼 클릭 (완료 처리 등)
@@ -321,23 +375,34 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                   </div>
                 </div>
 
-                {/* 색상 필드 */}
+                {/* 색상 필드 – 컬러피커 적용 */}
                 <div className="field-container">
                   <label>색상</label>
-                  <div className="input-field">
-                    <input
-                      type="text"
-                      placeholder="색상을 입력하세요 (콤마로 구분)"
-                      value={selectedColors.join(", ")}
-                      onChange={(e) => {
-                        const input = e.target.value;
-                        const colors = input
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter((s) => s);
-                        setSelectedColors(colors);
-                      }}
-                    />
+                  <div className="color-picker-container">
+                    <div className="selected-colors">
+                      {selectedColors.map((color, index) => (
+                        <div
+                          key={index}
+                          className="color-tag"
+                          style={{ backgroundColor: color }}
+                          onClick={(e) => handleColorTagClick(index, e)}
+                        >
+                          <button
+                            className="remove-color-button"
+                            onClick={(e) => handleColorRemove(index, e)}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div
+                      className="color-picker-button"
+                      ref={colorPickerButtonRef}
+                      onClick={handleColorPickerClick}
+                    >
+                      <Plus size={12} weight="bold" />
+                    </div>
                   </div>
                 </div>
 
@@ -479,6 +544,53 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               )}
             </div>
           </ul>,
+          document.body
+        )}
+
+      {/* Portal을 사용하여 컬러피커 팝오버 렌더링 */}
+      {isColorPickerOpen &&
+        ReactDOM.createPortal(
+          <div
+            className="color-picker-popover"
+            style={{
+              position: "absolute",
+              top: colorPickerPos.y,
+              left: colorPickerPos.x,
+              zIndex: 1002,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SketchPicker
+              color={tempColor}
+              onChange={(color) => {
+                setTempColor(color.hex);
+              }}
+              disableAlpha={true}
+            />
+            <button
+              className="color-picker-confirm"
+              onClick={() => {
+                if (editingColorIndex !== null) {
+                  const newColors = [...selectedColors];
+                  newColors[editingColorIndex] = tempColor;
+                  setSelectedColors(newColors);
+                  setEditingColorIndex(null);
+                } else {
+                  if (selectedColors.length >= 3) {
+                    alert(
+                      "최대 3개까지만 지정할 수 있습니다. 기존 색상을 변경해주세요."
+                    );
+                    return;
+                  } else {
+                    setSelectedColors([...selectedColors, tempColor]);
+                  }
+                }
+                setIsColorPickerOpen(false);
+              }}
+            >
+              확인
+            </button>
+          </div>,
           document.body
         )}
     </motion.div>
