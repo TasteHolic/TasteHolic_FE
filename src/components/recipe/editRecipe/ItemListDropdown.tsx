@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 
 const DropdownContainer = styled.div`
     width: 320px;
+    // max-height: 433px;
     flex-shrink: 0;
     border-radius: 8px;
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
     background: var(--grayscale-gray800, #242525);
     box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.51);
 `;
-
 const SearchBarContainer = styled.div`
     width: 296px;
     justify-content: center;
@@ -18,29 +18,28 @@ const SearchBarContainer = styled.div`
     background: rgba(255, 255, 255, 0.10);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     padding: 12px;
 `;
-
 const SearchBar = styled.div`
     width: 280px;
     height: 36px;
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content:left;
     align-items: center;
     gap: 8px;
     padding-left: 16px;
+
     flex-shrink: 0;
     border-radius: 50px;
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
     background: none;
     box-shadow: 0px 4px 10px 0px rgba(255, 255, 255, 0.10);
-
     &:focus {
-        outline: none;
-    }
+    outline: none;}
 `;
-
 const SearchBarInput = styled.input`
     width: 220px;
     background: none;
@@ -48,7 +47,9 @@ const SearchBarInput = styled.input`
     color: #FFF;
     font-family: Pretendard;
     font-size: 14px;
+    font-style: normal;
     font-weight: 500;
+    line-height: normal;
     letter-spacing: -0.56px;
     text-transform: capitalize;
 
@@ -62,9 +63,11 @@ const SearchBarInput = styled.input`
     }
 `;
 
+
 const DropdownItem = styled.div`
     padding: 10px 10px 10px 30px;
     cursor: pointer;
+    text-align: center;
     text-align: left;
     position: relative;
 
@@ -91,27 +94,33 @@ const DropdownItem = styled.div`
         display: none;
     }
 `;
-
 const HighlightedText = styled.span`
     color: #828282;
+
     font-family: Pretendard;
     font-size: 14px;
+    font-style: normal;
     font-weight: 500;
+    line-height: normal;
     letter-spacing: -0.56px;
     text-transform: capitalize;
 `;
 
 const StyledOptionText = styled.span`
     color: #FFF;
+
     font-family: Pretendard;
     font-size: 14px;
+    font-style: normal;
     font-weight: 500;
+    line-height: normal;
     letter-spacing: -0.56px;
     text-transform: capitalize;
 `;
 
 const formatTextWithParentheses = (text: string) => {
-    const match = text.match(/(.*?)\((.*?)\)/);
+    const match = text.match(/(.*?)\((.*?)\)/); // Regex to detect text with parentheses
+
     if (match) {
         return (
             <>
@@ -122,6 +131,7 @@ const formatTextWithParentheses = (text: string) => {
     }
     return <StyledOptionText>{text}</StyledOptionText>;
 };
+
 
 interface ItemListDropdownProps {
     onSelect: (item: string) => void;
@@ -134,11 +144,6 @@ const ItemListDropdown: React.FC<ItemListDropdownProps> = ({ onSelect, options }
     const filteredItems = options.filter(item =>
         item.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    const handleSelect = (item: string) => {
-        onSelect(item);  // Add selected item
-        setSearchTerm("");  // Clear search field after selection
-    };
 
     return (
         <DropdownContainer>
@@ -158,27 +163,15 @@ const ItemListDropdown: React.FC<ItemListDropdownProps> = ({ onSelect, options }
                         placeholder="검색 또는 새로 입력"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter" && searchTerm.trim() !== "") {
-                                handleSelect(searchTerm.trim());  // Add new item when Enter is pressed
-                            }
-                        }}
                     />
                 </SearchBar>
             </SearchBarContainer>
 
             {filteredItems.map((item, index) => (
-                <DropdownItem key={index} onClick={() => handleSelect(item)}>
+                <DropdownItem key={index} onClick={() => onSelect(item)}>
                     {formatTextWithParentheses(item)}
                 </DropdownItem>
             ))}
-
-            {/*새로입력*/}
-            {searchTerm.trim() !== "" && !filteredItems.includes(searchTerm.trim()) && (
-                <DropdownItem onClick={() => handleSelect(searchTerm.trim())}>
-                    <StyledOptionText>+ {searchTerm.trim()}</StyledOptionText>
-                </DropdownItem>
-            )}
         </DropdownContainer>
     );
 };

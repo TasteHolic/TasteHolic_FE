@@ -6,14 +6,16 @@ import "pretendard/dist/web/static/pretendard.css"
 
 const ListContainer = styled.div`
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     padding: 5px;
     padding-right: 7px;
     padding-left: 7px;
-    height: 51px;
     max-width: 478px;
     align-items: center;
     gap: 10px;
-    border-radius: 50px;
+    row-gap: 5px;
+    border-radius: 30px;
     background: rgba(0, 0, 0, 0.30);
 `;
 
