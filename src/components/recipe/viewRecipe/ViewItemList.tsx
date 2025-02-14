@@ -35,7 +35,8 @@ const Item = styled.div`
     border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.32);
     background: rgba(12, 12, 12, 0.00);
-
+    
+    padding: 2px;
     padding-left: 16px;
     padding-right: 16px;
 

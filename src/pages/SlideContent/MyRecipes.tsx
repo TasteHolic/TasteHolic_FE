@@ -79,40 +79,40 @@ const MyRecipe: React.FC = () => {
                 )}
             </div>
 
-            <div className="recipe-list">
+            <div className="slide-my-recipe-list">
                 {sortedRecipes.map((recipe) => (
-                    <div key={recipe.id} className="recipe-card">
-                        <div className="recipe-header">
+                    <div key={recipe.id} className="slide-my-recipe-card">
+                        <div className="slide-my-recipe-header">
                             <div>{recipe.createdAt}</div>
                             <div className="views-likes-container">
                                 <img src="/image/eye.png" alt="조회수" />{recipe.views}
                                 <img src="/image/saveIcon.png" alt="저장수" />{recipe.likes}
                             </div>
                         </div>
-                        <div className="recipe-title">
+                        <div className="slide-my-recipe-title">
                             <span>{recipe.title}</span>
                         </div>
-                        <div className="recipe-container">
-                            <div className="recipe-details">
-                                <span className="feature1">
-                                    <div className="feature-circle"><img src="\image\water_drop.png" alt="물방울 이미지"></img>재료 {recipe.ingredientsCount}개</div>
+                        <div className="slide-my-recipe-container">
+                            <div className="slide-my-recipe-details">
+                                <span className="slide-feature1">
+                                    <div className="slide-feature-circle"><img src="\image\water_drop.png" alt="물방울 이미지"></img>재료 {recipe.ingredientsCount}개</div>
                                 </span>
-                                <span className="feature2">
-                                    <div className="feature-circle"><img src="\image\Clock.png" alt="시계 이미지"></img>{recipe.stepsCount}단계</div>
+                                <span className="slide-feature2">
+                                    <div className="slide-feature-circle"><img src="\image\Clock.png" alt="시계 이미지"></img>{recipe.stepsCount}단계</div>
                                 </span>
-                                <span className="feature3">
-                                    <div className="feature-circle"><img src="\image\local_bar.png" alt="칵테일 이미지"></img>도수 {recipe.alcoholContent}</div>
+                                <span className="slide-feature3">
+                                    <div className="slide-feature-circle"><img src="\image\local_bar.png" alt="칵테일 이미지"></img>도수 {recipe.alcoholContent}</div>
                                 </span>
                             </div>
-                            <div className="recipe-footer">
+                            <div className="slide-recipe-footer">
                                 <button
-                                    className="view-btn"
+                                    className="slide-view-btn"
                                     onClick={() => window.location.href = `/recipe/${recipe.id}`}
                                 >
                                     전체글 보기
                                 </button>
                                 <button
-                                    className="edit-btn"
+                                    className="slide-edit-btn"
                                     onClick={() => window.location.href = `/edit/${recipe.id}`}
                                 >
                                     수정하기
