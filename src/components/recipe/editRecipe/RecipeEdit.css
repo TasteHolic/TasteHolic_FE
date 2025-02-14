@@ -1,6 +1,5 @@
 .container {
     width: 740px;
-    height: 838px;
     display: inline-flex;
     padding: 60px 0 60px 0;
     flex-direction: column;
