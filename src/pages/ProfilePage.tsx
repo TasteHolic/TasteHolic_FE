@@ -19,92 +19,74 @@ const MyTastingNotes = React.lazy(
 );
 const MyRecipes = React.lazy(() => import("./SlideContent/MyRecipes"));
 
-// 현재 랜덤으로 유저 선택하도록 설정해둠
-const dummyProfiles = [
-  {
-    nickname: "WhiskyLover",
-    introText: "칵테일을 아주아주아주 좋아합니다.",
-    profileImage: "/image/basicimage.png",
-  },
-  {
-    nickname: "CocktailMaster",
-    introText: "칵테일 마스터입니다.",
-    profileImage: "/image/basicimage.png",
-  },
-  {
-    nickname: "WineTaster",
-    introText: "와인의 향을 즐깁니다.",
-    profileImage: "/image/basicimage.png",
-  },
-];
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
 
-  const randomProfile = useMemo(() => {
-    return dummyProfiles[Math.floor(Math.random() * dummyProfiles.length)];
-  }, []);
-
-  const [isLoggedOut, setIsLoggedOut] = useState<boolean>(
-    () => localStorage.getItem("isLoggedOut") === "false"
-  ); // 로그인 된 상태를 가정하려면 true를 false로 변경하여 테스트하면 됩니다! false로 변경 시 로그아웃 되는 상태를 저장합니다.
+ // const [isLoggedOut, setIsLoggedOut] = useState<boolean>(
+  //   () => localStorage.getItem("isLoggedOut") === "false"); // 로그인 된 상태를 가정하려면 true를 false로 변경하여 테스트하면 됩니다! false로 변경 시 로그아웃 되는 상태를 저장합니다.
+  // const [isLoggedOut, setIsLoggedOut] = useState<boolean>(true);
   const [nickname, setNickname] = useState<string | null>(null);
   const [introText, setIntroText] = useState<string | null>(null);
-  const [profileImage, setProfileImage] = useState<string>(
-    randomProfile.profileImage
-  );
+  const [profileImage, setProfileImage] = useState<string>( "/image/basicimage.png");
   const [currentMenu, setCurrentMenu] = useState<number>(0);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
   const menuItems = ["계정 관리", "내 바", "내 테이스팅 노트", "내 레시피"];
   const carouselViewRef = useRef<HTMLDivElement | null>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (isLoggedOut) {
+    
+    if (token) {
+      setNickname(localStorage.getItem("nickname") || "기본닉넴");
+      setIntroText(localStorage.getItem("introText") || "본인을 설명해봐요");
+      setProfileImage(localStorage.getItem("profileImage") || "/image/basicimage.png");
+    } else {
       setNickname(null);
       setIntroText(null);
       setProfileImage("/image/basicimage.png");
-      return;
     }
-
-    const storedNickname =
-      localStorage.getItem("nickname") || randomProfile.nickname;
-    const storedIntro =
-      localStorage.getItem("introText") || randomProfile.introText;
-    const storedProfileImage =
-      localStorage.getItem("profileImage") || randomProfile.profileImage;
-
-    setNickname(storedNickname);
-    setIntroText(storedIntro);
-    setProfileImage(storedProfileImage);
-  }, [isLoggedOut, randomProfile]);
-
+  }, [token]);
+  
   useLayoutEffect(() => {
     if (carouselViewRef.current && slideRefs.current[currentMenu]) {
       const activeSlideHeight =
         slideRefs.current[currentMenu]?.offsetHeight || 0;
       carouselViewRef.current.style.height = `${activeSlideHeight}px`;
     }
-  }, [currentMenu, isLoggedOut]);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    localStorage.setItem("isLoggedOut", "true"); // 로그아웃 상태 저장
-    setNickname(null);
-    setIntroText(null);
-    setIsLoggedOut(true);
-    setLogoutModalOpen(false);
+  }, [currentMenu, token]);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://54.180.45.230:3000/api/v1/users/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // 토큰 포함
+        },
+      });
+  
+      if (response.ok) {
+        console.log(" 로그아웃 성공");
+        localStorage.removeItem("token");
+        setToken(null);
+        setLogoutModalOpen(false);// 로그아웃 모달 닫기
+        navigate("/");// 메인으로 이동
+      } else {
+        console.error("로그아웃 실패:", response.status);
+      }
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+    }
   };
-
+  
   const handleLoginPage = () => {
-    localStorage.removeItem("isLoggedOut"); // 로그인 시 로그아웃 상태 해제
-    setIsLoggedOut(false);
     navigate("/login");
   };
 
   const renderSlideContent = (index: number) => {
-    if (isLoggedOut) {
+    if (!token) {
       return (
         <div className="logged-out-message">
           <img src="/image/logoutIcon.png" alt="로그아웃이미지" />
@@ -148,7 +130,7 @@ const ProfilePage: React.FC = () => {
               <h2>{nickname || "Guest"}</h2>
               <div>
                 <span className="inner-text-info">
-                  {introText || "술이 취미인 사람입니다."}
+                  {introText || "로그인 후 이용해주세요."}
                 </span>
                 <button
                   className="profile-info-edit"
