@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './SignupNextPage.css';
+import MainHeader from '../components/Header/MainHeader';
+import Footer from '../components/Footer';
 
 const SignupNextPage: React.FC = () => {
     const navigate = useNavigate();
@@ -9,10 +11,12 @@ const SignupNextPage: React.FC = () => {
     };
 
     const handleGoBack = () => {
-        navigate('/home'); // 피그마에서 메인 페이지로 가라고 되어 있음
+        navigate('/'); // 피그마에서 메인 페이지로 가라고 되어 있음
     };
 
     return (
+        <>
+        <MainHeader/>
         <div className="signup-next-form">
             <div className="signup-next-banner">
                 <div className="signup-next-imagebox">
@@ -48,7 +52,8 @@ const SignupNextPage: React.FC = () => {
                 </div>
 
             </div>
-        </div>
+            <Footer/>
+        </div></>
     );
 };
 
