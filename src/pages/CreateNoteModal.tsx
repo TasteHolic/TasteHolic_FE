@@ -297,7 +297,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = flavorButtonRef.current.getBoundingClientRect();
       setFlavorDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 75,
       });
     }
   };
@@ -312,7 +312,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = aromaButtonRef.current.getBoundingClientRect();
       setAromaDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 75,
       });
     }
   };
@@ -327,7 +327,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = finishButtonRef.current.getBoundingClientRect();
       setFinishDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 75,
       });
     }
   };
