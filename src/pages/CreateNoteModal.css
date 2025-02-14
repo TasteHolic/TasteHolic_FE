@@ -1,3 +1,6 @@
+/* ---------------------------------------------------- */
+/* 1) 기존 공통 모달 스타일                                  */
+/* ---------------------------------------------------- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -113,6 +116,7 @@
 .fields-wrapper {
   width: 100%;
   display: flex;
+  min-height: 275px;
   flex-direction: column;
   gap: 22px;
   margin-top: 28px;
@@ -177,6 +181,10 @@
   max-width: 100%;
 }
 
+/* ---------------------------------------------------- */
+/* 2) 맛/향/여운 Dropdown, 색상 관련 CSS                        */
+/* ---------------------------------------------------- */
+
 .tag-chip {
   display: flex;
   align-items: center;
@@ -223,7 +231,6 @@
 .add-flavor-button svg {
   color: rgba(255, 255, 255, 0.6);
 }
-
 .add-flavor-button:hover svg {
   color: #fff;
 }
@@ -248,7 +255,7 @@
   padding: 0;
   margin: 0;
   overflow: hidden;
-  z-index: 1002;
+  z-index: 99999 !important;
 }
 
 .search-box {
@@ -295,7 +302,6 @@
   margin-bottom: -1.2px;
   margin-left: -6px;
 }
-
 .search-input-container input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
@@ -305,20 +311,16 @@
   overflow-y: auto;
   background: transparent;
 }
-
 .scroll-container::-webkit-scrollbar {
   width: 8px;
 }
-
 .scroll-container::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .scroll-container::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
 }
-
 .scroll-container::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
@@ -337,42 +339,38 @@
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-
 .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
-
 .dropdown-item.no-match {
   justify-content: center;
   color: #999;
   cursor: default;
 }
-
 .dropdown-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background: rgba(255, 255, 255, 0.05);
 }
-
 .dropdown-item.disabled:hover {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* 색상 필드 스타일 */
+/* ---------------------------------------------------- */
+/* 3) 색상 필드 스타일 */
+/* ---------------------------------------------------- */
 .color-picker-container {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .selected-colors {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .color-tag {
   width: 12.872px;
   height: 12.872px;
@@ -381,31 +379,25 @@
   cursor: pointer;
   position: relative;
 }
-
-/* 기본 상태에서는 삭제 버튼 숨김 */
 .remove-color-button {
   display: none;
   position: absolute;
-  top: -2px; /* 기존보다 조금 더 안쪽 */
+  top: -2px;
   right: -2px;
-  width: 10px; /* 약간 작게 */
+  width: 10px;
   height: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.7);
   color: #fff;
   border-radius: 50%;
-  font-size: 8px; /* 글씨 크기도 줄임 */
+  font-size: 8px;
   cursor: pointer;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
-
-/* 색상 태그에 호버 시 삭제 버튼 보이기 */
 .color-tag:hover .remove-color-button {
   display: flex;
 }
-
 .color-picker-button {
   width: 12.872px;
   height: 12.872px;
@@ -416,18 +408,15 @@
   fill: #636363;
   transition: background 0.2s ease;
 }
-
 .color-picker-button:hover {
   background: rgba(255, 255, 255, 0.15);
 }
-
 .color-picker-popover {
   background: #fff;
   padding: 8px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
 .color-picker-confirm {
   margin-top: 8px;
   width: 100%;
@@ -440,15 +429,58 @@
   font-size: 12px;
   transition: background 0.2s ease;
 }
-
 .color-picker-confirm:hover {
   background: #4c2a07;
 }
 
+/* ---------------------------------------------------- */
+/* 4) 도수 필드 – 투명 <select> + 커스텀 버튼 스타일       */
+/* ---------------------------------------------------- */
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+}
+.invisible-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-appearance: none;
+  cursor: pointer;
+  z-index: 2;
+  pointer-events: auto;
+}
+.custom-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 80px;
+  height: 100%;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+.custom-button .icon {
+  margin-left: 4px;
+}
+
+/* 한줄평 필드 */
 .one-line-field {
   display: flex;
   width: 262.385px;
-  height: 62.873px;
+  height: 52px;
   padding: 9px 10px;
   align-items: flex-start;
   gap: 10px;
@@ -456,7 +488,6 @@
   border: 1px solid #8b8b8b;
   background: rgba(162, 162, 162, 0.1);
 }
-
 .one-line-textarea {
   width: 100%;
   height: 100%;
@@ -473,7 +504,6 @@
   text-transform: capitalize;
   overflow-y: auto;
 }
-
 .one-line-textarea::placeholder {
   color: rgba(255, 255, 255, 0.2);
   font-family: "Pretendard", sans-serif;
@@ -483,20 +513,136 @@
   letter-spacing: -0.463px;
   text-transform: capitalize;
 }
-
 .one-line-textarea::-webkit-scrollbar {
   width: 6px;
 }
-
 .one-line-textarea::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .one-line-textarea::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
-
 .one-line-textarea::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* ---------------------------------------------------- */
+/* 5) 모달 하단 버튼 (뒤로, 생성하기)                          */
+/* ---------------------------------------------------- */
+.modal-footer {
+  margin-top: auto;
+  padding-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-footer button {
+  display: flex;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.8px;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.modal-footer button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.prev-btn {
+  margin-right: auto;
+}
+.next-btn {
+  margin-left: auto;
+}
+
+/* 여운 드롭다운 전용 CSS */
+.dropdown-menu.finish-dropdown .search-wrapper {
+  width: 160px !important;
+  padding: 0 10px !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dropdown-menu.finish-dropdown .search-input-container {
+  width: 100% !important;
+}
+
+/* 전문가 테이스팅 노트 란 */
+.expert-note {
+  width: 50%;
+  padding-left: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* expert-note 제목 */
+.expert-label {
+  color: #000 !important;
+  background: #fff !important;
+  border: 1px solid #000 !important;
+}
+
+/* expert-note의 필드 래퍼 (user-note fields-wrapper와 유사) */
+.expert-fields-wrapper {
+  width: 100%;
+  display: flex;
+  min-height: 275px;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 28px;
+  max-height: 252.14px;
+  overflow-y: auto; /* scroll 가능 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.expert-fields-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* expert-input-field: user-note의 input-field와 같은 레이아웃 + 배경 rgba(0,0,0,0.6) */
+.expert-input-field {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 4px;
+  align-items: center;
+  gap: 5px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  min-height: 28.29px;
+  max-width: 100%;
+}
+
+/* 전문가 노트 빈 상태 (Empty State) */
+.expert-empty-state {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 아이콘, 텍스트 등은 임의 */
+.expert-empty-icon {
+  width: 50px;
+  height: 50px;
+  background: #ccc;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+.expert-empty-text {
+  color: #fff;
+  font-size: 12px;
+  margin: 2px 0;
 }

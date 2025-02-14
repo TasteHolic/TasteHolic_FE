@@ -24,7 +24,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [tastingNote, setTastingNote] = useState("");
   const [step, setStep] = useState<"create" | "complete">("create");
 
-  // [맛] 관련 상태 및 ref
+  // [맛]
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [isFlavorDropdownOpen, setIsFlavorDropdownOpen] = useState(false);
   const [searchTermFlavor, setSearchTermFlavor] = useState("");
@@ -44,14 +44,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "허브 (Herbal)",
     "짭짤함 (Salty)",
   ];
-
   const filteredFlavors = searchTermFlavor
     ? flavors.filter((flavor) =>
         flavor.toLowerCase().includes(searchTermFlavor.toLowerCase())
       )
     : flavors;
 
-  // [향] 관련 상태 및 ref
+  // [향]
   const [selectedAromas, setSelectedAromas] = useState<string[]>([]);
   const [isAromaDropdownOpen, setIsAromaDropdownOpen] = useState(false);
   const [searchTermAroma, setSearchTermAroma] = useState("");
@@ -71,14 +70,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "커피 (Coffee)",
     "오렌지 (Orange)",
   ];
-
   const filteredAromas = searchTermAroma
     ? aromas.filter((aroma) =>
         aroma.toLowerCase().includes(searchTermAroma.toLowerCase())
       )
     : aromas;
 
-  // [도수] 관련 상태 (간단 select)
+  // [도수] 투명 select
   const [selectedAlcohol, setSelectedAlcohol] = useState<string | null>(null);
   const alcoholOptions = [
     "논알콜",
@@ -89,7 +87,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "40% 이상",
   ];
 
-  // [색상] 관련 상태 – 컬러피커 사용
+  // [색상]
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const colorPickerButtonRef = useRef<HTMLDivElement>(null);
@@ -99,7 +97,61 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   );
   const [tempColor, setTempColor] = useState<string>("#636363");
 
-  // 모달 닫힐 때 모든 입력 초기화
+  // [여운] (Cocktail이 아닐 때만)
+  const [selectedFinish, setSelectedFinish] = useState<string[]>([]);
+  const [isFinishDropdownOpen, setIsFinishDropdownOpen] = useState(false);
+  const [searchTermFinish, setSearchTermFinish] = useState("");
+  const finishDropdownRef = useRef<HTMLUListElement>(null);
+  const finishButtonRef = useRef<HTMLDivElement>(null);
+  const [finishDropdownPos, setFinishDropdownPos] = useState({ x: 0, y: 0 });
+  const [isAddFinishActive, setIsAddFinishActive] = useState(false);
+
+  const finishKeywords = [
+    "부드러운 (Smooth)",
+    "향신료 (Spicy)",
+    "오크 (Oak)",
+    "스모키 (Smoky)",
+    "은은한 (Subtle)",
+    "긴 여운 (Long Finish)",
+    "헤이즐넛 (Hazelnut)",
+    "설탕에 절인 과일 (Candied Fruit)",
+    "달콤한 (Sweet)",
+    "산뜻한 (Fresh)",
+  ];
+  const filteredFinish = searchTermFinish
+    ? finishKeywords.filter((keyword) =>
+        keyword.toLowerCase().includes(searchTermFinish.toLowerCase())
+      )
+    : finishKeywords;
+
+  // 전문가 노트 관련 더미 데이터 (추후 API 연결)
+  // TODO: 실제 API 연결 시 여기서 fetch 후 setExpertData(...)하도록 변경
+  const [expertData, setExpertData] = useState<any | null>(null);
+  const dummyExpertData = {
+    flavors: [
+      "드라이함 (Dry)",
+      "짭짤함 (Salty)",
+      "짭짤함 (Salty)",
+      "짭짤함 (Salty)",
+    ],
+    aromas: ["오렌지 (Orange)", "바닐라 (Vanilla)"],
+    alcohol: ["20%"],
+    finish: ["스모키 (Smoky)"],
+    ingredients: ["럼 (Rum)", "라임주스 (Lime Juice)"],
+  };
+  // "데이터셋에 없는 새로운 술"이라면 빈 상태라고 가정하는 함수
+  const [isExpertDataAvailable, setIsExpertDataAvailable] = useState(true);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 임의로 더미데이터 적용 (나중에 지워주세요)
+      setExpertData(dummyExpertData);
+      // isExpertDataAvailable를 true로
+      setIsExpertDataAvailable(true);
+    }
+  }, [isOpen]);
+
+  // 모달 열리고 닫힐 때 초기화
   useEffect(() => {
     if (!isOpen) {
       setSelectedFlavors([]);
@@ -113,16 +165,26 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       setIsAddAromaActive(false);
 
       setSelectedAlcohol(null);
+
       setSelectedColors([]);
       setTastingNote("");
       setEditingColorIndex(null);
       setTempColor("#636363");
+
+      setSelectedFinish([]);
+      setSearchTermFinish("");
+      setIsFinishDropdownOpen(false);
+      setIsAddFinishActive(false);
+
+      // 전문가 데이터 초기화
+      setExpertData(null);
+      setIsExpertDataAvailable(false);
     }
   }, [isOpen]);
 
-  // 맛 드롭다운 외부 클릭 감지
+  // 맛 드롭다운 외부 클릭
   useEffect(() => {
-    const handleClickOutsideFlavor = (event: globalThis.MouseEvent) => {
+    const handleClickOutsideFlavor = (event: MouseEvent) => {
       if (
         flavorDropdownRef.current &&
         !flavorDropdownRef.current.contains(event.target as Node) &&
@@ -134,7 +196,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         setSearchTermFlavor("");
       }
     };
-
     if (isFlavorDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutsideFlavor);
     }
@@ -143,9 +204,9 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     };
   }, [isFlavorDropdownOpen]);
 
-  // 향 드롭다운 외부 클릭 감지
+  // 향 드롭다운 외부 클릭
   useEffect(() => {
-    const handleClickOutsideAroma = (event: globalThis.MouseEvent) => {
+    const handleClickOutsideAroma = (event: MouseEvent) => {
       if (
         aromaDropdownRef.current &&
         !aromaDropdownRef.current.contains(event.target as Node) &&
@@ -157,7 +218,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         setSearchTermAroma("");
       }
     };
-
     if (isAromaDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutsideAroma);
     }
@@ -166,7 +226,29 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     };
   }, [isAromaDropdownOpen]);
 
-  // 맛 선택 및 제거
+  // (신규) 여운 드롭다운도 외부 클릭 닫기
+  useEffect(() => {
+    const handleClickOutsideFinish = (event: MouseEvent) => {
+      if (
+        finishDropdownRef.current &&
+        !finishDropdownRef.current.contains(event.target as Node) &&
+        finishButtonRef.current &&
+        !finishButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsFinishDropdownOpen(false);
+        setIsAddFinishActive(false);
+        setSearchTermFinish("");
+      }
+    };
+    if (isFinishDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutsideFinish);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideFinish);
+    };
+  }, [isFinishDropdownOpen]);
+
+  // 맛 선택/제거
   const handleFlavorSelect = (flavor: string) => {
     if (!selectedFlavors.includes(flavor)) {
       setSelectedFlavors((prev) => [...prev, flavor]);
@@ -175,12 +257,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       setSearchTermFlavor("");
     }
   };
-
   const removeFlavorTag = (flavor: string) => {
     setSelectedFlavors((prev) => prev.filter((f) => f !== flavor));
   };
 
-  // 향 선택 및 제거
+  // 향 선택/제거
   const handleAromaSelect = (aroma: string) => {
     if (!selectedAromas.includes(aroma)) {
       setSelectedAromas((prev) => [...prev, aroma]);
@@ -189,12 +270,24 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       setSearchTermAroma("");
     }
   };
-
   const removeAromaTag = (aroma: string) => {
     setSelectedAromas((prev) => prev.filter((a) => a !== aroma));
   };
 
-  // 맛 플러스 버튼 클릭 → 드롭다운 토글 및 위치 계산
+  // 여운 선택/제거
+  const handleFinishSelect = (finish: string) => {
+    if (!selectedFinish.includes(finish)) {
+      setSelectedFinish((prev) => [...prev, finish]);
+      setIsFinishDropdownOpen(false);
+      setIsAddFinishActive(false);
+      setSearchTermFinish("");
+    }
+  };
+  const removeFinishTag = (finish: string) => {
+    setSelectedFinish((prev) => prev.filter((f) => f !== finish));
+  };
+
+  // 맛 플러스 버튼
   const handleAddFlavorClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsAddFlavorActive((prev) => !prev);
@@ -204,12 +297,12 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = flavorButtonRef.current.getBoundingClientRect();
       setFlavorDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height,
+        y: rect.top + rect.height + 20,
       });
     }
   };
 
-  // 향 플러스 버튼 클릭 → 드롭다운 토글 및 위치 계산
+  // 향 플러스 버튼
   const handleAddAromaClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsAddAromaActive((prev) => !prev);
@@ -219,12 +312,27 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = aromaButtonRef.current.getBoundingClientRect();
       setAromaDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height,
+        y: rect.top + rect.height + 20,
       });
     }
   };
 
-  // 색상 필드 – 컬러피커 버튼 클릭 처리 (신규 색상 추가)
+  // 여운 플러스 버튼
+  const handleAddFinishClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsAddFinishActive((prev) => !prev);
+    setIsFinishDropdownOpen((prev) => !prev);
+
+    if (finishButtonRef.current) {
+      const rect = finishButtonRef.current.getBoundingClientRect();
+      setFinishDropdownPos({
+        x: rect.left,
+        y: rect.top + rect.height + 20,
+      });
+    }
+  };
+
+  // 색상 + 버튼
   const handleColorPickerClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (selectedColors.length >= 3) {
@@ -232,8 +340,9 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       return;
     }
     setEditingColorIndex(null);
-    setTempColor("#636363"); // 기본 색상
+    setTempColor("#636363");
     setIsColorPickerOpen(true);
+
     if (colorPickerButtonRef.current) {
       const rect = colorPickerButtonRef.current.getBoundingClientRect();
       setColorPickerPos({
@@ -242,8 +351,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       });
     }
   };
-
-  // 색상 태그 클릭 시 – 기존 색상 수정
   const handleColorTagClick = (
     index: number,
     e: MouseEvent<HTMLDivElement>
@@ -252,14 +359,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setEditingColorIndex(index);
     setTempColor(selectedColors[index]);
     setIsColorPickerOpen(true);
+
     const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
     setColorPickerPos({
       x: rect.left,
       y: rect.top + rect.height,
     });
   };
-
-  // 색상 삭제 처리
   const handleColorRemove = (
     index: number,
     e: MouseEvent<HTMLButtonElement>
@@ -268,10 +374,9 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setSelectedColors((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // 생성 버튼 클릭 (완료 처리 등)
+  // 생성하기
   const handleCreate = () => {
     setStep("complete");
-    // 필요 시 onComplete() 호출 등 추가 로직 구현
   };
 
   if (!isOpen) return null;
@@ -279,14 +384,14 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   return (
     <motion.div className="modal-overlay">
       <motion.div className="modal-content">
-        {/* 배경 원 및 블러 효과 */}
+        {/* 배경 원 + 블러 */}
         <div className="modal-bg-circles">
           <div className="blur-circle yellow"></div>
           <div className="blur-circle white"></div>
         </div>
 
         <div className="modal-body">
-          {/* 제목 영역 */}
+          {/* 제목 */}
           <div className="title-section">
             <h2>{drinkName}</h2>
             <p className="subtitle">{category}</p>
@@ -294,10 +399,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
           {/* 메인 영역 */}
           <div className="tasting-note-container">
+            {/* 왼쪽: user-note */}
             <div className="user-note">
               <span className="section-label">나의 테이스팅 노트</span>
               <div className="fields-wrapper">
-                {/* 맛 필드 */}
+                {/* 맛 */}
                 <div className="field-container">
                   <label>맛</label>
                   <div className="input-field">
@@ -326,7 +432,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                   </div>
                 </div>
 
-                {/* 향 필드 */}
+                {/* 향 */}
                 <div className="field-container">
                   <label>향</label>
                   <div className="input-field">
@@ -355,58 +461,93 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                   </div>
                 </div>
 
-                {/* 도수 필드 */}
+                {/* 도수 select (투명) */}
                 <div className="field-container">
                   <label>도수</label>
-                  <div className="input-field">
+                  <div className="custom-select-wrapper">
                     <select
+                      className="invisible-select"
                       value={selectedAlcohol || ""}
-                      onChange={(e) => setSelectedAlcohol(e.target.value)}
+                      onChange={(e) =>
+                        setSelectedAlcohol(e.target.value || null)
+                      }
                     >
-                      <option value="" disabled>
-                        도수 선택
-                      </option>
+                      <option value="">도수 선택</option>
                       {alcoholOptions.map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>
                       ))}
                     </select>
+                    <div className="custom-button">
+                      {selectedAlcohol || "도수 선택"}
+                      <span className="icon">▼</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* 색상 필드 – 컬러피커 적용 */}
-                <div className="field-container">
-                  <label>색상</label>
-                  <div className="color-picker-container">
-                    <div className="selected-colors">
-                      {selectedColors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="color-tag"
-                          style={{ backgroundColor: color }}
-                          onClick={(e) => handleColorTagClick(index, e)}
-                        >
-                          <button
-                            className="remove-color-button"
-                            onClick={(e) => handleColorRemove(index, e)}
+                {/* 색상 or 여운 */}
+                {category === "Cocktail" ? (
+                  <div className="field-container">
+                    <label>색상</label>
+                    <div className="color-picker-container">
+                      <div className="selected-colors">
+                        {selectedColors.map((color, index) => (
+                          <div
+                            key={index}
+                            className="color-tag"
+                            style={{ backgroundColor: color }}
+                            onClick={(e) => handleColorTagClick(index, e)}
                           >
-                            ×
+                            <button
+                              className="remove-color-button"
+                              onClick={(e) => handleColorRemove(index, e)}
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div
+                        className="color-picker-button"
+                        ref={colorPickerButtonRef}
+                        onClick={handleColorPickerClick}
+                      >
+                        <Plus size={12} weight="bold" />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="field-container">
+                    <label>여운</label>
+                    <div className="input-field">
+                      {selectedFinish.map((finish) => (
+                        <div key={finish} className="tag-chip">
+                          <span>{finish}</span>
+                          <button
+                            className="remove-tag"
+                            onClick={() => removeFinishTag(finish)}
+                          >
+                            ✕
                           </button>
                         </div>
                       ))}
-                    </div>
-                    <div
-                      className="color-picker-button"
-                      ref={colorPickerButtonRef}
-                      onClick={handleColorPickerClick}
-                    >
-                      <Plus size={12} weight="bold" />
+                      <div className="dropdown-container">
+                        <div
+                          className={`tag-chip add-flavor-button ${
+                            isAddFinishActive ? "active" : ""
+                          }`}
+                          ref={finishButtonRef}
+                          onClick={handleAddFinishClick}
+                        >
+                          <Plus size={12} weight="bold" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* 한줄평 필드 */}
+                {/* 한줄평 */}
                 <div className="field-container last-field">
                   <label>한줄평</label>
                   <div className="one-line-field">
@@ -421,8 +562,88 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 </div>
               </div>
             </div>
+
             <div className="vertical-line" />
-            <div className="expert-note">{/* 전문가 노트 (미구현) */}</div>
+
+            {/* 전문가 테이스팅 노트 */}
+            <div className="expert-note">
+              {/* 제목 */}
+              <span className="section-label expert-label">
+                전문가 테이스팅 노트
+              </span>
+
+              {/* 데이터셋이 없을 때(새로운 술 등) -> 빈 상태 표시! 추후 수정해주세요. */}
+              {!isExpertDataAvailable ? (
+                <div className="expert-empty-state">
+                  <div className="expert-empty-icon">[ICON]</div>
+                  <p className="expert-empty-text">전문가 데이터가 없습니다.</p>
+                  <p className="expert-empty-text">추후에 추가될 예정입니다.</p>
+                </div>
+              ) : (
+                <div className="expert-fields-wrapper">
+                  {/* 칵테일이면 구성(ingredients) 아니면 여운(finish) */}
+                  <div className="field-container">
+                    <label>맛</label>
+                    <div className="expert-input-field">
+                      {expertData?.flavors?.map((fl: string, idx: number) => (
+                        <div key={idx} className="tag-chip">
+                          <span>{fl}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="field-container">
+                    <label>향</label>
+                    <div className="expert-input-field">
+                      {expertData?.aromas?.map((ar: string, idx: number) => (
+                        <div key={idx} className="tag-chip">
+                          <span>{ar}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 도수 */}
+                  <div className="field-container">
+                    <label>도수</label>
+                    <div className="expert-input-field">
+                      {expertData?.alcohol?.map((alc: string, idx: number) => (
+                        <div key={idx} className="tag-chip">
+                          <span>{alc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {category === "Cocktail" ? (
+                    <div className="field-container">
+                      <label>구성</label>
+                      <div className="expert-input-field">
+                        {expertData?.ingredients?.map(
+                          (ing: string, idx: number) => (
+                            <div key={idx} className="tag-chip">
+                              <span>{ing}</span>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="field-container">
+                      <label>여운</label>
+                      <div className="expert-input-field">
+                        {expertData?.finish?.map((fi: string, idx: number) => (
+                          <div key={idx} className="tag-chip">
+                            <span>{fi}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* 하단 버튼 */}
@@ -437,7 +658,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         </div>
       </motion.div>
 
-      {/* Portal을 사용하여 맛 드롭다운 렌더링 */}
+      {/* 맛 드롭다운 */}
       {isFlavorDropdownOpen &&
         ReactDOM.createPortal(
           <ul
@@ -447,11 +668,10 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               position: "absolute",
               top: flavorDropdownPos.y,
               left: flavorDropdownPos.x,
-              zIndex: 1002,
+              zIndex: 99999,
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* 맛 검색창 */}
             <div className="search-box">
               <div className="search-wrapper">
                 <div className="search-input-container">
@@ -465,7 +685,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 </div>
               </div>
             </div>
-            {/* 맛 드롭다운 목록 */}
             <div className="scroll-container">
               {filteredFlavors.map((flavor) => (
                 <li
@@ -492,7 +711,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           document.body
         )}
 
-      {/* Portal을 사용하여 향 드롭다운 렌더링 */}
+      {/* 향 드롭다운 */}
       {isAromaDropdownOpen &&
         ReactDOM.createPortal(
           <ul
@@ -502,11 +721,10 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               position: "absolute",
               top: aromaDropdownPos.y,
               left: aromaDropdownPos.x,
-              zIndex: 1002,
+              zIndex: 99999,
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* 향 검색창 */}
             <div className="search-box">
               <div className="search-wrapper">
                 <div className="search-input-container">
@@ -520,7 +738,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 </div>
               </div>
             </div>
-            {/* 향 드롭다운 목록 */}
             <div className="scroll-container">
               {filteredAromas.map((aroma) => (
                 <li
@@ -547,7 +764,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           document.body
         )}
 
-      {/* Portal을 사용하여 컬러피커 팝오버 렌더링 */}
+      {/* 컬러피커 */}
       {isColorPickerOpen &&
         ReactDOM.createPortal(
           <div
@@ -556,7 +773,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               position: "absolute",
               top: colorPickerPos.y,
               left: colorPickerPos.x,
-              zIndex: 1002,
+              zIndex: 99999,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -591,6 +808,60 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               확인
             </button>
           </div>,
+          document.body
+        )}
+
+      {/* 여운 드롭다운 */}
+      {category !== "Cocktail" &&
+        isFinishDropdownOpen &&
+        ReactDOM.createPortal(
+          <ul
+            className="dropdown-menu finish-dropdown"
+            ref={finishDropdownRef}
+            style={{
+              position: "absolute",
+              top: finishDropdownPos.y,
+              left: finishDropdownPos.x,
+              zIndex: 99999,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="search-box">
+              <div className="search-wrapper">
+                <div className="search-input-container">
+                  <MagnifyingGlass size={12} weight="bold" />
+                  <input
+                    type="text"
+                    placeholder="검색"
+                    value={searchTermFinish}
+                    onChange={(e) => setSearchTermFinish(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="scroll-container">
+              {filteredFinish.map((fi) => (
+                <li
+                  key={fi}
+                  className={`dropdown-item ${
+                    selectedFinish.includes(fi) ? "disabled" : ""
+                  }`}
+                  onClick={() => {
+                    if (!selectedFinish.includes(fi)) {
+                      handleFinishSelect(fi);
+                    }
+                  }}
+                >
+                  {fi}
+                </li>
+              ))}
+              {filteredFinish.length === 0 && (
+                <li className="dropdown-item no-match">
+                  일치하는 여운이 없습니다.
+                </li>
+              )}
+            </div>
+          </ul>,
           document.body
         )}
     </motion.div>
