@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import CocktailRecipeCard from "../components/CocktailRecipeCard";
 import "./RecipeExplore.css";
-import FloatingButton from "../components/FloatingButton";
+// import FloatingButton from "../components/FloatingButton";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import MainHeader from "../components/Header/MainHeader";
 import Footer from "../components/Footer";
 
 const cocktailData = [
-  { id: 1, name: "피냐콜라다 정복하기", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 21, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
-  { id: 2, name: "내 방이 칵테일 바가 되는 방법", image: "/image/recipe2.png", description: "1 bottle, beverage sugar syrup", views: 18, likes: 5, category: "low-alcohol", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
-  { id: 3, name: "3가지 재료로 만드는 다이키리", image: "/image/recipe3.png", description: "1 bottle, beverage honey", views: 30, likes: 8, category: "fruity", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
-  { id: 4, name: "피냐콜라다", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 21, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
-  { id: 5, name: "입문용 칵테일", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 11, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
-  { id: 6, name: "칵테일", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 11, likes: 18, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." }
+  { id: 1, name: "피냐콜라다 정복하기", drinkName: "올드 패션드", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 21, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
+  { id: 2, name: "내 방이 칵테일 바가 되는 방법", drinkName: "올드 패션드", image: "/image/recipe2.png", description: "1 bottle, beverage sugar syrup", views: 18, likes: 5, category: "low-alcohol", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
+  { id: 3, name: "3가지 재료로 만드는 다이키리", drinkName: "올드 패션드", image: "/image/recipe3.png", description: "1 bottle, beverage honey", views: 30, likes: 8, category: "fruity", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
+  { id: 4, name: "피냐콜라다", drinkName: "올드 패션드", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 21, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
+  { id: 5, name: "입문용 칵테일", drinkName: "올드 패션드", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 11, likes: 3, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." },
+  { id: 6, name: "칵테일", drinkName: "올드 패션드", image: "/image/recipe1.png", description: "1 bottle, beverage coconut cream", views: 11, likes: 18, category: "user", amount1: "1 Tsp", amount2: "1 Tsp", amount3: "1 Splash", ingredient1: "vodka", ingredient2: "coffee Liqueur", ingredient3: "얼음", recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.", recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.", recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다." }
 
 ];
 
@@ -116,13 +116,13 @@ const RecipeExplore: React.FC = () => {
           <p>오늘의 특별한 한 잔을 기록하러 가볼까요?</p></div>
         )}
       </div>
-      <FloatingButton/>
+      {/* <FloatingButton/> */}
       {selectedRecipe && (
         <div className="explore-recipe-background">
           <div className="explore-recipe">
             <ExploreRecipe
               exploreTitle={selectedRecipe.name}
-              drinkName={selectedRecipe}
+              drinkName={selectedRecipe.drinkName}
               imgSrc={selectedRecipe.image}
               viewCount={selectedRecipe.views}
               favoriteCount={selectedRecipe.likes}
