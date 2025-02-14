@@ -89,7 +89,7 @@ const EditWriteRecipe: React.FC<WriteRecipeProps> = ({ line1 = '', line2 = '', l
     });
 
     const [showLine3, setShowLine3] = useState(!!line3);
-    const [focusedField, setFocusedField] = useState<null | 'line1' | 'line2' | 'line3'>(null);
+    const [, setFocusedField] = useState<null | 'line1' | 'line2' | 'line3'>(null);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: 'line1' | 'line2' | 'line3') => {
         setInputValues((prev) => ({
@@ -129,7 +129,7 @@ const EditWriteRecipe: React.FC<WriteRecipeProps> = ({ line1 = '', line2 = '', l
                             onFocus={() => setFocusedField(field as 'line1' | 'line2' | 'line3')}
                             onBlur={() => setTimeout(() => setFocusedField(null), 200)} /* Delay hiding */
                         />
-                        {focusedField === field && inputValues[field as 'line1' | 'line2' | 'line3'] && (
+                        {inputValues[field as 'line1' | 'line2' | 'line3'] && (
                             <DeleteButton onClick={() => handleDelete(field as 'line1' | 'line2' | 'line3')}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#D9D9D9" fill-opacity="0.3"/>
