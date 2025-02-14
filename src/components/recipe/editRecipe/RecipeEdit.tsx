@@ -124,8 +124,8 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                             color3={hexColor3}/>
                         </div>
                     </div>
-                    <div className="category2">
-                        <div className="category-name">레시피</div>
+                    <div className="category r1">
+                        <div className="category-name r2">레시피</div>
                         <WriteRecipe line1={recipeLine1} line2={recipeLine2} line3={recipeLine3} />
                     </div>
                 </div>
