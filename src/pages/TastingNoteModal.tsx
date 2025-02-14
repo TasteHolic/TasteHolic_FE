@@ -43,7 +43,14 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
-  const drinkCategories = ["Beer", "Gin", "Rum", "Tequila", "Whiskey"];
+  const drinkCategories = [
+    "Beer",
+    "Cocktail",
+    "Gin",
+    "Rum",
+    "Tequila",
+    "Whiskey",
+  ];
   const [drinkNames, setDrinkNames] = useState([
     "Heineken",
     "Bombay Sapphire",

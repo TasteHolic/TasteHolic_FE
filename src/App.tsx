@@ -5,16 +5,10 @@ import ProfilePage from "./pages/ProfilePage";
 import SignupForm from "./pages/signupForm";
 import MyRecipePage from "./pages/MyRecipePage";
 import RecipeExplore from "./pages/RecipeExplore";
-<<<<<<< HEAD
-import LoginPage from "./pages/LoginPage";
-import TasteNote from "./pages/TastingNote";
-import ProfileEditPage from "./pages/ProfileEditPage";
-=======
 import TasteNote from "./pages/TastingNote";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import LoginPage from "./pages/LoginPage";
 import SignupNextPage from "./pages/SignupNextPage";
->>>>>>> dcac93c0356fdefce01af7dc6118e035008b302e
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App: React.FC = () => {
   return (
