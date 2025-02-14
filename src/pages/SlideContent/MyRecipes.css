@@ -71,18 +71,18 @@ button {
     background: #666;
 }
 
-.recipe-list {
+.my-recipe-container .slide-my-recipe-list {
     margin-top: 32px;
 }
 
-.recipe-card {
+.slide-my-recipe-card {
     background: #242525;
     padding: 40px;
     margin-bottom: 20px;
     border-radius: 16px;
 }
 
-.recipe-header {
+.slide-my-recipe-header {
     font-size: 14px;
     line-height: 16.71px;
     letter-spacing: -0.56px;
@@ -94,7 +94,7 @@ button {
     align-items: center;
 }
 
-.recipe-header img {
+.slide-my-recipe-header img {
     width: 16px;
     height: 16px;
     margin: 0 4px;
@@ -112,25 +112,26 @@ button {
     vertical-align: middle;
 }
 
-.recipe-title {
+.slide-my-recipe-title {
     font-size: 16px;
     line-height: 19.09px;
     letter-spacing: -0.64px;
     margin-bottom: 20px;
 }
 
-.recipe-container {
+.slide-my-recipe-container {
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     align-items: center;
 }
 
-.recipe-details {
+.slide-my-recipe-details {
     display: flex;
     gap: 10px;
 }
 
-.feature1, .feature2, .feature3 {
+.slide-feature1, .slide-feature2, .slide-feature3 {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -142,19 +143,19 @@ button {
     letter-spacing: -0.52px;
     color: #FFFFFF;
     min-width: 60px;
-    height: 60px;
+    height: 36px;
     text-align: center;
     border: 0.8px solid #515253;
     box-sizing: border-box;
 }
 
-.feature-circle {
+.slide-feature-circle {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.feature-circle img {
+.slide-feature-circle img {
     width: 16px;
     height: 16px;
 }
@@ -175,12 +176,12 @@ button {
     height: 36px;
 }
 
-.recipe-footer {
+.slide-my-recipe-footer {
     margin-left: auto;
 }
 
-.view-btn,
-.edit-btn {
+.slide-view-btn,
+.slide-edit-btn {
     border-radius: 40px;
     border: 1px solid #00000033;
     padding: 12px 22px;
@@ -190,7 +191,7 @@ button {
     letter-spacing: -0.56px;
 }
 
-.view-btn {
+.slide-view-btn {
     width: 110px;
     height: 41px;
     margin-right: 8px;
@@ -198,7 +199,7 @@ button {
     color: #F3F5F6;
 }
 
-.edit-btn {
+.slide-edit-btn {
     width: 95px;
     height: 41px;
     background: #FFFFFF;
