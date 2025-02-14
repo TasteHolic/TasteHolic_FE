@@ -121,7 +121,7 @@ const TermsAgreement: React.FC<TermsAgreementProps> = ({ onChange }) => {
       {/* 팝업 */}
       {showPopup && (
         <div className="popup-overlay">
-          <div className="popup">
+          <div className="termpopup">
             <div className="title-container">
                 <h3 className="popup-title">{popupTitle}</h3>
             </div>

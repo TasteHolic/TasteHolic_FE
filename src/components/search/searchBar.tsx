@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "pretendard/dist/web/static/pretendard.css"
 
 interface MainSearch {
     myBarClick: () => void; //My Bar 일시 호출
     searchClick: () => void; //검색 시 호출
-    searched?: string;
+    searched?: string; //서치바에 입력되어 있는 검색어
 }
 
 const searchBar: React.FC<MainSearch> = ({myBarClick, searchClick, searched}) => {
   const [isMyBar, setIsMyBar] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(searched ?? "");
+
+  useEffect(() => {
+    if (searched !== undefined) {
+        setInputValue(searched);
+    }
+}, [searched]);
 
   const placeholderText = "위스키, 와인, 만들어보고 싶은 레시피 등을 검색해보세요.";
     
@@ -162,7 +168,7 @@ const searchBar: React.FC<MainSearch> = ({myBarClick, searchClick, searched}) =>
             type="text"
             placeholder={placeholderText}
             className="search-iinput"
-            value={searched ?? inputValue}
+            value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
           {inputValue && (

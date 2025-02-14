@@ -1,0 +1,120 @@
+.search-results-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #121212;
+}
+.search-bar-labels{
+    width: 100vw;
+    height: 503px;
+    flex-shrink: 0;
+    border-radius: 0px 0px 32px 32px;
+    background: #181818;
+    box-shadow: 0px 4px 20px 0px rgba(255, 255, 255, 0.10);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 28px;
+}
+.results-string{
+    color: var(--grayscale-gray50, #F3F5F6);
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -1.28px;
+    text-transform: capitalize;
+
+    margin-top: 160px;
+    margin-bottom: 5px;
+}
+.type-labels-container{
+    bottom: 200px;
+    width: 667px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 7px;
+}
+.no-search-results{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 173px;
+    gap: 53px;
+}
+.no-results-image{
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+}
+.no-results-lines{
+    margin-bottom: 500px;
+}
+.no-results{
+    color: var(--grayscale-gray400, #8D8F90);
+    text-align: center;
+    /* H3 */
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.96px;
+    text-transform: capitalize;
+}
+.search-results{
+    gap: 100px;
+    padding: 124px 114px 447px 114px;
+}
+.official-recipes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.user-recipes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 100px;
+}
+.recipes-title{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    color: var(--grayscale-gray50, #F3F5F6);
+    text-align: center;
+    /* H3 */
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.96px;
+    text-transform: capitalize;
+    margin-bottom: 80px;
+}
+.recipe-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+.line{
+    width: 93px;
+    height: 2px;
+    background: #F3F5F6;
+    text-align: center;
+}
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+}

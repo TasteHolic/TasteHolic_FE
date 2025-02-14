@@ -37,7 +37,12 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
             <div className="container">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
-                    <p className="cocktail">Cocktail</p>
+                    <VarietyItem
+                    options={[
+                        "Cocktail",
+                        "whiskey",
+                        "gin, rum, tequilla"
+                    ]}/>
                 </div>
 
                 <div className="categories">
@@ -110,13 +115,13 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                         <div className="category-name">색상</div>
                         <div className="colors">
                             <ColorPicker
-                            color1="#3C2005"
-                            color2="#AE8560"
+                            color1=""
+                            color2=""
                             color3=""/>
                         </div>
                     </div>
-                    <div className="category2">
-                        <div className="category-name">레시피</div>
+                    <div className="category r1">
+                        <div className="category-name r2">레시피</div>
                         <CreateWriteRecipe recipeLines={recipeLines} onChange={setRecipeLines} />
                     </div>
                 </div>

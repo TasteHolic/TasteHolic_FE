@@ -12,8 +12,7 @@ const Container = styled.div<{ isSelected: boolean }>`
     justify-content: center;
     gap: 10px;
     border-radius: 50px;
-    background: ${(props) => (props.isSelected ? "transparent" : "rgba(0, 0, 0, 0.30)")};
-    cursor: pointer;
+    background: ${(props) => (props.isSelected ? "transparent" : "rgba(0, 0, 0, 0.30)")};\
     position: relative;
 `;
 
@@ -69,34 +68,34 @@ const AddButton = styled.button<{ isOpen: boolean }>`
 const DropdownWrapper = styled.div`
     position: absolute;
     top: 100%;
-    left: -80px;
-    transform: translateX(-50%);
+    right: 0;
     margin-top: 0px;
     z-index: 10;
+    transform: translateX(0%);
 `;
 
-interface ItemListProps {
+interface VarietyItemProps {
     options: string[];
 }
 
-const ItemList: React.FC<ItemListProps> = ({ options }) => {
+const VarietyItem: React.FC<VarietyItemProps> = ({ options }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleSelect = (option: string) => {
-        setSelectedOption(option.replace(/\s?\(.*?\)/g, "")); // Removes parentheses content
+        setSelectedOption(option.replace(/\s?\(.*?\)/g, ""));
         setShowDropdown(false);
     };
 
     return (
-        <Container isSelected={!!selectedOption} onClick={() => setShowDropdown(!showDropdown)}>
+        <Container isSelected={!!selectedOption}>
             {selectedOption ? (
-                <SelectedTextContainer>
+                <SelectedTextContainer onClick={() => setShowDropdown(!showDropdown)}>
                     <SelectedText>{selectedOption}</SelectedText>
                 </SelectedTextContainer>
             ) : (
                 <AddButtonContainer>
-                    <AddButton isOpen={showDropdown}>
+                    <AddButton isOpen={showDropdown} onClick={() => setShowDropdown(!showDropdown)}>
                         <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.2106 5.20898V19.7923M5.91895 12.5007H20.5023" stroke="#8D8F90" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -113,4 +112,4 @@ const ItemList: React.FC<ItemListProps> = ({ options }) => {
     );
 };
 
-export default ItemList;
+export default VarietyItem;

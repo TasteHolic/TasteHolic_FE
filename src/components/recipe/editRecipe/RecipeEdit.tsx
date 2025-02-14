@@ -11,6 +11,9 @@ interface RecipeEditProps {
     ingredients?: string[]; //재료 종류들
     alcoholPer?: string; //도수 
     glass?: string; //잔
+    hexColor1?: string; //#여섯자리숫자
+    hexColor2?: string;
+    hexColor3?: string;
     recipeLine1?: string; //레시피 작성 3줄
     recipeLine2?: string;
    recipeLine3?: string;
@@ -26,6 +29,9 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
     ingredients,
     alcoholPer,
     glass,
+    hexColor1,
+    hexColor2,
+    hexColor3,
     recipeLine1,
     recipeLine2,
     recipeLine3,
@@ -113,13 +119,13 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                         <div className="category-name">색상</div>
                         <div className="colors">
                             <ColorPicker
-                                color1="#3C2005"
-                                color2="#AE8560"
-                                color3=""/>
+                            color1={hexColor1}
+                            color2={hexColor2}
+                            color3={hexColor3}/>
                         </div>
                     </div>
-                    <div className="category2">
-                        <div className="category-name">레시피</div>
+                    <div className="category r1">
+                        <div className="category-name r2">레시피</div>
                         <WriteRecipe line1={recipeLine1} line2={recipeLine2} line3={recipeLine3} />
                     </div>
                 </div>
