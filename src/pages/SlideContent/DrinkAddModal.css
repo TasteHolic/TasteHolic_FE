@@ -113,6 +113,7 @@
   letter-spacing: -0.64px;
   text-transform: capitalize;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .add-drink-modal .cancel-button:hover {

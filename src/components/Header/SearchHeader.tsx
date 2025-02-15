@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SearchHeader.css";
 
 const SearchHeader: React.FC = () => {
@@ -24,10 +24,38 @@ const SearchHeader: React.FC = () => {
       xmlns="http://www.w3.org/2000/svg"
       style={{ color: "var(--primary-rose-500-main, #F42B72)" }}
     >
-      {/* 실제 경로 데이터로 교체 */}
       <path d="M21 20l-5.197-5.197A7.953 7.953 0 0018 10a8 8 0 10-8 8 7.953 7.953 0 004.803-1.197L20 21zM10 16a6 6 0 110-12 6 6 0 010 12z" />
     </svg>
   );
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // token이 있으면 true, 없으면 false
+  }, []);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(
+        "http://54.180.45.230:3000/api/v1/users/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("로그아웃 성공");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        navigate("/");
+      } else {
+        console.error("로그아웃 실패:", response.status);
+      }
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+    }
+  };
   return (
     <header className="header">
       <a href="/" className="logo">
@@ -46,17 +74,13 @@ const SearchHeader: React.FC = () => {
         >
           <p className="nav-link">RECIPE</p>
           {isRecipeHovered && (
-            <div className="recipe-dropdown-menu">
-              <a href="/recipe" className="recipe-item">
-                유저 레시피
+            <div className="header-dropdown-menu">
+              <a href="/my-recipe" className="header-dropdown-item">
+                내 레시피
               </a>
-              <hr className="dropdown-divider" />
-              <a href="/my-recipe" className="recipe-item">
-                내 레시피 보기
-              </a>
-              <hr className="dropdown-divider" />
-              <a href="/write-recipe" className="recipe-item">
-                레시피 작성하기
+              <hr className="header-dropdown-divider" />
+              <a href="/recipe" className="header-dropdown-item">
+                레시피 탐색
               </a>
             </div>
           )}
@@ -70,12 +94,12 @@ const SearchHeader: React.FC = () => {
         >
           <p className="nav-link">NOTE</p>
           {isNoteHovered && (
-            <div className="note-dropdown-menu">
-              <a href="/write-note" className="note-item">
+            <div className="header-dropdown-menu">
+              <a href="/write-note" className="header-dropdown-item">
                 테이스팅 노트 작성
               </a>
-              <hr className="note-divider" />
-              <a href="/view-notes" className="note-item">
+              <hr className="header-dropdown-divider" />
+              <a href="/view-notes" className="header-dropdown-item">
                 전체 노트 보기
               </a>
             </div>
@@ -90,38 +114,27 @@ const SearchHeader: React.FC = () => {
         >
           <p className="nav-link">MY</p>
           {isMyHovered && (
-            <div
-              className={
-                isLoggedIn
-                  ? "my-dropdown-menu logged-in"
-                  : "my-dropdown-menu logged-out"
-              }
-            >
+            <div className="header-dropdown-menu">
               {isLoggedIn ? (
                 <>
-                  <a href="/profile/account" className="my-item">
+                  <a href="/mypage" className="header-dropdown-item">
                     마이페이지
                   </a>
-                  <hr className="my-divider" />
-                  <a href="/profile/myrecipes" className="my-item">
-                    작성한 레시피
-                  </a>
-                  <hr className="my-divider" />
-                  <a href="/profile/mybar" className="my-item">
-                    내 바
-                  </a>
-                  <hr className="my-divider" />
-                  <a href="/logout" className="my-item">
+                  <hr className="header-dropdown-divider" />
+                  <button
+                    onClick={handleLogout}
+                    className="header-dropdown-item logout-button"
+                  >
                     로그아웃
-                  </a>
+                  </button>
                 </>
               ) : (
                 <>
-                  <a href="/login" className="my-item">
+                  <a href="/login" className="header-dropdown-item">
                     로그인
                   </a>
-                  <hr className="my-divider" />
-                  <a href="/signup" className="my-item">
+                  <hr className="header-dropdown-divider" />
+                  <a href="/signup" className="header-dropdown-item">
                     회원가입
                   </a>
                 </>

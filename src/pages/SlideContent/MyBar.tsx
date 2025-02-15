@@ -1,5 +1,6 @@
 import "./MyBar.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import DrinkCard from "../../components/productCard/DrinkProps";
 import DrinkDeleteModal from "./DrinkDeleteModal";
 import AddDrinkModal from "./DrinkAddModal";
@@ -11,103 +12,116 @@ interface Drink {
   image: string;
 }
 
+// 카테고리별 이미지 경로 반환 함수
+const getImageForCategory = (category: string): string => {
+  switch (category.toLowerCase()) {
+    case "whisky":
+      return "/image/empty-whiskey.svg";
+    case "tequila":
+      return "/image/empty-teq.svg";
+    case "gin":
+      return "/image/empty-gin.svg";
+    case "rum":
+      return "/image/empty-rum.svg";
+    case "liqueur":
+      return "/image/empty-liqeur.svg";
+    case "beer":
+      return "/image/empty-beer.svg";
+    default:
+      return "/image/empty-etc.svg";
+  }
+};
+
 const MyBar: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
-  const [drinks, setDrinks] = useState<Drink[]>([
-    {
-      id: 1,
-      name: "잭다니엘",
-      category: "Whisky",
-      image: "/image/DrinkProps.svg",
-    },
-    {
-      id: 2,
-      name: "호세 쿠엘보",
-      category: "Tequila",
-      image: "/image/DrinkProps.svg",
-    },
-    {
-      id: 3,
-      name: "봄베이 사파이어",
-      category: "Gin",
-      image: "/image/DrinkProps.svg",
-    },
-    { id: 4, name: "바카디", category: "Rum", image: "/image/DrinkProps.svg" },
-    {
-      id: 5,
-      name: "말리부",
-      category: "Liqueur",
-      image: "/image/DrinkProps.svg",
-    },
-    {
-      id: 6,
-      name: "조니 워커 블랙",
-      category: "Whisky",
-      image: "/image/DrinkProps.svg",
-    },
-  ]);
+  const [drinks, setDrinks] = useState<Drink[]>([]);
 
-  const fetchWithAuth = async (url: string, options: RequestInit) => {
+  /**
+   * 마이바 조회 API 호출
+   */
+  const fetchMyBarDrinks = async () => {
     try {
       let token =
         localStorage.getItem("token") || localStorage.getItem("authToken");
-      if (!token)
+      if (!token) {
         throw new Error("로그인 토큰이 없습니다. 먼저 로그인 해주세요.");
-      token = token.replace(/^"|"$/g, "");
-
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          ...options.headers,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "서버 응답 오류" }));
-        throw new Error(
-          errorData.error?.message ||
-            `서버 에러 (상태 코드: ${response.status})`
-        );
       }
+      token = token.replace(/^"|"$/g, ""); // 따옴표 제거
 
-      return await response.json();
-    } catch (error: any) {
-      console.error("API 요청 중 오류 발생:", error.message || error);
-      throw error;
-    }
-  };
-
-  const handleAddDrink = async (newDrink: { type: string; name: string }) => {
-    try {
-      const result = await fetchWithAuth(
-        "http://54.180.45.230:3000/api/v1/users/my-bar/post",
+      const response = await axios.get(
+        "http://54.180.45.230:3000/api/v1/users/my-bar/view",
         {
-          method: "POST",
-          body: JSON.stringify({
-            name: newDrink.name,
-            category: newDrink.type,
-          }),
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
-      const addedDrink = result.success;
+      const fetchedDrinks = response.data.success.data.map((drink: any) => ({
+        id: drink.id,
+        name: drink.name,
+        category: drink.category,
+        image: getImageForCategory(drink.category),
+      }));
+
+      setDrinks(fetchedDrinks);
+    } catch (error: any) {
+      console.error(
+        "마이바 조회 중 오류 발생:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  /**
+   * 컴포넌트 마운트 시 마이바 조회
+   */
+  useEffect(() => {
+    fetchMyBarDrinks();
+  }, []);
+
+  /**
+   * 음료 추가
+   */
+  const handleAddDrink = async (newDrink: { type: string; name: string }) => {
+    try {
+      let token =
+        localStorage.getItem("token") || localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("로그인 토큰이 없습니다. 먼저 로그인 해주세요.");
+      }
+      token = token.replace(/^"|"$/g, "");
+
+      const result = await axios.post(
+        "http://54.180.45.230:3000/api/v1/users/my-bar/post",
+        {
+          name: newDrink.name,
+          category: newDrink.type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const addedDrink = result.data.success;
       if (addedDrink) {
+        // 로컬 상태 업데이트 (주종에 따라 이미지 설정)
         setDrinks((prev) => [
           ...prev,
           {
             id: addedDrink.id,
             name: addedDrink.name,
             category: addedDrink.category,
-            image: "/image/new.png",
+            image: getImageForCategory(addedDrink.category),
           },
         ]);
+        // 서버와 동기화 위해 재조회 (선택 사항)
+        await fetchMyBarDrinks();
       }
     } catch (error: any) {
       alert(error.message || "음료 추가 중 문제가 발생했습니다.");
@@ -116,27 +130,67 @@ const MyBar: React.FC = () => {
     }
   };
 
+  /**
+   * 음료 삭제
+   */
+  const handleDeleteDrink = async (drinkId: number) => {
+    try {
+      let token =
+        localStorage.getItem("token") || localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("로그인 토큰이 없습니다. 먼저 로그인 해주세요.");
+      }
+      token = token.replace(/^"|"$/g, "");
+
+      await axios.delete(
+        `http://54.180.45.230:3000/api/v1/users/my-bar/delete/${drinkId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // 로컬 상태에서 제거
+      setDrinks((prevDrinks) =>
+        prevDrinks.filter((drink) => drink.id !== drinkId)
+      );
+    } catch (error: any) {
+      console.error(
+        "삭제 중 오류 발생:",
+        error.response?.data || error.message
+      );
+      alert(
+        error.response?.data?.error?.message || "삭제 중 문제가 발생했습니다."
+      );
+    } finally {
+      closeDeleteModal();
+    }
+  };
+
+  /**
+   * 삭제 모달 열기
+   */
   const handleDeleteClick = (drink: Drink) => {
     setSelectedDrink(drink);
     setIsDeleteModalOpen(true);
   };
 
+  /**
+   * 삭제 모달에서 확인 버튼 클릭
+   */
   const confirmDelete = () => {
     if (selectedDrink) {
-      setDrinks(drinks.filter((drink) => drink.id !== selectedDrink.id));
+      handleDeleteDrink(selectedDrink.id);
     }
-    closeDeleteModal();
   };
 
-  const closeDeleteModal = () => {
-    setSelectedDrink(null);
-    setIsDeleteModalOpen(false);
-  };
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const closeAddModal = () => setIsAddModalOpen(false);
 
-  const closeAddModal = () => {
-    setIsAddModalOpen(false);
-  };
-
+  /**
+   * 4개 단위로 그룹화하여 렌더링
+   */
   const renderDrinkGroups = () => {
     const containers: Drink[][] = [];
     for (let i = 0; i < drinks.length; i += 4) {
@@ -172,7 +226,6 @@ const MyBar: React.FC = () => {
           xmlns="http://www.w3.org/2000/svg"
           width="20"
           height="20"
-          viewBox="0 0 20 20"
           fill="none"
           className="add-icon"
         >
