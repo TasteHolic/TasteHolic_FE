@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './DeleteAccount.css';
+import Header from "../components/Header/MyHeader";
+import Footer from "../components/Footer";
 
 const DeleteAccountNextPage: React.FC = () => {
     const navigate = useNavigate();
@@ -9,33 +11,37 @@ const DeleteAccountNextPage: React.FC = () => {
     };
 
     return (
-        <div className="delete-account-form">
-            <div className="delete-account-inform">
-                <div className="delete-account-informbox">
-                    <h1>회원 탈퇴</h1>
-                </div>
-            </div>
+        <>
+            <Header/>
+                <div className="delete-account-form">
+                    <div className="delete-account-inform">
+                        <div className="delete-account-informbox">
+                            <h1>회원 탈퇴</h1>
+                        </div>
+                    </div>
 
-            <div className="delete-form-group">
-                <div className="imgbox2">
-                    <img src="\image\deleteimg2.png" alt="삭제 안내 내용" />
-                </div>
-                <h1 id="after-delete">
-                    탈퇴가 완료되었습니다. <br />
-                    그동안 Tasteholic을 사용해주셔서 감사합니다. <br />
-                </h1>
-            </div>
+                    <div className="delete-form-group">
+                        <div className="imgbox2">
+                            <img src="\image\deleteimg2.png" alt="삭제 안내 내용" />
+                        </div>
+                        <h1 id="after-delete">
+                            탈퇴가 완료되었습니다. <br />
+                            그동안 Tasteholic을 사용해주셔서 감사합니다. <br />
+                        </h1>
+                    </div>
 
-            <div className="homebutton-container">
-                <button
-                    type="submit"
-                    className="home-button"
-                    onClick={handleGoHome}
-                >
-                    홈으로
-                </button>
-            </div>
-        </div>
+                    <div className="homebutton-container">
+                        <button
+                            type="submit"
+                            className="home-button"
+                            onClick={handleGoHome}
+                        >
+                            홈으로
+                        </button>
+                    </div>
+                </div>
+            <Footer/>
+        </>
     )
 };
 export default DeleteAccountNextPage;
