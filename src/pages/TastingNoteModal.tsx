@@ -8,7 +8,6 @@ type Step = "intro" | "category" | "name";
 interface TastingNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // onAddDrink: 부모에 새 음료 데이터 전달 (여기서는 name과 category만 전달)
   onAddDrink: (data: { name: string; category: string }) => void;
 }
 
@@ -321,16 +320,16 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
         )}
       </AnimatePresence>
 
-      {/* CreateNoteModal: 추가 정보 입력 → onComplete 시 부모 onAddDrink 호출 */}
+      {/* CreateNoteModal: 추가 정보 입력 → onComplete 시 부모 onAddDrink 호출 후 모달 닫기 */}
       {isCreateNoteOpen && (
         <CreateNoteModal
           isOpen={isCreateNoteOpen}
-          onClose={() => setIsCreateNoteModalOpen(false)}
+          onClose={() => setIsCreateNoteOpen(false)}
           onComplete={(data) => {
             console.log("🟢 onComplete 실행 직전", data);
-            // 부모 콜백 호출: 새 음료 데이터 전달
             onAddDrink({ name: data.name, category: data.category });
             setIsCreateNoteOpen(false);
+            onClose();
           }}
           drinkName={name}
           category={category}

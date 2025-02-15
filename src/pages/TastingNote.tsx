@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NoteHeader from "../components/Header/NoteHeader";
 import Footer from "../components/Footer";
-import AddPage from "./AddPage";
 import EditPage from "./EditPage";
 import "./TastingNote.css";
 import TastingNoteModal from "./TastingNoteModal";
@@ -14,17 +13,6 @@ interface Drink {
   rating: number;
   createdAt: Date;
   category: string;
-}
-
-interface FinalData {
-  name: string;
-  category: string;
-  flavors: string[];
-  aromas: string[];
-  alcohol: string | null;
-  colors: string[];
-  finish: string[];
-  note: string;
 }
 
 const DEFAULT_DRINKS: Drink[] = [
@@ -111,9 +99,8 @@ const TasteNote: React.FC = () => {
   const [editTarget, setEditTarget] = useState<Drink | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("recent");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 반드시 선언!
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // 부모에서 TastingNoteModal의 onAddDrink로 전달받은 데이터로 음료 추가
   const handleAddDrink = (data: { name: string; category: string }) => {
     const newDrink: Drink = {
       id: Date.now(),
