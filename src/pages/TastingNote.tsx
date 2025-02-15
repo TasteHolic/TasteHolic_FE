@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NoteHeader from "../components/Header/NoteHeader";
 import Footer from "../components/Footer";
 import AddPage from "./AddPage";
 import EditPage from "./EditPage";
 import "./TastingNote.css";
 import TastingNoteModal from "./TastingNoteModal";
+import CreateNoteModal from "./CreateNoteModal";
+import CompleteModal from "./CompleteModal";
+
 interface Drink {
   id: number;
   name: string;
@@ -13,6 +16,19 @@ interface Drink {
   createdAt: Date;
   category: string;
 }
+
+interface FinalData {
+  name: string;
+  category: string;
+  flavors: string[];
+  aromas: string[];
+  alcohol: string | null;
+  colors: string[];
+  finish: string[];
+  note: string;
+}
+
+console.log("TasteNote.tsx: File loaded and interfaces declared.");
 
 const DEFAULT_DRINKS: Drink[] = [
   {
@@ -89,39 +105,117 @@ const DEFAULT_DRINKS: Drink[] = [
   },
 ];
 
+console.log("TasteNote.tsx: DEFAULT_DRINKS array declared.");
+
 const TasteNote: React.FC = () => {
+  console.log("TasteNote component rendering started.");
+
   const [drinks, setDrinks] = useState<Drink[]>(DEFAULT_DRINKS);
   const [filter, setFilter] = useState("전체");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isTastingNoteModalOpen, setIsTastingNoteModalOpen] = useState(false);
+  const [isCreateNoteModalOpen, setIsCreateNoteModalOpen] = useState(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Drink | null>(null);
   const [editTarget, setEditTarget] = useState<Drink | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("recent");
+  const [newDrinkInitialData, setNewDrinkInitialData] = useState<{
+    name: string;
+    category: string;
+  } | null>(null);
+  const [newDrinkFinalData, setNewDrinkFinalData] = useState<FinalData | null>(
+    null
+  );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  console.log("TasteNote component states initialized:", {
+    drinks,
+    filter,
+    isTastingNoteModalOpen,
+    isCreateNoteModalOpen,
+    isCompleteModalOpen,
+    deleteTarget,
+    editTarget,
+    isOpen,
+    selectedOption,
+    newDrinkInitialData,
+    newDrinkFinalData,
+    isEditModalOpen,
+  });
 
   const toggleDropdown = () => {
+    console.log("toggleDropdown called. Current isOpen:", isOpen);
     setIsOpen((prev) => !prev);
   };
 
   const handleSelect = (value: string) => {
+    console.log("handleSelect called with value:", value);
     setSelectedOption(value);
     setIsOpen(false);
   };
 
-  const handleAddDrink = (drink: { category: string; name: string }) => {
-    const newDrink: Drink = {
-      id: Date.now(),
-      name: drink.name,
-      image: "/image/default.png", // 기본 이미지로 설정 (원하는 이미지로 변경 가능)
-      rating: 0, // 기본 평점 (필요에 따라 수정)
-      createdAt: new Date(),
-      category: drink.category,
-    };
-    setDrinks([...drinks, newDrink]);
-    setIsModalOpen(false);
+  useEffect(() => {
+    console.log("📌 useEffect triggered: drinks state changed:", drinks);
+  }, [drinks]);
+
+  // TastingNoteModal의 제출: 이름, 주종 입력 후 "만들러가기" 버튼 클릭 시
+  const handleTastingNoteModalSubmit = (drink: {
+    name: string;
+    category: string;
+  }) => {
+    console.log("handleTastingNoteModalSubmit called with:", drink);
+    setNewDrinkInitialData(drink);
+    setIsTastingNoteModalOpen(false);
+    setIsCreateNoteModalOpen(true);
+  };
+
+  // CreateNoteModal의 생성하기 완료 시
+  const handleCreateNoteModalComplete = (finalData: FinalData) => {
+    console.log("handleCreateNoteModalComplete called with:", finalData);
+    setNewDrinkFinalData(finalData);
+    setIsCreateNoteModalOpen(false);
+    setIsCompleteModalOpen(true);
+  };
+
+  const handleCompleteModalClose = () => {
+    console.log(
+      "🟡 handleCompleteModalClose 실행됨. newDrinkFinalData:",
+      newDrinkFinalData
+    );
+
+    if (newDrinkFinalData) {
+      console.log("🍹 newDrinkFinalData 있음:", newDrinkFinalData);
+
+      const newDrink: Drink = {
+        id: Date.now(),
+        name: newDrinkFinalData.name,
+        image: "/image/default.png",
+        rating: 0,
+        createdAt: new Date(),
+        category: newDrinkFinalData.category,
+      };
+
+      console.log("🔄 추가될 newDrink 객체:", newDrink);
+
+      setDrinks((prevDrinks) => {
+        console.log("📝 기존 drinks 리스트 (이전):", prevDrinks);
+        const updatedDrinks = [...prevDrinks, newDrink];
+        console.log("🆕 새로운 drinks 리스트:", updatedDrinks);
+        return updatedDrinks;
+      });
+
+      console.log("✅ setDrinks 실행됨");
+    } else {
+      console.error("🚨 newDrinkFinalData가 없음! 데이터가 전달되지 않음");
+    }
+
+    setIsCompleteModalOpen(false);
+    setNewDrinkInitialData(null);
+    setNewDrinkFinalData(null);
   };
 
   const handleDeleteDrink = () => {
+    console.log("handleDeleteDrink called with deleteTarget:", deleteTarget);
     if (deleteTarget) {
       setDrinks(drinks.filter((drink) => drink.id !== deleteTarget.id));
       setDeleteTarget(null);
@@ -129,6 +223,7 @@ const TasteNote: React.FC = () => {
   };
 
   const handleEditDrink = (updatedDrink: Drink) => {
+    console.log("handleEditDrink called with updatedDrink:", updatedDrink);
     if (editTarget) {
       setDrinks(
         drinks.map((drink) =>
@@ -144,13 +239,16 @@ const TasteNote: React.FC = () => {
     filter === "전체"
       ? drinks
       : drinks.filter((drink) => drink.category === filter);
+  console.log("Filtered drinks based on filter:", filter, filteredDrinks);
 
   const sortedDrinks = [...filteredDrinks].sort((a, b) => {
     return selectedOption === "recent"
       ? b.createdAt.getTime() - a.createdAt.getTime()
       : b.rating - a.rating;
   });
+  console.log("Sorted drinks by:", selectedOption, sortedDrinks);
 
+  console.log("TasteNote component rendering return section.");
   return (
     <>
       <NoteHeader />
@@ -191,9 +289,9 @@ const TasteNote: React.FC = () => {
 
         <div className="taste-note-drink-categories">
           {["전체", "칵테일", "위스키", "진, 럼, 데낄라", "와인", "기타"].map(
-            (category) => (
-              <button key={category} onClick={() => setFilter(category)}>
-                {category}
+            (cat) => (
+              <button key={cat} onClick={() => setFilter(cat)}>
+                {cat}
               </button>
             )
           )}
@@ -202,9 +300,12 @@ const TasteNote: React.FC = () => {
           {sortedDrinks.length > 0 && (
             <button
               className="taste-note-add-drink"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                console.log("Add button clicked. Opening TastingNoteModal.");
+                setIsTastingNoteModalOpen(true);
+              }}
             >
-              <img src="/image/addbutton.png" alt="추가버튼"></img>
+              <img src="/image/addbutton.png" alt="추가버튼" />
             </button>
           )}
           {sortedDrinks.length > 0 ? (
@@ -213,6 +314,10 @@ const TasteNote: React.FC = () => {
                 key={drink.id}
                 className="taste-note-drink-item"
                 onClick={() => {
+                  console.log(
+                    "Drink item clicked. Opening EditPage for:",
+                    drink
+                  );
                   setEditTarget(drink);
                   setIsEditModalOpen(true);
                 }}
@@ -224,7 +329,8 @@ const TasteNote: React.FC = () => {
                   <button
                     className="taste-note-delete-button"
                     onClick={(e) => {
-                      e.stopPropagation(); // 부모 요소 클릭 방지
+                      e.stopPropagation();
+                      console.log("Delete button clicked for:", drink);
                       setDeleteTarget(drink);
                     }}
                   >
@@ -237,26 +343,33 @@ const TasteNote: React.FC = () => {
             <div className="taste-note-empty-container">
               <button
                 className="taste-note-empty-add-plus"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  console.log(
+                    "Empty container add button clicked. Opening TastingNoteModal."
+                  );
+                  setIsTastingNoteModalOpen(true);
+                }}
               >
-                <img src="/image/addbutton.png" alt="추가버튼"></img>
+                <img src="/image/addbutton.png" alt="추가버튼" />
               </button>
               <div className="taste-note-empty-message">
-                텅 비었네요!<br></br>오늘의 특별한 한 잔을 기록하러 가볼까요?
+                텅 비었네요!
+                <br />
+                오늘의 특별한 한 잔을 기록하러 가볼까요?
               </div>
               <div className="taste-note-empty-box">
                 <div>
-                  <img src="/image/wine-Bar.png" alt="술 선택"></img>
+                  <img src="/image/wine-Bar.png" alt="술 선택" />
                   <h3>마신 술 선택하기</h3>
                   <h4>원하는 술을 검색하거나 직접 추가하세요</h4>
                 </div>
                 <div>
-                  <img src="/image/Create.png" alt="향, 도수 기록"></img>
+                  <img src="/image/Create.png" alt="향, 도수 기록" />
                   <h3>향, 맛, 도수 기록하기</h3>
                   <h4>술의 특징을 상세하게 기록해보세요</h4>
                 </div>
                 <div>
-                  <img src="/image/Read.png" alt="전문가비교"></img>
+                  <img src="/image/Read.png" alt="전문가비교" />
                   <h3>전문가와 비교하기</h3>
                   <h4>전문가의 평가와 비교해보세요</h4>
                 </div>
@@ -266,28 +379,62 @@ const TasteNote: React.FC = () => {
         </div>
       </div>
 
-      {/* 추가 모달 */}
-      {isModalOpen && (
+      {/* TastingNoteModal: 이름, 주종 입력 */}
+      {isTastingNoteModalOpen && (
         <TastingNoteModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onAddDrink={handleAddDrink}
+          isOpen={isTastingNoteModalOpen}
+          onClose={() => {
+            console.log("TastingNoteModal closed without submission.");
+            setIsTastingNoteModalOpen(false);
+          }}
+          onAddDrink={handleTastingNoteModalSubmit}
+        />
+      )}
+
+      {/* CreateNoteModal: 추가 정보 입력 */}
+      {isCreateNoteModalOpen && (
+        <CreateNoteModal
+          isOpen={isCreateNoteModalOpen}
+          onClose={() => {
+            console.log("CreateNoteModal closed without final data.");
+            setIsCreateNoteModalOpen(false);
+          }}
+          onComplete={handleCreateNoteModalComplete}
+          drinkName={newDrinkInitialData ? newDrinkInitialData.name : "Merlot"}
+          category={newDrinkInitialData ? newDrinkInitialData.category : "Wine"}
+        />
+      )}
+
+      {/* CompleteModal: 생성 완료 후 */}
+      {isCompleteModalOpen && (
+        <CompleteModal
+          isOpen={isCompleteModalOpen}
+          onClose={handleCompleteModalClose}
         />
       )}
 
       {/* 삭제 확인 모달 */}
       {deleteTarget && (
         <div className="taste-note-delete-modal">
-          <p>‘Black Russian‘을 삭제하시겠습니까?</p>
+          <p>‘{deleteTarget.name}’을 삭제하시겠습니까?</p>
           <button
             className="delete-btn-in-tastenote"
-            onClick={handleDeleteDrink}
+            onClick={() => {
+              console.log("확인 버튼 클릭. Deleting drink:", deleteTarget);
+              handleDeleteDrink();
+            }}
           >
             삭제
           </button>
           <button
             className="cancel-btn-in-tastenote"
-            onClick={() => setDeleteTarget(null)}
+            onClick={() => {
+              console.log(
+                "취소 버튼 클릭. Deletion canceled for:",
+                deleteTarget
+              );
+              setDeleteTarget(null);
+            }}
           >
             취소
           </button>
@@ -298,7 +445,10 @@ const TasteNote: React.FC = () => {
       {isEditModalOpen && editTarget && (
         <EditPage
           drink={editTarget}
-          onClose={() => setIsEditModalOpen(false)}
+          onClose={() => {
+            console.log("EditPage closed without changes for:", editTarget);
+            setIsEditModalOpen(false);
+          }}
           onEditDrink={handleEditDrink}
         />
       )}
