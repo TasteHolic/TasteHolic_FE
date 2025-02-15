@@ -43,11 +43,12 @@ body {
     border: none;
     border: 1px solid #00000033;
     border-radius: 40px;
-    padding: 16px 32px;
+    padding: 12px 32px;
     font-size: 16px;
     font-weight: 500;
     line-height: 19.09px;
     letter-spacing: -0.64px;
+    height: 51px;
 }
 
 .editnextpage-btn1 {
