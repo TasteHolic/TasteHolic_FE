@@ -2,7 +2,7 @@ import React from "react";
 import SearchBar from "../src/components/search/searchBar";
 import SearchHeader from "../src/components/Header/SearchHeader";
 import SearchCategory from "../src/components/search/searchCategory";
-import "../src/index.css";
+
 import RecommandCard from "../src/components/Category/RecommandCard";
 import CategoryCard from "../src/components/Category/CategoryCard";
 import Footer from "../src/components/Footer";
