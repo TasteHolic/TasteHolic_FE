@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CreateNoteModal from "./CreateNoteModal";
-import CompleteModal from "./CompleteModal";
-
 import "./TastingNoteModal.css";
 
 type Step = "intro" | "category" | "name";
@@ -10,7 +8,8 @@ type Step = "intro" | "category" | "name";
 interface TastingNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddDrink: (drink: { category: string; name: string }) => void;
+  // onAddDrink: 부모에 새 음료 데이터 전달 (여기서는 name과 category만 전달)
+  onAddDrink: (data: { name: string; category: string }) => void;
 }
 
 const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
@@ -25,39 +24,21 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
   const [error, setError] = useState(false);
 
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const [newDrinkFinalData, setNewDrinkFinalData] = useState<{
-    name: string;
-    category: string;
-    flavors: string[];
-    aromas: string[];
-    alcohol: string | null;
-    colors: string[];
-    finish: string[];
-    note: string;
-  } | null>(null);
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isNameOpen, setIsNameOpen] = useState(false);
-
   const [hasAddedNewDrink, setHasAddedNewDrink] = useState(false);
 
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
   const nameDropdownRef = useRef<HTMLDivElement>(null);
 
-  // 모달 열릴 때 body 스크롤 방지
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
-  // 예시 주종, 술이름 목록
   const drinkCategories = [
     "Beer",
     "Cocktail",
@@ -74,19 +55,16 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
     "Jack Daniel's",
   ]);
 
-  // 검색어 필터링 (이름)
   const filteredNames = searchTerm
     ? drinkNames.filter((n) =>
         n.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : drinkNames;
 
-  // 검색어 입력
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  // 새로 입력한 술 추가
   const handleAddNewDrink = () => {
     if (!searchTerm.trim()) return;
     setDrinkNames((prev) => [...prev, searchTerm]);
@@ -94,8 +72,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
     setHasAddedNewDrink(true);
     setSearchTerm("");
     setIsNameOpen(false);
-
-    // highlight (기존 CSS에 정의된 클래스명을 그대로 사용)
     const dropdownMenu = document.querySelector(
       ".name-dropdown .dropdown-menu"
     );
@@ -104,7 +80,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
     }
   };
 
-  // 다음 스텝
   const nextStep = () => {
     if (step === "intro") {
       setStep("category");
@@ -126,21 +101,10 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log("🟡 useEffect 실행됨 - isCreateNoteOpen:", isCreateNoteOpen);
-    console.log("🟡 newDrinkFinalData 변경됨:", newDrinkFinalData);
-
-    if (!isCreateNoteOpen && newDrinkFinalData !== null) {
-      console.log("🟢 CompleteModal 열기");
-      setIsCompleteModalOpen(true);
-    }
-  }, [isCreateNoteOpen, newDrinkFinalData]);
-
   if (!isOpen) return null;
 
   return (
     <>
-      {/* 모달 단계별 내용 렌더링 */}
       <AnimatePresence mode="wait">
         {isOpen && !isCreateNoteOpen && (
           <motion.div
@@ -179,7 +143,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                     </div>
                   </motion.div>
                 )}
-
                 {step === "category" && (
                   <motion.div key="category" className="modal-content">
                     <h2>어떤 종류인가요?</h2>
@@ -208,7 +171,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                           className="dropdown-icon"
                         />
                       </div>
-
                       {isCategoryOpen && (
                         <ul className="dropdown-menu type-dropdown">
                           {drinkCategories.map((type, index) => (
@@ -244,7 +206,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                     </div>
                   </motion.div>
                 )}
-
                 {step === "name" && (
                   <motion.div key="name" className="modal-content">
                     <h2>무슨 이름인가요?</h2>
@@ -292,7 +253,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                             : ""}
                         </p>
                       </div>
-
                       {isNameOpen && (
                         <ul
                           className="dropdown-menu name-dropdown"
@@ -361,37 +321,21 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
         )}
       </AnimatePresence>
 
-      {/* CreateNoteModal은 모달 단계가 끝나면 별도로 렌더링 */}
+      {/* CreateNoteModal: 추가 정보 입력 → onComplete 시 부모 onAddDrink 호출 */}
       {isCreateNoteOpen && (
         <CreateNoteModal
           isOpen={isCreateNoteOpen}
-          onClose={() => {
-            setIsCreateNoteOpen(false);
-          }}
+          onClose={() => setIsCreateNoteModalOpen(false)}
           onComplete={(data) => {
-            console.log("🟢 onComplete 실행 직전");
-
-            setNewDrinkFinalData((prev) => {
-              console.log("🔹 prev:", prev);
-              console.log("🔹 새로운 데이터:", data);
-              return data;
-            });
-
+            console.log("🟢 onComplete 실행 직전", data);
+            // 부모 콜백 호출: 새 음료 데이터 전달
+            onAddDrink({ name: data.name, category: data.category });
             setIsCreateNoteOpen(false);
           }}
           drinkName={name}
           category={category}
         />
       )}
-
-      {/* CompleteModal은 CreateNoteModal 완료 후 표시 */}
-      <CompleteModal
-        isOpen={isCompleteModalOpen}
-        onClose={() => {
-          setIsCompleteModalOpen(false);
-          onClose();
-        }}
-      />
     </>
   );
 };

@@ -370,7 +370,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
     const finalData: FinalData = {
       name: drinkName || "",
-      category: category || "",
+      category: category,
       flavors: selectedFlavors,
       aromas: selectedAromas,
       alcohol: selectedAlcohol,
