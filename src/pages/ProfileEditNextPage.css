@@ -49,6 +49,7 @@ body {
   line-height: 19.09px;
   letter-spacing: -0.64px;
   height: 51px;
+  white-space: nowrap;
 }
 
 .editnextpage-btn1 {
