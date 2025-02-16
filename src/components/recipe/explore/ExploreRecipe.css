@@ -1,8 +1,4 @@
 .explore-recipe-container {
-    position: absolute;
-    top: 695px;
-    left: 278px;
-    z-index: 12;
     width: 740px;
     height: 904px;
     display: inline-flex;
@@ -10,7 +6,7 @@
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    box-sizing: content-box;
+
     border-radius: 24px;
     border: 1px solid #FFF;
 
@@ -53,7 +49,7 @@
     text-transform: capitalize;
 }
 
-.drink-name {
+.explore-recipe-drink-name {
     text-align: center;
     font-family: Pretendard;
     font-size: 20px;
@@ -97,14 +93,14 @@
     letter-spacing: -0.56px;
     text-transform: capitalize;
 }
-.explorecategory {
+.explore-recipe-category {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
     margin-bottom: 8px;
 }
-.category-title {
+.explore-recipe-category-title {
     color: #FFF;
 
     font-family: Pretendard;

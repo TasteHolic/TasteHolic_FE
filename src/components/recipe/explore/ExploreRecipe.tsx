@@ -1,6 +1,11 @@
 import "./ExploreRecipe.css"
 import ViewWriteRecipe from "../viewRecipe/ViewWriteRecipe";
 
+export interface ingredients {
+    ingredient: string;
+    amount: string;
+}
+
 interface ExploreRecipeProps {
     exploreTitle: string; //탐색창 이름
     drinkName: string; //칵테일 이름
@@ -8,12 +13,7 @@ interface ExploreRecipeProps {
     viewCount: number; //조회수
     favoriteCount: number; // 하트수
 
-    amount1: string; //첫 번째 재료양
-    ingredient1: string; //첫 번째 재료
-    amount2: string; //두 번째 재료양
-    ingredient2: string; //두 번째 재료
-    amount3: string; //세 번째 재료양
-    ingredient3: string; //세 번째 재료
+    ingredients: ingredients[];
 
     recipeLine1?: string; //레시피 작성
     recipeLine2?: string;
@@ -28,12 +28,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
     imgSrc,
     viewCount,
     favoriteCount,
-    amount1,
-    amount2,
-    amount3,
-    ingredient1,
-    ingredient2,
-    ingredient3,
+    ingredients,
     recipeLine1,
     recipeLine2,
     recipeLine3,
@@ -47,7 +42,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
             <div className="contents">
                 <div className="title">
                     <div className="explore-title">{exploreTitle}</div>
-                    <div className="drink-name">{drinkName}</div>
+                    <div className="explore-recipe-drink-name">{drinkName}</div>
                     <div className="counts">
                         <div className="count">
                             <img
@@ -67,38 +62,22 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                         </div>
                     </div>
                 </div>
-                <div className="explorecategory">
-                    <div className="category-title">재료</div>
+                <div className="explore-recipe-category">
+                    <div className="explore-recipe-category-title">재료</div>
                     <div className="ingredients">
-                        <div className="ingredient">
-                            <div className="amount">
-                                {amount1}
+                        {ingredients.map((item, index) => (
+                            <div className="ingredient" key={index}>
+                                <div className="amount">{item.amount}</div>
+                                <div className={`label label-${index + 1}`}>
+                                    {item.ingredient}
+                                </div>
                             </div>
-                            <div className="label label-1">
-                                {ingredient1}
-                            </div>
-                        </div>
-                        <div className="ingredient">
-                            <div className="amount">
-                                {amount2}
-                            </div>
-                            <div className="label label-2">
-                                {ingredient2}
-                            </div>
-                        </div>
-                        <div className="ingredient">
-                            <div className="amount">
-                                {amount3}
-                            </div>
-                            <div className="label label-3">
-                                {ingredient3}
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                 </div>
-                <div className="category">
-                    <div className="category-title">레시피</div>
+                <div className="explore-recipe-category">
+                    <div className="explore-recipe-category-title">레시피</div>
                     <div className="recipe">
                     <ViewWriteRecipe
                         line1={recipeLine1}
