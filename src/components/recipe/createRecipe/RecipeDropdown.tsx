@@ -77,6 +77,17 @@ const OptionText = styled.div`
     text-transform: capitalize;
 `;
 
+const ButtonText = styled.p`
+color: var(--grayscale-gray400, #8D8F90);
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+letter-spacing: -0.64px;
+text-transform: capitalize;
+`;
+
 const ArrowDown = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
         <path d="M2 5.5L8 10.5L14 5.5" stroke="#E2E4E6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -102,7 +113,9 @@ const RecipeDropdown: React.FC<DropdownProps> = ({ placeholder, options, option,
     return (
         <DropdownContainer>
             <DropdownButton onClick={() => setIsActive(!isActive)}>
-                {selected || placeholder}
+                <ButtonText style={{ color: selected ? "#ffffff" : "var(--grayscale-gray400, #8D8F90)" }}>
+                    {selected || placeholder}
+                </ButtonText>
                 {isActive ? <ArrowUp /> : <ArrowDown />}
             </DropdownButton>
             {isActive && (
