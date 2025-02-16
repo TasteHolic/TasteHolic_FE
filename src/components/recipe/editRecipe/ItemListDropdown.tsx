@@ -94,6 +94,23 @@ const DropdownItem = styled.div`
         display: none;
     }
 `;
+const Items = styled.div`
+    max-height: 255px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(243, 245, 246, 0.30);
+        border-radius: 33.814px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #888; /* Darker shade when hovered */
+    }
+`;
 const HighlightedText = styled.span`
     color: #828282;
 
@@ -166,12 +183,13 @@ const ItemListDropdown: React.FC<ItemListDropdownProps> = ({ onSelect, options }
                     />
                 </SearchBar>
             </SearchBarContainer>
-
+            <Items>
             {filteredItems.map((item, index) => (
                 <DropdownItem key={index} onClick={() => onSelect(item)}>
                     {formatTextWithParentheses(item)}
                 </DropdownItem>
             ))}
+            </Items>
         </DropdownContainer>
     );
 };
