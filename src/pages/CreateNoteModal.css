@@ -646,3 +646,41 @@
   font-size: 12px;
   margin: 2px 0;
 }
+
+/* 도수 드랍다운 전용 스타일 */
+.alcohol-dropdown-button {
+  cursor: pointer;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 24px;
+  border: 0.5px solid #fff;
+  background: transparent;
+  margin: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 80px;
+}
+
+.alcohol-dropdown-button.active {
+  background: #737373;
+}
+
+.alcohol-dropdown-button .dropdown-text {
+  flex-grow: 1;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.alcohol-dropdown-button .arrow-icon {
+  transition: transform 0.4s ease;
+  margin-left: 4px;
+  color: #fff;
+}
+
+.alcohol-dropdown-button .arrow-icon.rotated {
+  transform: rotate(180deg);
+}

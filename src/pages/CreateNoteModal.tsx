@@ -97,7 +97,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       )
     : aromas;
 
-  // [도수]
+  // [도수] – 기존 select대신 새 드랍다운 사용
   const [selectedAlcohol, setSelectedAlcohol] = useState<string | null>(null);
   const alcoholOptions = [
     "논알콜",
@@ -107,6 +107,10 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     "30%-40%",
     "40% 이상",
   ];
+  const [isAlcoholDropdownOpen, setIsAlcoholDropdownOpen] = useState(false);
+  const alcoholDropdownRef = useRef<HTMLUListElement>(null);
+  const alcoholButtonRef = useRef<HTMLDivElement>(null);
+  const [alcoholDropdownPos, setAlcoholDropdownPos] = useState({ x: 0, y: 0 });
 
   // [색상]
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -169,7 +173,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   }, [isOpen]);
 
   // ─────────────────────────
-  // 드롭다운 외부 클릭 관련 useEffect들 (변경 없음)
+  // 드랍다운 외부 클릭 관련 useEffect들
   // ─────────────────────────
   useEffect(() => {
     const handleClickOutsideFlavor = (event: MouseEvent) => {
@@ -234,8 +238,28 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     };
   }, [isFinishDropdownOpen]);
 
+  // 도수 드랍다운 외부 클릭 처리
+  useEffect(() => {
+    const handleClickOutsideAlcohol = (event: MouseEvent) => {
+      if (
+        alcoholDropdownRef.current &&
+        !alcoholDropdownRef.current.contains(event.target as Node) &&
+        alcoholButtonRef.current &&
+        !alcoholButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsAlcoholDropdownOpen(false);
+      }
+    };
+    if (isAlcoholDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutsideAlcohol);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideAlcohol);
+    };
+  }, [isAlcoholDropdownOpen]);
+
   // ─────────────────────────
-  // 이벤트 핸들러들 (변경 없음)
+  // 이벤트 핸들러들
   // ─────────────────────────
   const handleFlavorSelect = (flavor: string) => {
     if (!selectedFlavors.includes(flavor)) {
@@ -313,6 +337,24 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         y: rect.top + rect.height + 10,
       });
     }
+  };
+
+  // 도수 드랍다운 버튼 클릭 핸들러
+  const handleAlcoholDropdownClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsAlcoholDropdownOpen((prev) => !prev);
+    if (alcoholButtonRef.current) {
+      const rect = alcoholButtonRef.current.getBoundingClientRect();
+      setAlcoholDropdownPos({
+        x: rect.left,
+        y: rect.top + rect.height + 10,
+      });
+    }
+  };
+
+  const handleAlcoholSelect = (option: string) => {
+    setSelectedAlcohol(option);
+    setIsAlcoholDropdownOpen(false);
   };
 
   const handleColorPickerClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -471,27 +513,27 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                     </div>
                   </div>
                 </div>
-
+                {/* 도수 드랍다운 – 기존의 select 대신 새로 구현 */}
                 <div className="field-container">
                   <label>도수</label>
-                  <div className="custom-select-wrapper">
-                    <select
-                      className="invisible-select"
-                      value={selectedAlcohol || ""}
-                      onChange={(e) =>
-                        setSelectedAlcohol(e.target.value || null)
-                      }
+                  <div className="dropdown-container">
+                    <div
+                      className={`alcohol-dropdown-button ${
+                        isAlcoholDropdownOpen ? "active" : ""
+                      }`}
+                      ref={alcoholButtonRef}
+                      onClick={handleAlcoholDropdownClick}
                     >
-                      <option value="">도수 선택</option>
-                      {alcoholOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="custom-button">
-                      {selectedAlcohol || "도수 선택"}
-                      <span className="icon">▼</span>
+                      <span className="dropdown-text">
+                        {selectedAlcohol || "도수 선택"}
+                      </span>
+                      <span
+                        className={`arrow-icon ${
+                          isAlcoholDropdownOpen ? "rotated" : ""
+                        }`}
+                      >
+                        ▾
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -660,13 +702,14 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         </div>
       </motion.div>
 
+      {/* 맛 드랍다운 */}
       {isFlavorDropdownOpen &&
         ReactDOM.createPortal(
           <ul
             className="dropdown-menu"
             ref={flavorDropdownRef}
             style={{
-              position: "fixed", // fixed로 변경
+              position: "fixed",
               top: flavorDropdownPos.y,
               left: flavorDropdownPos.x,
               zIndex: 99999,
@@ -712,13 +755,14 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           document.body
         )}
 
+      {/* 향 드랍다운 */}
       {isAromaDropdownOpen &&
         ReactDOM.createPortal(
           <ul
             className="dropdown-menu"
             ref={aromaDropdownRef}
             style={{
-              position: "fixed", // fixed로 변경
+              position: "fixed",
               top: aromaDropdownPos.y,
               left: aromaDropdownPos.x,
               zIndex: 99999,
@@ -764,12 +808,42 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           document.body
         )}
 
+      {/* 도수 드랍다운 – 검색 섹션 없이 단순 키워드 선택 */}
+      {isAlcoholDropdownOpen &&
+        ReactDOM.createPortal(
+          <ul
+            className="dropdown-menu"
+            ref={alcoholDropdownRef}
+            style={{
+              position: "fixed",
+              top: alcoholDropdownPos.y,
+              left: alcoholDropdownPos.x,
+              zIndex: 99999,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {alcoholOptions.map((option) => (
+              <li
+                key={option}
+                className={`dropdown-item ${
+                  selectedAlcohol === option ? "disabled" : ""
+                }`}
+                onClick={() => handleAlcoholSelect(option)}
+              >
+                {option}
+              </li>
+            ))}
+          </ul>,
+          document.body
+        )}
+
+      {/* 색상 선택 팝오버 */}
       {isColorPickerOpen &&
         ReactDOM.createPortal(
           <div
             className="color-picker-popover"
             style={{
-              position: "fixed", // fixed로 변경
+              position: "fixed",
               top: colorPickerPos.y,
               left: colorPickerPos.x,
               zIndex: 99999,
@@ -810,6 +884,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           document.body
         )}
 
+      {/* 여운 드랍다운 */}
       {category !== "Cocktail" &&
         isFinishDropdownOpen &&
         ReactDOM.createPortal(
@@ -817,7 +892,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             className="dropdown-menu finish-dropdown"
             ref={finishDropdownRef}
             style={{
-              position: "fixed", // 이미 fixed로 되어 있음
+              position: "fixed",
               top: finishDropdownPos.y,
               left: finishDropdownPos.x,
               zIndex: 99999,
