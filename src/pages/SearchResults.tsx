@@ -7,9 +7,9 @@ import RecipeCard from "../components/ReipeCard";
 import { Keyword } from "../components/ReipeCard";
 import RecipeView from "../components/recipe/viewRecipe/RecipeView";
 import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
+import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import SearchHeader from "../components/Header/SearchHeader";
 import Footer from "../components/Footer";
-
 
 interface SearchResultsProps {
     searched: string; 
@@ -18,54 +18,72 @@ interface SearchResultsProps {
 
 const cocktails = [
     {
-      id: 1,
-      name: "Old Fashioned",
-      image: "/image/recipeimage1.png",
-      flavor: ["달콤함", "드라이함"],
-      aroma: ["바닐라", "오크"],
-      ingredients: ["위스키", "설탕", "비터스"],
-      alcoholPer: ["40% 이상"],
-      glass: ["올드패션드 글라스"],
-      hexColor1: "#3C2005",
-      hexColor2: "#AE8560",
-      hexColor3: "",
-      recipeLine1: "설탕과 비터스를 녹인다.",
-      recipeLine2: "위스키를 추가하고 저어준다.",
-      recipeLine3: "얼음과 함께 제공한다.",
+        id: 1,
+        name: "Old Fashioned",
+        image: "/image/cocktail_old_fashioned-1 1.png",
+        flavor: ["달콤함", "드라이함"],
+        aroma: ["바닐라", "오크"],
+        ingredients: [
+            { ingredient: "위스키", amount: "60ml" },
+            { ingredient: "설탕", amount: "1 cube" },
+            { ingredient: "비터스", amount: "2 dashes" }
+        ],
+        alcoholPer: ["40% 이상"],
+        glass: ["올드패션드 글라스"],
+        hexColor1: "#3C2005",
+        hexColor2: "#AE8560",
+        hexColor3: "",
+        recipeLine1: "설탕과 비터스를 녹인다.",
+        recipeLine2: "위스키를 추가하고 저어준다.",
+        recipeLine3: "얼음과 함께 제공한다.",
+        viewCount: 250,
+        favoriteCount: 80
     },
     {
-      id: 2,
-      name: "Black Russian",
-      image: "/image/recipeimage2.png",
-      flavor: ["시트러스", "상쾌함"],
-      aroma: ["라임", "오렌지"],
-      ingredients: ["데킬라", "트리플 섹", "라임 주스"],
-      alcoholPer: ["30-40%"],
-      glass: ["마가리타 글라스"],
-      hexColor1: "#3C2005",
-      hexColor2: "#AE8560",
-      hexColor3: "",
-      recipeLine1: "모든 재료를 섞는다.",
-      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
-      recipeLine3: "라임 조각을 올려 장식한다.",
+        id: 2,
+        name: "Margarita",
+        image: "/image/cocktail_old_fashioned-1 1.png",
+        flavor: ["시트러스", "상쾌함"],
+        aroma: ["라임", "오렌지"],
+        ingredients: [
+            { ingredient: "데킬라", amount: "50ml" },
+            { ingredient: "트리플 섹", amount: "20ml" },
+            { ingredient: "라임 주스", amount: "20ml" }
+        ],
+        alcoholPer: ["30-40%"],
+        glass: ["마가리타 글라스"],
+        hexColor1: "#3C2005",
+        hexColor2: "#AE8560",
+        hexColor3: "",
+        recipeLine1: "모든 재료를 섞는다.",
+        recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
+        recipeLine3: "라임 조각을 올려 장식한다.",
+        viewCount: 400,
+        favoriteCount: 150
     },
     {
-      id: 3,
-      name: "Margarita",
-      image: "/image/recipeimage3.png",
-      flavor: ["시트러스", "상쾌함"],
-      aroma: ["라임", "오렌지"],
-      ingredients: ["데킬라", "트리플 섹", "라임 주스"],
-      alcoholPer: ["30-40%"],
-      glass: ["마가리타 글라스"],
-      hexColor1: "#3C2005",
-      hexColor2: "#AE8560",
-      hexColor3: "",
-      recipeLine1: "모든 재료를 섞는다.",
-      recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
-      recipeLine3: "라임 조각을 올려 장식한다.",
-    },
-  ];
+        id: 3,
+        name: "Margarita",
+        image: "/image/cocktail_old_fashioned-1 1.png",
+        flavor: ["시트러스", "상쾌함"],
+        aroma: ["라임", "오렌지"],
+        ingredients: [
+            { ingredient: "데킬라", amount: "50ml" },
+            { ingredient: "트리플 섹", amount: "20ml" },
+            { ingredient: "라임 주스", amount: "20ml" }
+        ],
+        alcoholPer: ["30-40%"],
+        glass: ["마가리타 글라스"],
+        hexColor1: "#3C2005",
+        hexColor2: "#AE8560",
+        hexColor3: "",
+        recipeLine1: "모든 재료를 섞는다.",
+        recipeLine2: "쉐이킹 후, 소금이 뿌려진 글라스에 따른다.",
+        recipeLine3: "라임 조각을 올려 장식한다.",
+        viewCount: 400,
+        favoriteCount: 150
+    }
+];
 
   const initialSearchedTypes = [
     { id: 1, label: "칵테일", type: "variety" },
@@ -127,7 +145,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
     const userCards = filteredCards.filter((card) => card.type === "user");
 
     const noResults = officialCards.length === 0 && userCards.length === 0;
-
+    const [exploreCocktail, setExploreCocktail] = useState<(typeof cocktails)[0] | null>(null);
+    const [isExploreOpen, setIsExploreOpen] = useState(false);
+    
     return (
         <>
         <div className="search-results-container">
@@ -224,10 +244,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 drinkName={selectedCocktail.name}
                                 flavor={selectedCocktail.flavor}
                                 aroma={selectedCocktail.aroma}
-                                ingredients={selectedCocktail.ingredients}
-                                alcoholPer={
-                                selectedCocktail.alcoholPer ? selectedCocktail.alcoholPer[0] : ""
-                                }
+                                ingredients={selectedCocktail.ingredients.map((ingredient) => 
+                                    typeof ingredient === "object" ? ingredient.ingredient : ingredient
+                                )}
+                                alcoholPer={selectedCocktail.alcoholPer ? selectedCocktail.alcoholPer[0] : ""}
                                 glass={selectedCocktail.glass ? selectedCocktail.glass[0] : ""}
                                 hexColor1={selectedCocktail.hexColor1}
                                 hexColor2={selectedCocktail.hexColor2}
@@ -235,13 +255,19 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 recipeLine1={selectedCocktail.recipeLine1}
                                 recipeLine2={selectedCocktail.recipeLine2}
                                 recipeLine3={selectedCocktail.recipeLine3}
-                                onReadMore={() => console.log("자세히 보기 클릭")}
+                                onReadMore={() => {
+                                    setExploreCocktail(selectedCocktail);
+                                    setIsExploreOpen(true);
+                                    setSelectedCocktail(null);
+                
+                                  }}
                                 onCancel={() => {
                                 setIsEditMode(false);
                                 }}
                                 onSave={() => {
                                 console.log("레시피 저장 완료");
                                 setIsEditMode(false);
+                                setSelectedCocktail(null);
                                 }}
                             />
                             </div>
@@ -252,7 +278,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 drinkName={selectedCocktail.name}
                                 flavor={selectedCocktail.flavor}
                                 aroma={selectedCocktail.aroma}
-                                ingredients={selectedCocktail.ingredients}
+                                ingredients={selectedCocktail.ingredients.map((ingredient) => 
+                                    typeof ingredient === "object" ? ingredient.ingredient : ingredient
+                                )}
                                 alcoholPer={selectedCocktail.alcoholPer}
                                 glass={selectedCocktail.glass}
                                 hexColor1={selectedCocktail.hexColor1}
@@ -261,13 +289,36 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searched, onSearch }) => 
                                 recipeLine1={selectedCocktail.recipeLine1}
                                 recipeLine2={selectedCocktail.recipeLine2}
                                 recipeLine3={selectedCocktail.recipeLine3}
-                                onReadMore={() => console.log("자세히 보기 클릭")}
+                                onReadMore={() => {
+                                    setExploreCocktail(selectedCocktail);
+                                    setIsExploreOpen(true);
+                                    setSelectedCocktail(null);
+                                  }}
                                 onCancel={() => setSelectedCocktail(null)}
                                 onEdit={() => setIsEditMode(true)}
                             />
                             </div>
 
                             ))}
+                            <div className="modal-container">
+                            {isExploreOpen && exploreCocktail && (
+                            <ExploreRecipe
+                                exploreTitle="레시피 탐색"
+                                drinkName={exploreCocktail.name}
+                                imgSrc={exploreCocktail.image}
+                                viewCount={123}
+                                favoriteCount={45}
+                                ingredients={exploreCocktail.ingredients}
+                                recipeLine1={exploreCocktail.recipeLine1}
+                                recipeLine2={exploreCocktail.recipeLine2}
+                                recipeLine3={exploreCocktail.recipeLine3}
+                                onCancel={() => setIsExploreOpen(false)}
+                                onSave={() => {console.log("레시피 저장!");
+                                setIsExploreOpen(false);
+                                }}
+                            />
+                            )}
+                            </div>
                 </div>
             )}
         <Footer/>
