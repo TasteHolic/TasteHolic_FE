@@ -8,6 +8,8 @@ const DropdownContainer = styled.div`
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
     background: var(--grayscale-gray800, #242525);
     box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.51);
+
+    
 `;
 
 const SearchBarContainer = styled.div`
@@ -61,6 +63,23 @@ const SearchBarInput = styled.input`
         outline: none;
     }
 `;
+const Items = styled.div`
+    max-height: 255px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(243, 245, 246, 0.30);
+        border-radius: 33.814px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #888; /* Darker shade when hovered */
+    }
+`;
 
 const DropdownItem = styled.div`
     padding: 10px 10px 10px 30px;
@@ -90,6 +109,7 @@ const DropdownItem = styled.div`
     &:last-child::after {
         display: none;
     }
+        
 `;
 
 const HighlightedText = styled.span`
@@ -166,12 +186,14 @@ const ItemListDropdown: React.FC<ItemListDropdownProps> = ({ onSelect, options }
                     />
                 </SearchBar>
             </SearchBarContainer>
+            <Items>
 
             {filteredItems.map((item, index) => (
                 <DropdownItem key={index} onClick={() => handleSelect(item)}>
                     {formatTextWithParentheses(item)}
                 </DropdownItem>
             ))}
+            </Items>
 
             {/*새로입력*/}
             {searchTerm.trim() !== "" && !filteredItems.includes(searchTerm.trim()) && (
