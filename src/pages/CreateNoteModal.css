@@ -10,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .modal-content {
@@ -22,7 +22,7 @@
   border: 0.63px solid #fff;
   background: rgba(0, 0, 0, 0.4);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(50px);
+  backdrop-filter: blur(15px);
   overflow: visible;
 }
 
@@ -182,7 +182,7 @@
 }
 
 /* ---------------------------------------------------- */
-/* 2) 맛/향/여운 Dropdown, 색상 관련 CSS                        */
+/* 2) 맛/향/여운 Dropdown, 색상 관련 CSS                     */
 /* ---------------------------------------------------- */
 
 .tag-chip {
@@ -359,7 +359,7 @@
 }
 
 /* ---------------------------------------------------- */
-/* 3) 색상 필드 스타일 */
+/* 3) 색상 필드 스타일                                      */
 /* ---------------------------------------------------- */
 .color-picker-container {
   display: flex;
@@ -434,7 +434,7 @@
 }
 
 /* ---------------------------------------------------- */
-/* 4) 도수 필드 – 투명 <select> + 커스텀 버튼 스타일       */
+/* 4) 도수 필드 – 투명 <select> + 커스텀 버튼 스타일            */
 /* ---------------------------------------------------- */
 .custom-select-wrapper {
   position: relative;

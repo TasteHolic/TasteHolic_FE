@@ -31,6 +31,18 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   drinkName = "Merlot",
   category = "Wine",
 }) => {
+  // 모달이 열릴 때 body 스크롤을 막음
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
+
   const [tastingNote, setTastingNote] = useState("");
 
   // [맛]
@@ -156,9 +168,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     }
   }, [isOpen]);
 
-  // 기존의 isOpen 변화에 따른 상태 리셋 useEffect는 제거합니다.
-  // (모달 닫힘 시 onClose에서 상태 초기화하도록 처리)
-
   // ─────────────────────────
   // 드롭다운 외부 클릭 관련 useEffect들 (변경 없음)
   // ─────────────────────────
@@ -273,7 +282,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = flavorButtonRef.current.getBoundingClientRect();
       setFlavorDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 10,
       });
     }
   };
@@ -287,7 +296,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = aromaButtonRef.current.getBoundingClientRect();
       setAromaDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 10,
       });
     }
   };
@@ -301,7 +310,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       const rect = finishButtonRef.current.getBoundingClientRect();
       setFinishDropdownPos({
         x: rect.left,
-        y: rect.top + rect.height + 20,
+        y: rect.top + rect.height + 10,
       });
     }
   };
@@ -657,7 +666,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             className="dropdown-menu"
             ref={flavorDropdownRef}
             style={{
-              position: "absolute",
+              position: "fixed", // fixed로 변경
               top: flavorDropdownPos.y,
               left: flavorDropdownPos.x,
               zIndex: 99999,
@@ -709,7 +718,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             className="dropdown-menu"
             ref={aromaDropdownRef}
             style={{
-              position: "absolute",
+              position: "fixed", // fixed로 변경
               top: aromaDropdownPos.y,
               left: aromaDropdownPos.x,
               zIndex: 99999,
@@ -760,7 +769,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           <div
             className="color-picker-popover"
             style={{
-              position: "absolute",
+              position: "fixed", // fixed로 변경
               top: colorPickerPos.y,
               left: colorPickerPos.x,
               zIndex: 99999,
@@ -808,7 +817,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             className="dropdown-menu finish-dropdown"
             ref={finishDropdownRef}
             style={{
-              position: "absolute",
+              position: "fixed", // 이미 fixed로 되어 있음
               top: finishDropdownPos.y,
               left: finishDropdownPos.x,
               zIndex: 99999,
