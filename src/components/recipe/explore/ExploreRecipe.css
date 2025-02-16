@@ -1,4 +1,8 @@
 .explore-recipe-container {
+    position: absolute;
+    top: 695px;
+    left: 278px;
+    z-index: 12;
     width: 740px;
     height: 904px;
     display: inline-flex;
@@ -6,7 +10,7 @@
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-
+    box-sizing: content-box;
     border-radius: 24px;
     border: 1px solid #FFF;
 
@@ -93,7 +97,7 @@
     letter-spacing: -0.56px;
     text-transform: capitalize;
 }
-.category {
+.explorecategory {
     display: flex;
     flex-direction: column;
     align-items: center;

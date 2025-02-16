@@ -41,7 +41,7 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
 }) => {
     return (
         <>
-            <div className="container">
+            <div className="editcontainer">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
                     <button className="read-more-button" onClick={onReadMore}>

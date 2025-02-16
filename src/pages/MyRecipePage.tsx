@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./MyRecipePage.css";
 import RecipeHeader from "../components/Header/RecipeHeader";
-import CocktailCard from "../components/CocktailCard";
+import RecipeCard from "../components/ReipeCard";
 import { image } from "framer-motion/client";
 import RecipeModal from "../components/WriteRecipe";
 import FloatingButton from "../components/FloatingButton";
 import Footer from "../components/Footer";
 import RecipeView from "../components/recipe/viewRecipe/RecipeView";
 import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
+import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 
 const cocktails = [
   {
     name: "Old Fashioned",
-    image: "/image/recipeimage1.png",
+    image: "/image/recipe1.png",
+    ismybar: true,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["달콤함", "드라이함"],
     aroma: ["바닐라", "오크"],
     ingredients: ["위스키", "설탕", "비터스"],
@@ -28,6 +35,12 @@ const cocktails = [
   {
     name: "Black Russian",
     image: "/image/recipeimage2.png",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -43,6 +56,12 @@ const cocktails = [
   {
     name: "Margarita",
     image: "/image/recipeimage3.png",
+    ismybar: true,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -57,7 +76,13 @@ const cocktails = [
   },
   {
     name: "Mojito",
+    ismybar: false,
     image: "/image/recipeimage4.png",
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -73,6 +98,12 @@ const cocktails = [
   {
     name: "yellow",
     image: "/image/recipeimage5.png",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -88,6 +119,12 @@ const cocktails = [
   {
     name: "whisky shower",
     image: "/image/recipeimage6.png",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -102,6 +139,12 @@ const cocktails = [
   },
   {
     name: "whisky sho",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     image: "/image/recipeimage7.png",
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
@@ -118,6 +161,12 @@ const cocktails = [
   {
     name: "whisky showe",
     image: "/image/recipeimage8.png",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -133,6 +182,12 @@ const cocktails = [
   {
     name: "whisky show",
     image: "/image/recipeimage9.png",
+    ismybar: false,
+    keyWords: [
+      { label: "칵테일", type: "variety" as const},
+      { label: "상큼한", type: "flavor" as const},
+      { label: "부드러운", type: "mood" as const},
+    ],
     flavor: ["시트러스", "상쾌함"],
     aroma: ["라임", "오렌지"],
     ingredients: ["데킬라", "트리플 섹", "라임 주스"],
@@ -158,7 +213,8 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
     (typeof cocktails)[0] | null
   >(null);
   const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
-
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [exploreCocktail, setExploreCocktail] = useState<(typeof cocktails)[0] | null>(null);
   return (
     <>
       <RecipeHeader />
@@ -204,10 +260,11 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
       )}
       <div className="recipes-container">
         {cocktails.map((cocktail) => (
-          <CocktailCard
-            key={cocktail.name}
+          <RecipeCard
             name={cocktail.name}
             image={cocktail.image}
+            keyWords={cocktail.keyWords}
+            isMyBar={cocktail.ismybar}
             onClick={() => setSelectedCocktail(cocktail)}
             isSelected={selectedCocktail?.name === cocktail.name} // ✅ 선택된 칵테일인지 체크
           />
@@ -230,13 +287,18 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             recipeLine1={selectedCocktail.recipeLine1}
             recipeLine2={selectedCocktail.recipeLine2}
             recipeLine3={selectedCocktail.recipeLine3}
-            onReadMore={() => console.log("자세히 보기 클릭")}
+            onReadMore={() => {
+              setExploreCocktail(selectedCocktail);
+              setIsExploreOpen(true);
+              setSelectedCocktail(null);
+            }}
             onCancel={() => {
               setIsEditMode(false);
             }}
             onSave={() => {
               console.log("레시피 저장 완료");
               setIsEditMode(false);
+              setSelectedCocktail(null);
             }}
           />
         ) : (
@@ -253,12 +315,37 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             recipeLine1={selectedCocktail.recipeLine1}
             recipeLine2={selectedCocktail.recipeLine2}
             recipeLine3={selectedCocktail.recipeLine3}
-            onReadMore={() => console.log("자세히 보기 클릭")}
+            onReadMore={() => {
+              setExploreCocktail(selectedCocktail);
+              setIsExploreOpen(true);
+              setSelectedCocktail(null);
+            }}
             onCancel={() => setSelectedCocktail(null)} // 모달 닫기
             onEdit={() => setIsEditMode(true)}
           />
         ))}
-
+        {isExploreOpen && exploreCocktail && (
+  <ExploreRecipe
+    exploreTitle="레시피 탐색"
+    drinkName={exploreCocktail.name}
+    imgSrc={exploreCocktail.image}
+    viewCount={123}
+    favoriteCount={45}
+    amount1="30ml"
+    ingredient1={exploreCocktail.ingredients[0] || "재료 없음"}
+    amount2="20ml"
+    ingredient2={exploreCocktail.ingredients[1] || "재료 없음"}
+    amount3="10ml"
+    ingredient3={exploreCocktail.ingredients[2] || "재료 없음"}
+    recipeLine1={exploreCocktail.recipeLine1}
+    recipeLine2={exploreCocktail.recipeLine2}
+    recipeLine3={exploreCocktail.recipeLine3}
+    onCancel={() => setIsExploreOpen(false)}
+    onSave={() => {console.log("레시피 저장!");
+      setIsExploreOpen(false);
+    }}
+  />
+)}
       <FloatingButton />
       <Footer />
     </>

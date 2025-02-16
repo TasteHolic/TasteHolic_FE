@@ -67,7 +67,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                         </div>
                     </div>
                 </div>
-                <div className="category">
+                <div className="explorecategory">
                     <div className="category-title">재료</div>
                     <div className="ingredients">
                         <div className="ingredient">
