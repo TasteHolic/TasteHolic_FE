@@ -38,6 +38,22 @@ const DropdownContent = styled.div`
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     padding-top: 8px;
     padding-bottom: 8px;
+    
+    max-height: 270px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(243, 245, 246, 0.30);
+        border-radius: 33.814px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #888; /* Darker shade when hovered */
+    }
 `;
 
 const DropdownItem = styled.div`
