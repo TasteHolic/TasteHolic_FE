@@ -51,6 +51,18 @@
     position: absolute;
     right: 24px;
     top: 24px;
+
+
+    color: #F5F5F5;
+
+    text-align: right;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.64px;
+    text-transform: capitalize;
 }
 .done-img {
     width: 20px;
