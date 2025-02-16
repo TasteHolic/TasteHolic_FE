@@ -11,7 +11,7 @@ const DropdownContainer = styled.div`
 `;
 
 const SearchBarContainer = styled.div`
-    width: 296px;
+    width: 320px;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
@@ -22,7 +22,7 @@ const SearchBarContainer = styled.div`
 `;
 
 const SearchBar = styled.div`
-    width: 280px;
+    width: 296px;
     height: 36px;
     display: flex;
     flex-direction: row;
