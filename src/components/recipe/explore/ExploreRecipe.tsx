@@ -38,6 +38,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
     return(
         <>
         <div className="explore-recipe-container">
+            <div className="gradient-over-img"/>
             <img src={imgSrc} className="background-img"/>
             <div className="contents">
                 <div className="title">
@@ -45,6 +46,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                     <div className="explore-recipe-drink-name">{drinkName}</div>
                     <div className="counts">
                         <div className="count">
+                            
                             <img
                                 src="/image/iconamoon_eye-duotone.png"
                                 className="count-img"
@@ -62,6 +64,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                         </div>
                     </div>
                 </div>
+                <div className="explore-recipe-wrapper">
                 <div className="explore-recipe-category">
                     <div className="explore-recipe-category-title">재료</div>
                     <div className="ingredients">
@@ -87,7 +90,8 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                     </div>
 
                 </div>
-                <div className="bottom">
+                </div>
+                <div className="explore-recipe-bottom">
                     <button className="cancel-button" onClick={onCancel}>
                         cancel
                     </button>
