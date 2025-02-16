@@ -11,7 +11,7 @@ const RecipeLines = styled.div`
 
 const RecipeLine = styled.div`
     display: flex;
-    width: 470px;
+    width: 507px;
     height: 38px;
     padding-left: 18px;
     padding-right: 18px;
