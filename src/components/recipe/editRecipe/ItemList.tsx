@@ -70,8 +70,8 @@ position: relative;
 `;
 const AddButton = styled.button<{ isOpen: boolean }>`
     display: flex;
-    height: 48px;
-    width: 67px;
+    height: 40px;
+    width: 56px;
     justify-content: center;
     align-items: center;
     border-radius: 50px;
