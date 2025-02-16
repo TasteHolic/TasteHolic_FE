@@ -12,7 +12,6 @@ import SignupNextPage from "./pages/SignupNextPage";
 import DeleteAccount from "./pages/DeleteAccount";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProfileNextPage from "./pages/ProfileEditNextPage";
-import DeleteAccount from "./pages/DeleteAccount";
 import DeleteAccountNextPage from "./pages/DeleteAccountNextPage";
 const App: React.FC = () => {
   return (
@@ -25,7 +24,6 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/signup/done" element={<SignupNextPage />} />
         <Route path="/my-recipe" element={<MyRecipePage />} />
-        <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/recipe" element={<RecipeExplore />} />
         <Route path="/view-notes" element={<TasteNote />} />
         <Route path="/mypage/edit-profile" element={<ProfileEditPage />} />
