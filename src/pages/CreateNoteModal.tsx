@@ -847,8 +847,18 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               top: colorPickerPos.y,
               left: colorPickerPos.x,
               zIndex: 99999,
+              overscrollBehavior: "none",
+              touchAction: "none",
             }}
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            onTouchMove={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
           >
             <SketchPicker
               color={tempColor}
