@@ -15,7 +15,7 @@ const TypeLabelSvg: React.FC<TypeLabelSvgProps> = ({
   const styles = {
     container: {
       display: "inline-flex",
-      height: "20px",
+      height: "36px",
       padding: "8px 12px",
       justifyContent: "center",
       alignItems: "center",
