@@ -49,6 +49,17 @@ const DropdownItem = styled.div`
     position: relative;
     text-align: left;
 
+    color: #FFF;
+
+    /* 기본 본문 */
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.56px;
+    text-transform: capitalize;
+
     &:hover {
         background: var(--grayscale-gray700, #383939);
         margin-left: 20px;
@@ -72,10 +83,9 @@ const DropdownItem = styled.div`
         display: none;
     }
 `;
-const OptionText = styled.div`a
+const OptionText = styled.div`
     color: #FFF;
 
-    /* 기본 본문 */
     font-family: Pretendard;
     font-size: 14px;
     font-style: normal;
@@ -83,6 +93,16 @@ const OptionText = styled.div`a
     line-height: normal;
     letter-spacing: -0.56px;
     text-transform: capitalize;
+`;
+const ButtonText = styled.p`
+color: var(--grayscale-gray400, #8D8F90);
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+letter-spacing: -0.64px;
+text-transform: capitalize;
 `;
 
 
@@ -106,7 +126,10 @@ const RecipeDropdown: React.FC<DropdownProps> = ({ placeholder, options, option 
     return (
         <DropdownContainer>
             <DropdownButton onClick={() => setIsActive(!isActive)}>
-                {selected || placeholder}
+                <ButtonText style={{ color: selected ? "#ffffff" : "var(--grayscale-gray400, #8D8F90)" }}>
+                    {selected || placeholder}
+                </ButtonText>
+                
                 {isActive ? <ArrowUp /> : <ArrowDown />}
             </DropdownButton>
             {isActive && (
