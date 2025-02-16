@@ -1,6 +1,6 @@
 import "./RecipeCreate.css"
 import { useState } from "react";
-import ItemList from "./ItemList";
+import ItemList from "../ItemList";
 import VarietyItem from "./VarietyItem";
 import RecipeDropdown from "./RecipeDropdown";
 import CreateWriteRecipe from "./CreateWriteRecipe";

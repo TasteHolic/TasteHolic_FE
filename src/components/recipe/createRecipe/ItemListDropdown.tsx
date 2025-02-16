@@ -136,8 +136,8 @@ const ItemListDropdown: React.FC<ItemListDropdownProps> = ({ onSelect, options }
     );
 
     const handleSelect = (item: string) => {
-        onSelect(item);  // Add selected item
-        setSearchTerm("");  // Clear search field after selection
+        onSelect(item);
+        setSearchTerm("");
     };
 
     return (
