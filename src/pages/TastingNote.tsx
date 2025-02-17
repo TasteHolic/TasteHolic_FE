@@ -1,3 +1,4 @@
+// TasteNote.tsx
 import React, { useState, useEffect } from "react";
 import NoteHeader from "../components/Header/NoteHeader";
 import Footer from "../components/Footer";
@@ -11,6 +12,12 @@ interface Drink {
   image: string;
   createdAt: Date;
   category: string;
+  flavors?: string[];
+  aromas?: string[];
+  alcohol?: string | null;
+  colors?: string[];
+  finish?: string[];
+  note?: string;
 }
 
 const DEFAULT_DRINKS: Drink[] = [
@@ -40,7 +47,7 @@ const DEFAULT_DRINKS: Drink[] = [
     name: "Pina Colada",
     image: "/image/alcohol4.png",
     createdAt: new Date(),
-    category: "진, 럼, 데낄라라",
+    category: "진, 럼, 데낄라",
   },
   {
     id: 5,
@@ -123,10 +130,28 @@ const TasteNote: React.FC = () => {
     setEditTarget(null);
   };
 
+  // 카테고리 매핑
+  const categoryMap: Record<string, string[]> = {
+    칵테일: ["Cocktail"],
+    위스키: ["Whiskey"],
+    "진, 럼, 데낄라": ["Gin", "Rum", "Tequila"],
+    와인: ["Wine"],
+    기타: ["Beer"],
+  };
+
+  // 필터링 로직 (예: drink.category와 filter의 매핑된 배열에 공통 요소가 있는지 확인)
   const filteredDrinks =
     filter === "전체"
       ? drinks
-      : drinks.filter((drink) => drink.category === filter);
+      : drinks.filter((drink) => {
+          const drinkCategories = categoryMap[drink.category] || [
+            drink.category,
+          ];
+          const filterCategories = categoryMap[filter] || [filter];
+          return drinkCategories.some((dCat) =>
+            filterCategories.includes(dCat)
+          );
+        });
 
   const sortedDrinks = [...filteredDrinks].sort((a, b) => {
     return b.createdAt.getTime() - a.createdAt.getTime(); // 최근 작성순 정렬
@@ -166,7 +191,10 @@ const TasteNote: React.FC = () => {
               <div
                 key={drink.id}
                 className="taste-note-drink-item"
-                onClick={() => setEditTarget(drink)}
+                onClick={() => {
+                  setEditTarget(drink);
+                  setIsEditModalOpen(true);
+                }}
               >
                 <div className="taste-note-drink-hover-container">
                   <div className="change-item-to-blur-hover"></div>
@@ -258,9 +286,25 @@ const TasteNote: React.FC = () => {
       {/* 수정 모달 */}
       {isEditModalOpen && editTarget && (
         <EditNoteModal
-          drink={editTarget}
+          isOpen={isEditModalOpen}
+          initialData={{
+            name: editTarget.name,
+            category: editTarget.category,
+            flavors: editTarget.flavors || [],
+            aromas: editTarget.aromas || [],
+            alcohol: editTarget.alcohol || null,
+            colors: editTarget.colors || [],
+            finish: editTarget.finish || [],
+            note: editTarget.note || "",
+          }}
           onClose={() => setIsEditModalOpen(false)}
-          onEditDrink={handleEditDrink}
+          onSave={(finalData) => {
+            const updatedDrink: Drink = {
+              ...editTarget,
+              ...finalData,
+            };
+            handleEditDrink(updatedDrink);
+          }}
         />
       )}
 
