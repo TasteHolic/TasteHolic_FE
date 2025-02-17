@@ -41,22 +41,22 @@ const AlcoholSlideBar: React.FC<AlcoholSlideBarProps> = ({ addClick }) => {
   } as React.CSSProperties;
 
   const minLabelPosition = {
-    left: `calc(${(minRange / 100) * 487}px)`,
+    left: `calc(${(minRange / 100) * 482}px)`,
   };
   const maxLabelPosition = {
-    left: `calc(${(maxRange / 100) * 487}px)`,
+    left: `calc(${(maxRange / 100) * 482}px)`,
   };
 
   return (
     <div className="serachbar-container">
-      <div className="val">
-        <div className="minVal" style={minLabelPosition}>
-          <div className="min-value numberVal">
+      <div className="percentage-anchors">
+        <div className="values-anchor" style={minLabelPosition}>
+          <div className="number-percentage">
             <input type="number" min="0" max="100" value={minRange} disabled />
             <span className="percentage-symbol">%</span>
           </div>
           <svg
-            className="anchor"
+            className="anchor-img"
             xmlns="http://www.w3.org/2000/svg"
             width="12"
             height="10"
@@ -72,13 +72,13 @@ const AlcoholSlideBar: React.FC<AlcoholSlideBarProps> = ({ addClick }) => {
           </svg>
         </div>
 
-        <div className="maxVal" style={maxLabelPosition}>
-          <div className="max-value numberVal">
+        <div className="values-anchor" style={maxLabelPosition}>
+          <div className="number-percentage">
             <input type="number" min="0" max="100" value={maxRange} disabled />
             <span className="percentage-symbol">%</span>
           </div>
           <svg
-            className="anchor"
+            className="anchor-img"
             xmlns="http://www.w3.org/2000/svg"
             width="12"
             height="10"
