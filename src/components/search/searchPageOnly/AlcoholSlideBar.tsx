@@ -48,7 +48,7 @@ const AlcoholSlideBar: React.FC<AlcoholSlideBarProps> = ({ addClick }) => {
   };
 
   return (
-    <div className="container">
+    <div className="serachbar-container">
       <div className="val">
         <div className="minVal" style={minLabelPosition}>
           <div className="min-value numberVal">
@@ -116,7 +116,7 @@ const AlcoholSlideBar: React.FC<AlcoholSlideBarProps> = ({ addClick }) => {
       </div>
 
       <button
-        className={`addButton ${isActive ? "activeButton" : ""}`}
+        className={`serachbar-addButton ${isActive ? "activeButton" : ""}`}
         onClick={handleButtonClick}
       >
         추가하기
