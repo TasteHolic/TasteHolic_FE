@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./SearchPageUp.css";
-
+import { useNavigate } from "react-router-dom";
 import "pretendard/dist/web/static/pretendard.css";
 import SearchBar from "../components/search/searchBar";
 import SearchCategory from "../components/search/searchCategory";
@@ -10,9 +10,14 @@ import TypeLabel from "../components/search/searchPageOnly/TypeLabel";
 import TypeLabelSvg from "../components/search/searchPageOnly/TypeLabelSvg";
 
 const SearchPageUp: React.FC = () => {
+  const navigate = useNavigate();
   const [isPopupVisible, setIsPopupVisible] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [showSlideBar, setShowSlideBar] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedAromas, setSelectedAromas] = useState<string[]>([]);
+  const [selectedTastes, setSelectedTastes] = useState<string[]>([]);
   const [selectedRange, setSelectedRange] = useState<{
     min: number;
     max: number;
@@ -46,6 +51,53 @@ const SearchPageUp: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleSearchClick = async (query: string) => {
+    setSearchQuery(query); // 검색어 업데이트
+
+    if (!query.trim() && selectedCategories.length === 0) {
+      alert("검색어 또는 카테고리를 선택해야 합니다!");
+      return;
+    }
+    const requestData = {
+      category: selectedCategories.length > 0 ? selectedCategories[0] : "",
+      query: query.trim(),
+      minAbv: selectedRange.min,
+      maxAbv: selectedRange.max,
+      aroma: selectedAromas,
+      taste: selectedTastes,
+    };
+    console.log("📡 선택된 카테고리:", selectedCategories);
+    console.log("📡 선택된 아로마:", selectedAromas);
+    console.log("📡 선택된 맛:", selectedTastes);
+    console.log("📡 서버로 보낼 데이터:", requestData);
+    // API 요청
+    try {
+      const response = await fetch(
+        "http://54.180.45.230:3000/api/v1/users/search/category",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      const data = await response.json();
+      console.log("✅ 검색 결과:", data);
+
+      if (data.success) {
+        navigate("/search-results", {
+          state: { results: data.data, searched: query },
+        });
+      } else {
+        console.error("❌ 검색 실패:", data.message);
+      }
+    } catch (error) {
+      console.error("🚨 API 요청 중 오류 발생:", error);
+    }
+  };
+
   const handleAddClick = (min: number, max: number) => {
     setSelectedRange({ min, max });
     const newLabel = { name: `${min} % ~ ${max} %` };
@@ -56,55 +108,74 @@ const SearchPageUp: React.FC = () => {
   };
 
   const handleCategoryTypeClick = (type: string) => {
+    // (1) 기존 label 매핑
     const labelMapping: Record<string, string> = {
       etcVariety: "기타 주종",
       etcAroma: "기타 맛",
       etcFlavor: "기타 향",
       etcMood: "기타 분위기",
     };
-
     const displayName = labelMapping[type as keyof typeof labelMapping] || type;
 
-    const newLabel = { name: displayName };
-
+    // (2) activeCategories 업데이트
     setActiveCategories((prev) =>
       prev.includes(type) ? prev.filter((cat) => cat !== type) : [...prev, type]
     );
 
-    if (type === "allVariety") {
-      setVarietyLabels((prevLabels) =>
-        prevLabels.some((label) => label.name === "모든 주종 포함")
-          ? []
-          : [{ name: "모든 주종 포함" }]
+    // (3) 각 필터 그룹에 해당하는 타입 배열 정의
+    const varietyTypes = [
+      "칵테일",
+      "위스키",
+      "진,럼,데낄라",
+      "etcVariety",
+      "allVariety",
+    ];
+    const aromaTypes = [
+      "시트러스",
+      "베리/열대과일",
+      "꿀/시럽",
+      "카라멜/초콜렛",
+      "우디/오크/가죽",
+      "바닐라/견과류",
+      "허브(민트 등)",
+      "향신료(시나몬 등)",
+      "스모키",
+      "etcAroma",
+      "allAroma",
+    ];
+    const tasteTypes = [
+      "단맛",
+      "신맛",
+      "쓴맛",
+      "드라이",
+      "부드러움",
+      "묵직함",
+      "etcFlavor",
+      "allFlavor",
+    ];
+
+    // (4) 해당 그룹에 따라 선택 상태 업데이트
+    if (varietyTypes.includes(type)) {
+      setSelectedCategories((prev) =>
+        prev.includes(type)
+          ? prev.filter((item) => item !== type)
+          : [...prev, type]
       );
-      setActiveCategories((prev) => prev.filter((cat) => cat === "allVariety"));
-      return;
-    } else if (type === "allAroma") {
-      setAromaLabels((prevLabels) =>
-        prevLabels.some((label) => label.name === "모든 향 포함")
-          ? []
-          : [{ name: "모든 향 포함" }]
+    } else if (aromaTypes.includes(type)) {
+      setSelectedAromas((prev) =>
+        prev.includes(type)
+          ? prev.filter((item) => item !== type)
+          : [...prev, type]
       );
-      setActiveCategories((prev) => prev.filter((cat) => cat === "allAroma"));
-      return;
-    } else if (type === "allFlavor") {
-      setFlavorLabels((prevLabels) =>
-        prevLabels.some((label) => label.name === "모든 맛 포함")
-          ? []
-          : [{ name: "모든 맛 포함" }]
+    } else if (tasteTypes.includes(type)) {
+      setSelectedTastes((prev) =>
+        prev.includes(type)
+          ? prev.filter((item) => item !== type)
+          : [...prev, type]
       );
-      setActiveCategories((prev) => prev.filter((cat) => cat === "allFlavor"));
-      return;
-    } else if (type === "allMood") {
-      setMoodLabels((prevLabels) =>
-        prevLabels.some((label) => label.name === "모든 분위기 포함")
-          ? []
-          : [{ name: "모든 분위기 포함" }]
-      );
-      setActiveCategories((prev) => prev.filter((cat) => cat === "allMood"));
-      return;
     }
 
+    // (5) 화면에 보이는 라벨 토글 처리 (기존 로직)
     const toggleLabel = (
       labels: { name: string }[],
       setLabels: React.Dispatch<React.SetStateAction<{ name: string }[]>>
@@ -113,7 +184,6 @@ const SearchPageUp: React.FC = () => {
         const labelExists = prevLabels.find(
           (label) => label.name === displayName
         );
-
         const isAllActive = prevLabels.some(
           (label) =>
             label.name === "모든 주종 포함" ||
@@ -121,7 +191,6 @@ const SearchPageUp: React.FC = () => {
             label.name === "모든 향 포함" ||
             label.name === "모든 분위기 포함"
         );
-
         if (isAllActive) {
           setActiveCategories((prev) =>
             prev.filter(
@@ -140,22 +209,24 @@ const SearchPageUp: React.FC = () => {
                 label.name !== "모든 향 포함" &&
                 label.name !== "모든 분위기 포함"
             ),
-            newLabel,
+            { name: displayName },
           ];
         }
-
         return labelExists
           ? prevLabels.filter((label) => label.name !== displayName)
-          : [...prevLabels, newLabel];
+          : [...prevLabels, { name: displayName }];
       });
     };
 
     if (categories.includes("칵테일")) {
       toggleLabel(varietyLabels, setVarietyLabels);
+    } else if (
+      categories.includes("시트러스") ||
+      categories.includes("베리/열대과일")
+    ) {
+      toggleLabel(aromaLabels, setAromaLabels);
     } else if (categories.includes("단맛")) {
       toggleLabel(flavorLabels, setFlavorLabels);
-    } else if (categories.includes("시트러스")) {
-      toggleLabel(aromaLabels, setAromaLabels);
     } else if (categories.includes("깔끔한")) {
       toggleLabel(moodLabels, setMoodLabels);
     }
@@ -175,8 +246,15 @@ const SearchPageUp: React.FC = () => {
 
     const actualType = labelMapping[type] || type;
 
+    // activeCategories 업데이트
     setActiveCategories((prev) => prev.filter((cat) => cat !== actualType));
 
+    // selected 상태에서도 해당 필터를 제거
+    setSelectedCategories((prev) => prev.filter((item) => item !== actualType));
+    setSelectedAromas((prev) => prev.filter((item) => item !== actualType));
+    setSelectedTastes((prev) => prev.filter((item) => item !== actualType));
+
+    // 라벨 배열에서도 제거
     setVarietyLabels((prev) => prev.filter((label) => label.name !== type));
     setRangeLabels((prev) => prev.filter((label) => label.name !== type));
     setAromaLabels((prev) => prev.filter((label) => label.name !== type));
@@ -293,7 +371,7 @@ const SearchPageUp: React.FC = () => {
       <div className="body">
         <div className="set-up">
           <div className="greetings">어떤 Taste를 찾고 계신가요?</div>
-          <SearchBar />
+          <SearchBar myBarClick={() => {}} searchClick={handleSearchClick} />
           <SearchCategory
             onClick1={handleClick1}
             onClick2={handleClick2}

@@ -13,6 +13,7 @@ import DeleteAccount from "./pages/DeleteAccount";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProfileNextPage from "./pages/ProfileEditNextPage";
 import DeleteAccountNextPage from "./pages/DeleteAccountNextPage";
+import SearchResults from "./pages/SearchResults";
 const App: React.FC = () => {
   return (
     <Router>
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           path="/mypage/delete-account/done"
           element={<DeleteAccountNextPage />}
         />
+        <Route path="/search-results" element={<SearchResults />} />
       </Routes>
     </Router>
   );
