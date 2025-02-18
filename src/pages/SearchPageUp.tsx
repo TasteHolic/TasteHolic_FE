@@ -150,32 +150,35 @@ const SearchPageUp: React.FC = () => {
 
     // (3) 각 필터 그룹에 해당하는 타입 배열 정의
     const varietyTypes = [
-      "Cocktail",
-      "위스키",
-      "진,럼,데낄라",
+        "칵테일", 
+        "위스키", 
+        "진,럼,데낄라",
       "etcVariety",
       "allVariety",
     ];
     const aromaTypes = [
-      "시트러스",
-      "베리/열대과일",
-      "꿀/시럽",
-      "카라멜/초콜렛",
-      "우디/오크/가죽",
-      "바닐라/견과류",
-      "허브(민트 등)",
-      "향신료(시나몬 등)",
-      "스모키",
+        "라임",
+        "시트러스 향",
+        "아몬드",
+        "바닐라",
+        "민트",
+        "베리",
+        "오크",
+        "커피",
+        "오렌지",
       "etcAroma",
       "allAroma",
     ];
     const tasteTypes = [
-      "단맛",
-      "신맛",
-      "쓴맛",
-      "드라이",
-      "부드러움",
-      "묵직함",
+        "달콤함",
+        "시트러스",
+        "상쾌함",
+        "드라이함",
+        "강렬함",
+        "부드러움",
+        "프루티",
+        "허브",
+        "짭짤함",
       "etcFlavor",
       "allFlavor",
     ];
@@ -291,7 +294,11 @@ const SearchPageUp: React.FC = () => {
   const handleClick1 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories(["칵테일", "위스키", "진,럼,데낄라"]);
+      setCategories([
+        "칵테일", 
+        "위스키", 
+        "진,럼,데낄라"
+    ]);
     }, 0);
     setShowSlideBar(false);
 
@@ -315,15 +322,15 @@ const SearchPageUp: React.FC = () => {
     setCategories([]);
     setTimeout(() => {
       setCategories([
-        "시트러스",
-        "베리/열대과일",
-        "꿀/시럽",
-        "카라멜/초콜렛",
-        "우디/오크/가죽",
-        "바닐라/견과류",
-        "허브(민트 등)",
-        "향신료(시나몬 등)",
-        "스모키",
+        "라임",
+        "시트러스 향",
+        "아몬드",
+        "바닐라",
+        "민트",
+        "베리",
+        "오크",
+        "커피",
+        "오렌지"
       ]);
     }, 0);
     setShowSlideBar(false);
@@ -342,7 +349,18 @@ const SearchPageUp: React.FC = () => {
   const handleClick4 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories(["단맛", "신맛", "쓴맛", "드라이", "부드러움", "묵직함"]);
+      setCategories([
+        "달콤함",
+        "시트러스",
+        "상쾌함",
+        "드라이함",
+        "강렬함",
+        "부드러움",
+        "프루티",
+        "허브",
+        "짭짤함"
+
+    ]);
     }, 0);
     setShowSlideBar(false);
 
@@ -361,11 +379,12 @@ const SearchPageUp: React.FC = () => {
     setCategories([]);
     setTimeout(() => {
       setCategories([
-        "깔끔한",
-        "달콤하게 남는",
-        "씁쓸하게 남는",
-        "오래가는",
-        "짧은",
+        "로맨틱한",
+        "취하고 싶은 날",
+        "홈바(혼술)",
+        "여름",
+        "겨울",
+        "비 오는 날" 
       ]);
     }, 0);
     setShowSlideBar(false);
