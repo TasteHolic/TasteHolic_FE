@@ -139,9 +139,10 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
                     height="17"
                     viewBox="0 0 16 17"
                     fill="none"
-                    className={`dropdown-icon ${isDropdownOpen ? "rotate-icon" : ""}`}
+                    className={`dropdown-icon ${isDropdownOpen ? "" : "rotate-icon"}`}
+                    style={{ stroke: borderColor === "border-green-500" ? "#4ECE95" : "#E2E4E6" }}
                 >
-                    <path d="M14 11.5L8 6.5L2 11.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M14 11.5L8 6.5L2 11.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 </span>
             </div>
@@ -189,7 +190,7 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
           </div>
         )}
         {step === 3 &&(
-          <RecipeCreate drinkName={cocktailName} onCancel={onClose} onSave={() => { alert("레시피 저장 완료!"); onClose(); }} />
+          <RecipeCreate drinkName={cocktailName} onCancel={onClose} onSave={() => { onClose(); }} />
         )}
       </Modal>
     </div>
