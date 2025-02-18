@@ -13,10 +13,18 @@ const FloatingButton: React.FC = () => {
 
       {isOpen && (
         <div className="plusmenu">
-          <button className="plusmenu-item" onClick={() => navigate("/recipe")}>
+          <button className="plusmenu-item" 
+          onClick={() => {
+            navigate("/recipe");
+            setIsOpen(false);
+          }}>
             레시피 탐색
           </button>
-          <button className="plusmenu-item" onClick={() => navigate("/my-recipe")}>
+          <button className="plusmenu-item" 
+          onClick={() => {
+            navigate("/my-recipe");
+            setIsOpen(false);
+            }}>
             내 레시피
           </button>
         </div>
