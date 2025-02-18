@@ -6,6 +6,7 @@ import FloatingButton from "../components/FloatingButton";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import RecipeHeader from "../components/Header/RecipeHeader";
 import Footer from "../components/Footer";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const categories = [
   { id: "my", label: "유저등록" },
@@ -16,9 +17,22 @@ const categories = [
   {
     id: "user",
     icon: (
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <g id="Group 728">
-          <circle id="Ellipse 106" cx="15" cy="15" r="15" fill="white" fillOpacity="0.2" />
+          <circle
+            id="Ellipse 106"
+            cx="15"
+            cy="15"
+            r="15"
+            fill="white"
+            fillOpacity="0.2"
+          />
           <g id="Group 720">
             <path
               id="Vector 209"
@@ -37,14 +51,25 @@ const categories = [
 
 const RecipeExplore: React.FC = () => {
   const [recipes, setRecipes] = useState<any[]>([]);
-  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>({});
+  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>(
+    {}
+  );
   const [selectedCategory, setSelectedCategory] = useState("my");
   const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [cursor, setCursor] = useState<number | null>(null);
-  const [hasMore, setHasMore] = useState(true); 
+  const [hasMore, setHasMore] = useState(true);
   const loader = useRef<HTMLDivElement | null>(null);
+
+  const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get("category");
+    if (categoryParam && categoryParam !== selectedCategory) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     fetchRecipes(selectedCategory);
@@ -59,7 +84,7 @@ const RecipeExplore: React.FC = () => {
         }
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [selectedCategory, cursor]);
@@ -68,7 +93,9 @@ const RecipeExplore: React.FC = () => {
     if (!hasMore) return;
     setLoading(true);
     try {
-      const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes?type=${category}`);
+      const response = await axios.get(
+        `http://54.180.45.230:3000/api/v1/recipes?type=${category}`
+      );
       if (response.data.recipes) {
         setRecipes(response.data.recipes);
 
@@ -85,9 +112,13 @@ const RecipeExplore: React.FC = () => {
   const toggleSaveRecipe = async (id: number, type: string) => {
     try {
       if (savedRecipes[id]) {
-        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`);
+        await axios.patch(
+          `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`
+        );
       } else {
-        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=cocktail`);
+        await axios.patch(
+          `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=cocktail`
+        );
       }
       setSavedRecipes((prev) => ({ ...prev, [id]: !prev[id] }));
     } catch (error) {
@@ -119,19 +150,27 @@ const RecipeExplore: React.FC = () => {
         {/* 메뉴바 */}
         <div className="menu-bar">
           <div className="buttons">
-          {categories.map(({ id, label, icon }) => (
-            <button
-              key={id}
-              className={`menu-item ${selectedCategory === id ? "active" : ""}`}
-              onClick={() => handleCategoryClick(id)}
-            >
-              {icon && <span className="menu-icon">{icon}</span>}
-              {label}
-            </button>
-            
-          ))}
+            {categories.map(({ id, label, icon }) => (
+              <button
+                key={id}
+                className={`menu-item ${
+                  selectedCategory === id ? "active" : ""
+                }`}
+                onClick={() => handleCategoryClick(id)}
+              >
+                {icon && <span className="menu-icon">{icon}</span>}
+                {label}
+              </button>
+            ))}
           </div>
-          <div className="active-indicator" style={{ left: `${categories.findIndex(c => c.id === selectedCategory) * 190}px` }} />
+          <div
+            className="active-indicator"
+            style={{
+              left: `${
+                categories.findIndex((c) => c.id === selectedCategory) * 190
+              }px`,
+            }}
+          />
         </div>
 
         {/* 칵테일 카드 리스트 */}
@@ -196,7 +235,7 @@ const RecipeExplore: React.FC = () => {
         )}
       </div>
       <div ref={loader} style={{ height: "10px", background: "transparent" }} />
-      <FloatingButton/>
+      <FloatingButton />
       <Footer />
     </>
   );

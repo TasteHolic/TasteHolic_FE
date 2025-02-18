@@ -146,34 +146,34 @@ const SearchPageUp: React.FC = () => {
 
     // (3) 각 필터 그룹에 해당하는 타입 배열 정의
     const varietyTypes = [
-        "칵테일", 
-        "위스키", 
-        "진,럼,데낄라",
+      "칵테일",
+      "위스키",
+      "진,럼,데낄라",
       "etcVariety",
       "allVariety",
     ];
     const aromaTypes = [
-        "라임",
-        "시트러스 향",
-        "아몬드",
-        "바닐라",
-        "민트",
-        "베리",
-        "오크",
-        "커피",
-        "오렌지",
+      "라임",
+      "시트러스 향",
+      "아몬드",
+      "바닐라",
+      "민트",
+      "베리",
+      "오크",
+      "커피",
+      "오렌지",
       "allAroma",
     ];
     const tasteTypes = [
-        "달콤함",
-        "시트러스",
-        "상쾌함",
-        "드라이함",
-        "강렬함",
-        "부드러움",
-        "프루티",
-        "허브",
-        "짭짤함",
+      "달콤함",
+      "시트러스",
+      "상쾌함",
+      "드라이함",
+      "강렬함",
+      "부드러움",
+      "프루티",
+      "허브",
+      "짭짤함",
       "allFlavor",
     ];
 
@@ -286,11 +286,7 @@ const SearchPageUp: React.FC = () => {
   const handleClick1 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories([
-        "칵테일", 
-        "위스키", 
-        "진,럼,데낄라"
-    ]);
+      setCategories(["칵테일", "위스키", "진,럼,데낄라"]);
     }, 0);
     setShowSlideBar(false);
 
@@ -320,7 +316,7 @@ const SearchPageUp: React.FC = () => {
         "베리",
         "오크",
         "커피",
-        "오렌지"
+        "오렌지",
       ]);
     }, 0);
     setShowSlideBar(false);
@@ -346,9 +342,8 @@ const SearchPageUp: React.FC = () => {
         "부드러움",
         "프루티",
         "허브",
-        "짭짤함"
-
-    ]);
+        "짭짤함",
+      ]);
     }, 0);
     setShowSlideBar(false);
 
@@ -370,7 +365,7 @@ const SearchPageUp: React.FC = () => {
         "홈바(혼술)",
         "여름",
         "겨울",
-        "비 오는 날" 
+        "비 오는 날",
       ]);
     }, 0);
     setShowSlideBar(false);
