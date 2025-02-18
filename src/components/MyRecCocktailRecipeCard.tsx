@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./CocktailRecipeCard.css";
+import "./MyRecCocktailRecipeCard.css";
 
 interface CocktailRecipeCardProps {
   recipeId: number;
