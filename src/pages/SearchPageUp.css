@@ -48,7 +48,7 @@ body {
   gap: 7px;
 }
 .popup {
-  position: fixed;
+  position: fixed !important;
   top: 229px !important;
   left: 244px !important;
   box-sizing: border-box;
@@ -83,7 +83,7 @@ body {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 140%; /* 19.6px */
+  line-height: 140%;
   letter-spacing: -0.56px;
 }
 .popup.hidden {

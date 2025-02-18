@@ -16,33 +16,37 @@ import DeleteAccountNextPage from "./pages/DeleteAccountNextPage";
 import SearchResults from "./pages/SearchResults";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const GOOGLE_CLIENT_ID = "401407075309-feg0m1p3i01i1rvb7ukhii37qlvg1mu4.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  "401407075309-feg0m1p3i01i1rvb7ukhii37qlvg1mu4.apps.googleusercontent.com";
 
 const App: React.FC = () => {
   return (
-   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/mypage" element={<ProfilePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/signup/done" element={<SignupNextPage />} />
-        <Route path="/my-recipe" element={<MyRecipePage />} />
-        <Route path="/recipe" element={<RecipeExplore />} />
-        <Route path="/view-notes" element={<TasteNote />} />
-        <Route path="/mypage/edit-profile" element={<ProfileEditPage />} />
-        <Route path="/mypage/edit-profile/done" element={<ProfileNextPage />} />
-        <Route path="/mypage/delete-account" element={<DeleteAccount />} />
-        <Route
-          path="/mypage/delete-account/done"
-          element={<DeleteAccountNextPage />}
-        />
-        <Route path="/search-results" element={<SearchResults />} />
-      </Routes>
-    </Router>
-   </GoogleOAuthProvider> 
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/mypage" element={<ProfilePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/signup/done" element={<SignupNextPage />} />
+          <Route path="/my-recipe" element={<MyRecipePage />} />
+          <Route path="/recipe" element={<RecipeExplore />} />
+          <Route path="/view-notes" element={<TasteNote />} />
+          <Route path="/mypage/edit-profile" element={<ProfileEditPage />} />
+          <Route
+            path="/mypage/edit-profile/done"
+            element={<ProfileNextPage />}
+          />
+          <Route path="/mypage/delete-account" element={<DeleteAccount />} />
+          <Route
+            path="/mypage/delete-account/done"
+            element={<DeleteAccountNextPage />}
+          />
+          <Route path="/search-results" element={<SearchResults />} />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
   );
 };
 

@@ -19,6 +19,9 @@ const DrinkAddModal: React.FC<AddDrinkModalProps> = ({
   const [error, setError] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
   const [isNameOpen, setIsNameOpen] = useState(false);
+  const [drinkNames, setDrinkNames] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState("");
   const typeDropdownRef = useRef<HTMLDivElement>(null);
   const nameDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -36,13 +39,74 @@ const DrinkAddModal: React.FC<AddDrinkModalProps> = ({
   });
 
   const drinkTypes = ["Beer", "Gin", "Rum", "Tequila", "Whiskey"];
-  const [drinkNames, setDrinkNames] = useState([
-    "Heineken",
-    "Bombay Sapphire",
-    "Bacardi",
-    "Jose Cuervo",
-    "Jack Daniel's",
-  ]);
+  useEffect(() => {
+    if (isOpen) {
+      setDrinkType("");
+      setDrinkName("");
+      setSearchTerm("");
+      setError(false);
+      setIsTypeOpen(false);
+      setIsNameOpen(false);
+      setDrinkNames([]);
+      setFetchError("");
+    }
+  }, [isOpen]); // ✅ 모달이 열릴 때 초기화
+
+  useEffect(() => {
+    if (!drinkType) return;
+
+    const fetchDrinkNames = async () => {
+      setLoading(true);
+      setFetchError("");
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setFetchError("액세스 토큰이 없습니다.");
+          setLoading(false);
+          return;
+        }
+        const requestBody = JSON.stringify({ category: drinkType });
+        console.log("📤 요청 JSON 데이터:", requestBody); // 올바른 JSON 데이터 확인
+
+        const response = await fetch(
+          "http://54.180.45.230:3000/api/v1/users/my-bar/show-alcohols",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: requestBody, // ✅ JSON 형태로 보냄
+          }
+        );
+
+        const data = await response.json();
+        console.log("🔍 API 응답 데이터:", data);
+
+        if (!data.success || !Array.isArray(data.success.alcohols)) {
+          console.error("🚨 예상과 다른 API 응답 구조:", data);
+          throw new Error("API 응답 데이터가 예상과 다릅니다.");
+        }
+
+        // `name` 필드가 존재하는지 확인하고, undefined 방지
+        const alcoholNames = data.success.alcohols
+          .map((item: any) => item?.nameEng || "이름 없음")
+          .filter((name: string) => name !== "이름 없음");
+
+        console.log("🍺 추출된 술 이름 리스트:", alcoholNames);
+
+        setDrinkNames(alcoholNames);
+      } catch (error) {
+        console.error("API 요청 오류:", error);
+        setFetchError("술 목록을 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDrinkNames();
+  }, [drinkType]);
 
   // 주종 드롭다운 위치 업데이트
   useEffect(() => {

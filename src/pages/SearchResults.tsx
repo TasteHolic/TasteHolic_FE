@@ -30,54 +30,71 @@ const Icons = {
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({
-  searched,
+  searched: propsSearched,
   results = [],
   searchedTypes = [],
   onSearch,
 }) => {
   const location = useLocation();
+  const searched = propsSearched || location.state?.searched || "";
+  const [appliedFilters, setAppliedFilters] = useState(
+    location.state?.searchedTypes ?? []
+  );
   const [isMyBar, setIsMyBar] = useState(false);
   const [selectedCocktail, setSelectedCocktail] = useState<any | null>(null);
   const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
   const [isExploreOpen, setIsExploreOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState(searchedTypes || []);
   const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
 
   useEffect(() => {
-    // 검색 후, 필터 정보 유지
+    console.log("📌 검색 필터 데이터:", location.state?.searchedTypes);
     if (location.state?.searchedTypes) {
       setAppliedFilters(location.state.searchedTypes);
+      console.log(
+        "✅ `searchedTypes` 상태 업데이트됨:",
+        location.state.searchedTypes
+      );
     }
-  }, [location]);
+  }, [location.state?.searchedTypes]);
   const myBarClick = () => {
     setIsMyBar((prev) => !prev);
   };
 
   const handleDeleteType = (id: number) => {
-    setSearchedTypes((prev) => prev.filter((type) => type.id !== id));
+    setAppliedFilters((prev) => prev.filter((type) => type.id !== id));
   };
-
+  const handleDeleteFilter = (id: number) => {
+    setAppliedFilters((prev) => prev.filter((filter) => filter.id !== id));
+  };
   const handleCardClick = (id: number) => {
     const foundCocktail = cocktails.find((cocktail) => cocktail.id === id);
     setSelectedCocktail(foundCocktail || null);
   };
 
-  const filteredResults = isMyBar
-    ? results.filter((item) => item.isMyBar)
-    : results;
+  const filteredResults = results?.data?.length
+    ? isMyBar
+      ? results.data.filter((item) => item.isMyBar)
+      : results.data
+    : [];
+
   const officialCards = filteredResults.filter(
     (item) => item.type === "official"
   );
   const userCards = filteredResults.filter((item) => item.type === "user");
 
-  const noResults = officialCards.length === 0 && userCards.length === 0;
+  const noResults = !filteredResults.length; // 검색 결과 여부 수정
+
+  console.log("🔍 원본 검색 결과:", results);
+  console.log("📌 필터링된 결과:", filteredResults);
+  console.log("📢 공식 레시피 개수:", officialCards.length);
+  console.log("📢 유저 레시피 개수:", userCards.length);
 
   return (
     <>
       <div className="search-results-container">
         <SearchHeader />
         <div className="search-bar-labels">
-          <div className="results-string">'{searched}' 검색 결과</div>
+          <div className="results-string">"{searched}" 검색 결과</div>
           <SearchBar
             myBarClick={myBarClick}
             searchClick={() => {
@@ -86,33 +103,53 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             searched={searched}
           />
           <div className="type-labels-container">
-            {searchedTypes.map((type) => {
-              let icon;
-              if (type.type === "variety") {
-                if (type.label === "칵테일") icon = Icons.CocktailIcon;
-                else if (type.label === "위스키") icon = Icons.WhiskeyIcon;
-                else if (type.label === "진, 럼, 데낄라")
-                  icon = Icons.GinrumteqIcon;
-                else if (type.label === "전체 선택" || type.label === "기타")
-                  icon = Icons.EtcIcon;
-              }
+            {appliedFilters && appliedFilters.length > 0 ? (
+              appliedFilters.map((type, index) => {
+                console.log("🔍 렌더링할 필터:", type);
 
-              return type.type === "variety" ? (
-                <TypeLabelSvg
-                  key={type.id}
-                  svg={icon ? <img src={icon} alt={type.label} /> : null}
-                  name={type.label}
-                  onDelete={() => handleDeleteType(type.id)}
-                />
-              ) : (
-                <TypeLabel
-                  key={type.id}
-                  name={type.label}
-                  category={type.type as "aroma" | "flavor" | "mood"}
-                  onDelete={() => handleDeleteType(type.id)}
-                />
-              );
-            })}
+                let icon;
+                if (type.type === "variety") {
+                  switch (type.label) {
+                    case "칵테일":
+                      icon = Icons.CocktailIcon;
+                      break;
+                    case "위스키":
+                      icon = Icons.WhiskeyIcon;
+                      break;
+                    case "진, 럼, 데낄라":
+                      icon = Icons.GinrumteqIcon;
+                      break;
+                    default:
+                      icon = Icons.EtcIcon;
+                  }
+                }
+
+                return type.type === "variety" ? (
+                  <TypeLabelSvg
+                    key={index}
+                    svg={icon ? <img src={icon} alt={type.label} /> : null}
+                    name={type.label}
+                    onDelete={() => handleDeleteFilter(type.id)}
+                  />
+                ) : type.type === "abv" ? ( // 도수 필터 렌더링 추가
+                  <TypeLabel
+                    key={index}
+                    name={type.label}
+                    category="abv"
+                    onDelete={() => handleDeleteFilter(type.id)}
+                  />
+                ) : (
+                  <TypeLabel
+                    key={index}
+                    name={type.label}
+                    category={type.type as "aroma" | "flavor" | "mood"}
+                    onDelete={() => handleDeleteFilter(type.id)}
+                  />
+                );
+              })
+            ) : (
+              <div className="no-labels">❌ 필터 없음</div> // 디버깅용
+            )}
           </div>
         </div>
 

@@ -66,9 +66,6 @@ const SearchPageUp: React.FC = () => {
       aroma: selectedAromas,
       taste: selectedTastes,
     };
-    console.log("📡 선택된 카테고리:", selectedCategories);
-    console.log("📡 선택된 아로마:", selectedAromas);
-    console.log("📡 선택된 맛:", selectedTastes);
     console.log("📡 서버로 보낼 데이터:", requestData);
     // API 요청
     try {
@@ -85,10 +82,39 @@ const SearchPageUp: React.FC = () => {
 
       const data = await response.json();
       console.log("✅ 검색 결과:", data);
+      console.log(data.data);
 
       if (data.success) {
         navigate("/search-results", {
-          state: { results: data.data, searched: query },
+          state: {
+            results: data.data,
+            searched: query,
+            searchedTypes: [
+              ...selectedCategories.map((cat, index) => ({
+                id: index,
+                label: cat,
+                type: "variety",
+              })),
+              ...selectedAromas.map((aroma, index) => ({
+                id: selectedCategories.length + index,
+                label: aroma,
+                type: "aroma",
+              })),
+              ...selectedTastes.map((taste, index) => ({
+                id: selectedCategories.length + selectedAromas.length + index,
+                label: taste,
+                type: "flavor",
+              })),
+              {
+                id:
+                  selectedCategories.length +
+                  selectedAromas.length +
+                  selectedTastes.length,
+                label: `${selectedRange.min}% ~ ${selectedRange.max}%`,
+                type: "abv",
+              },
+            ],
+          },
         });
       } else {
         console.error("❌ 검색 실패:", data.message);
@@ -124,7 +150,7 @@ const SearchPageUp: React.FC = () => {
 
     // (3) 각 필터 그룹에 해당하는 타입 배열 정의
     const varietyTypes = [
-      "칵테일",
+      "Cocktail",
       "위스키",
       "진,럼,데낄라",
       "etcVariety",
@@ -358,7 +384,7 @@ const SearchPageUp: React.FC = () => {
   return (
     <>
       {isPopupVisible && (
-        <div className="popup">
+        <div className="popup" draggable="false">
           <div className="popup-strong">My Bar를 활성해보세요</div>
           <div className="popup-small">
             내가 가진 술로 만들 수 있는 레시피만
