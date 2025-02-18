@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import CocktailRecipeCard from "../components/MyRecCocktailRecipeCard";
 import "./RecipeExplore.css";
@@ -42,16 +42,38 @@ const RecipeExplore: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [hasMore, setHasMore] = useState(true); 
+  const loader = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     fetchRecipes(selectedCategory);
   }, [selectedCategory]);
 
-  const fetchRecipes = async (category: string) => {
+  useEffect(() => {
+    const handleScroll = () => {
+      if (loader.current) {
+        const { bottom } = loader.current.getBoundingClientRect();
+        if (bottom <= window.innerHeight) {
+          fetchRecipes(selectedCategory, true);
+        }
+      }
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [selectedCategory, cursor]);
+
+  const fetchRecipes = async (category: string, loadMore = false) => {
+    if (!hasMore) return;
     setLoading(true);
     try {
       const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes?type=${category}`);
       if (response.data.recipes) {
         setRecipes(response.data.recipes);
+
+        setCursor(response.data.nextCursor || null);
+        setHasMore(!!response.data.nextCursor);
       }
     } catch (error) {
       console.error("레시피 목록 불러오기 실패:", error);
@@ -173,6 +195,7 @@ const RecipeExplore: React.FC = () => {
           </div>
         )}
       </div>
+      <div ref={loader} style={{ height: "10px", background: "transparent" }} />
       <FloatingButton/>
       <Footer />
     </>
