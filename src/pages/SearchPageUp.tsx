@@ -176,7 +176,6 @@ const SearchPageUp: React.FC = () => {
       "오크",
       "커피",
       "오렌지",
-      "etcAroma",
       "allAroma",
     ];
     const tasteTypes = [
@@ -189,7 +188,6 @@ const SearchPageUp: React.FC = () => {
       "프루티",
       "허브",
       "짭짤함",
-      "etcFlavor",
       "allFlavor",
     ];
 
