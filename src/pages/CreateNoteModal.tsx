@@ -1,3 +1,4 @@
+//CreateNoteModal.tsx
 import React, { useState, useEffect, useRef, MouseEvent } from "react";
 import { motion } from "framer-motion";
 import ReactDOM from "react-dom";
@@ -419,6 +420,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       return;
     }
 
+
     const finalData: FinalData = {
       name: drinkName || "",
       category: category,
@@ -432,6 +434,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
     console.log("🔹 handleCreate 실행됨");
     console.log("📌 finalData:", finalData);
+    localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
 
     requestAnimationFrame(() => {
       console.log("🟢 onComplete 실행 직전");
