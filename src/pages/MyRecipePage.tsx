@@ -86,9 +86,9 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             />
           ))
         ) : (
-          <div className="empty-message">
+          <div className="my-empty-message">
           <svg
-            className="emptyicon"
+            className="my-emptyicon"
             width="131"
             height="131"
             viewBox="0 0 131 131"
