@@ -50,7 +50,13 @@ const SearchPageUp: React.FC = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
+  const categoryMapping: Record<string, string> = {
+    칵테일: "Cocktail",
+    위스키: "Whiskey",
+    "진,럼,데낄라": "Gin/Rum/Tequila",
+    기타: "Others",
+    "전체 선택": "All",
+  };
   const handleSearchClick = async (query: string) => {
     setSearchQuery(query); // 검색어 업데이트
 
@@ -58,8 +64,12 @@ const SearchPageUp: React.FC = () => {
       alert("검색어 또는 카테고리를 선택해야 합니다!");
       return;
     }
+    const translatedCategory =
+      selectedCategories.length > 0
+        ? categoryMapping[selectedCategories[0]] || selectedCategories[0]
+        : "";
     const requestData = {
-      category: selectedCategories.length > 0 ? selectedCategories[0] : "",
+      category: translatedCategory,
       query: query.trim(),
       minAbv: selectedRange.min,
       maxAbv: selectedRange.max,
@@ -150,35 +160,35 @@ const SearchPageUp: React.FC = () => {
 
     // (3) 각 필터 그룹에 해당하는 타입 배열 정의
     const varietyTypes = [
-        "칵테일", 
-        "위스키", 
-        "진,럼,데낄라",
+      "칵테일",
+      "위스키",
+      "진,럼,데낄라",
       "etcVariety",
       "allVariety",
     ];
     const aromaTypes = [
-        "라임",
-        "시트러스 향",
-        "아몬드",
-        "바닐라",
-        "민트",
-        "베리",
-        "오크",
-        "커피",
-        "오렌지",
+      "라임",
+      "시트러스 향",
+      "아몬드",
+      "바닐라",
+      "민트",
+      "베리",
+      "오크",
+      "커피",
+      "오렌지",
       "etcAroma",
       "allAroma",
     ];
     const tasteTypes = [
-        "달콤함",
-        "시트러스",
-        "상쾌함",
-        "드라이함",
-        "강렬함",
-        "부드러움",
-        "프루티",
-        "허브",
-        "짭짤함",
+      "달콤함",
+      "시트러스",
+      "상쾌함",
+      "드라이함",
+      "강렬함",
+      "부드러움",
+      "프루티",
+      "허브",
+      "짭짤함",
       "etcFlavor",
       "allFlavor",
     ];
@@ -294,11 +304,7 @@ const SearchPageUp: React.FC = () => {
   const handleClick1 = () => {
     setCategories([]);
     setTimeout(() => {
-      setCategories([
-        "칵테일", 
-        "위스키", 
-        "진,럼,데낄라"
-    ]);
+      setCategories(["칵테일", "위스키", "진,럼,데낄라"]);
     }, 0);
     setShowSlideBar(false);
 
@@ -330,7 +336,7 @@ const SearchPageUp: React.FC = () => {
         "베리",
         "오크",
         "커피",
-        "오렌지"
+        "오렌지",
       ]);
     }, 0);
     setShowSlideBar(false);
@@ -358,9 +364,8 @@ const SearchPageUp: React.FC = () => {
         "부드러움",
         "프루티",
         "허브",
-        "짭짤함"
-
-    ]);
+        "짭짤함",
+      ]);
     }, 0);
     setShowSlideBar(false);
 
@@ -384,7 +389,7 @@ const SearchPageUp: React.FC = () => {
         "홈바(혼술)",
         "여름",
         "겨울",
-        "비 오는 날" 
+        "비 오는 날",
       ]);
     }, 0);
     setShowSlideBar(false);
