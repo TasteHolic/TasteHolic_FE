@@ -7,6 +7,7 @@ import { SketchPicker } from "react-color";
 import "./CreateNoteModal.css";
 
 interface FinalData {
+    noteId: string;
     name: string;
     category: string;
     flavors: string[];
@@ -24,6 +25,31 @@ interface EditNoteModalProps {
     initialData: FinalData;
 }
 
+
+const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData | null> => {
+    const token = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
+    const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${noteId}?type=${type}`;
+
+    if (!token) {
+        throw new Error('액세스 토큰이 필요합니다.');
+    }
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '서버 오류');
+    }
+
+    const data = await response.json();
+    return data.result;
+};
 
 const EditNoteModal: React.FC<EditNoteModalProps> = ({
     isOpen,
@@ -53,27 +79,37 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
-            // 로컬 스토리지에서 데이터 불러오기
-            const storedData = localStorage.getItem(`tastingNote_${initialData.name}_${initialData.category}`);
-            if (storedData) {
-                const parsedData = JSON.parse(storedData);
-                setFinalData(parsedData);
-                setTastingNote(parsedData.note);
-                setSelectedFlavors(parsedData.flavors);
-                setSelectedAromas(parsedData.aromas);
-                setSelectedAlcohol(parsedData.alcohol);
-                setSelectedColors(parsedData.colors);
-                setSelectedFinish(parsedData.finish);
-            } else {
-                // 로컬 스토리지에 데이터가 없을 경우 초기 데이터 사용
-                setFinalData(initialData);
-                setTastingNote(initialData.note);
-                setSelectedFlavors(initialData.flavors);
-                setSelectedAromas(initialData.aromas);
-                setSelectedAlcohol(initialData.alcohol);
-                setSelectedColors(initialData.colors);
-                setSelectedFinish(initialData.finish);
-            }
+            // API에서 데이터 불러오기
+            const loadData = async () => {
+                try {
+                    const data = await fetchTastingNote(initialData.noteId, initialData.category);
+                    setFinalData(data);
+                    setTastingNote(data?.note || '');
+                    setSelectedFlavors(data?.flavors || []);
+                    setSelectedAromas(data?.aromas || []);
+                    setSelectedAlcohol(data?.alcohol || '');
+                    setSelectedColors(data?.colors || []);
+                    setSelectedFinish(data?.finish || []);
+                } catch (error) {
+                    console.error(error);
+                    // 오류 처리 (로컬 스토리지 사용 또는 에러 메시지 표시 등)
+                    const storedData = localStorage.getItem(
+                        `tastingNote_${initialData.name}_${initialData.category}`
+                    );
+                    if (storedData) {
+                        const parsedData = JSON.parse(storedData);
+                        setFinalData(parsedData);
+                        setTastingNote(parsedData.note);
+                        setSelectedFlavors(parsedData.flavors);
+                        setSelectedAromas(parsedData.aromas);
+                        setSelectedAlcohol(parsedData.alcohol);
+                        setSelectedColors(parsedData.colors);
+                        setSelectedFinish(parsedData.finish);
+                    }
+                }
+            };
+
+            loadData();
         }
     }, [isOpen, initialData]);
 
@@ -425,46 +461,75 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
     setSelectedColors((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (selectedFlavors.length === 0) {
-        alert("맛은 필수 항목입니다. 입력해주세요.");
-        return;
+            alert("맛은 필수 항목입니다. 입력해주세요.");
+            return;
         }
         if (selectedAromas.length === 0) {
-        alert("향은 필수 항목입니다. 입력해주세요.");
-        return;
+            alert("향은 필수 항목입니다. 입력해주세요.");
+            return;
         }
         if (!selectedAlcohol) {
-        alert("도수는 필수 항목입니다. 선택해주세요.");
-        return;
+            alert("도수는 필수 항목입니다. 선택해주세요.");
+            return;
         }
         if (!tastingNote.trim()) {
-        alert("한줄평은 필수 항목입니다. 입력해주세요.");
-        return;
+            alert("한줄평은 필수 항목입니다. 입력해주세요.");
+            return;
         }
-
+    
         const finalData: FinalData = {
-        name: initialData.name,
-        category: initialData.category,
-        flavors: selectedFlavors,
-        aromas: selectedAromas,
-        alcohol: selectedAlcohol,
-        colors: selectedColors,
-        finish: selectedFinish,
-        note: tastingNote,
+            noteId: initialData.noteId,
+            name: initialData.name,
+            category: initialData.category,
+            flavors: selectedFlavors,
+            aromas: selectedAromas,
+            alcohol: selectedAlcohol,
+            colors: selectedColors,
+            finish: selectedFinish,
+            note: tastingNote,
         };
-
+    
         console.log("🔹 handleSave 실행됨");
         console.log("📌 EditData:", finalData);
-
-        localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
-        
-        requestAnimationFrame(() => {
-        console.log("🟢 onComplete 실행 직전");
-        onComplete(finalData);
-        console.log("🟢 onComplete 실행 완료");
-        });
+    
+        try {
+            // API에 데이터 업데이트 요청 (PATCH 사용)
+            const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${finalData.noteId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalData),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '서버 오류');
+            }
+    
+            // 응답 성공 시
+            const data = await response.json();
+            console.log("📍 API 데이터 업데이트 성공:", data);
+    
+            // 로컬 스토리지에 데이터 저장
+            localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
+            console.log("🟢 로컬 스토리지에 데이터 저장 완료");
+    
+            // 완료 후 onComplete 호출
+            requestAnimationFrame(() => {
+                console.log("🟢 onComplete 실행 직전");
+                onComplete(finalData); // 완료 시 최종 데이터 전달
+                console.log("🟢 onComplete 실행 완료");
+            });
+        } catch (error) {
+            console.error("❌ 오류 발생:", error);
+            alert("데이터 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
     };
+    
 
     if (!isOpen) return null;
 

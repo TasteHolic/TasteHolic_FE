@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import NoteHeader from "../components/Header/NoteHeader";
 import Footer from "../components/Footer";
@@ -10,6 +7,7 @@ import CompleteModal from "./CompleteModal";
 import EditNoteModal from "./EditNoteModal";
 
 interface Drink {
+    noteId: string;
     id: number;
     name: string;
     image: string;
@@ -33,95 +31,132 @@ const TasteNote: React.FC = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useEffect(() => {
-        const tastingNoteKeys = Object.keys(localStorage).filter(key => key.startsWith("tastingNote_"));
-    
-        const allStoredData = tastingNoteKeys.map(key => {
-            const storedData = localStorage.getItem(key);
-            return storedData ? JSON.parse(storedData) : null;
-        }).filter(data => data !== null);
-    
-        // 데이터를 최신순으로 정렬
-        const sortedData = allStoredData.flat().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    
-        if (sortedData.length > 0) {
-            setDrinks(sortedData);
-        }
+        const fetchTastingNotes = async () => {
+            try {
+                const response = await fetch("http://54.180.45.230:3000/api/v1/users/tasting-notes", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setDrinks(data);
+                    localStorage.setItem("tastingNotes", JSON.stringify(data));
+                }
+            } catch (error) {
+                console.error("Failed to fetch tasting notes from server", error);
+                const storedData = localStorage.getItem("tastingNotes");
+                if (storedData) {
+                    setDrinks(JSON.parse(storedData));
+                }
+            }
+        };
+        fetchTastingNotes();
     }, []);
     
-
-    const handleAddDrink = (data: { name: string; category: string }) => {
+    const handleAddDrink = async (data: { name: string; category: string }) => {
+        const imageUrl = "/image/default.png";
+        
+        // 이미지 API 호출 부분 주석 처리
+        // try {
+        //     const response = await fetch(`/api/v1/drinks?name=${data.name}`);
+        //     if (response.ok) {
+        //         const drinkData = await response.json();
+        //         imageUrl = drinkData.image || "/image/default.png";
+        //     }
+        // } catch (error) {
+        //     console.error("Failed to fetch drink image", error);
+        // }
+    
         const newDrink: Drink = {
             id: Date.now(),
             name: data.name,
-            image: "/image/default.png",
+            image: imageUrl,
             createdAt: new Date(),
             category: data.category,
+            noteId: ""
         };
-
-        // 로컬에 음료 추가
+    
         const updatedDrinks = [...drinks, newDrink];
         setDrinks(updatedDrinks);
-
-        // 로컬 스토리지에 저장
-        localStorage.setItem(`AddNote_${newDrink.name}_${newDrink.category}`, JSON.stringify(updatedDrinks));
-
+        localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinks));
         setIsCompleteModalOpen(true);
+    
+        try {
+            // API에 새 음료 정보 추가
+            const response = await fetch("http://54.180.45.230:3000/api/v1/users/tasting-note", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(newDrink),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to save drink to server");
+            }
+            const data = await response.json();
+            console.log("음료 추가 성공:", data);
+        } catch (error) {
+            console.error("음료 추가 실패:", error);
+        }
+    };
+
+    const handleDeleteDrink = async () => {
+        if (deleteTarget) {
+            setDrinks((prevDrinks) => {
+                const updatedDrinks = prevDrinks.filter((drink) => drink.id !== deleteTarget.id);
+                localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinks));
+                return updatedDrinks;
+            });
+            
+            try {
+                await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${deleteTarget.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to delete drink from server", error);
+            }
+            setDeleteTarget(null);
+        }
+    };
+
+    const handleEditDrink = async (updatedDrink: Drink) => {
+        const updatedDrinks = drinks.map((drink) =>
+            drink.id === updatedDrink.id ? updatedDrink : drink
+        );
+        setDrinks(updatedDrinks);
+        localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinks));
+        setIsEditModalOpen(false);
+        setEditTarget(null);
+    
+        try {
+            // API에 음료 정보 수정
+            const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${updatedDrink.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(updatedDrink),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to update drink on server");
+            }
+            const data = await response.json();
+            console.log("음료 수정 성공:", data);
+        } catch (error) {
+            console.error("음료 수정 실패:", error);
+        }
     };
 
     const handleCompleteModalClose = () => {
         setIsCompleteModalOpen(false);
     };
-    
-    const handleDeleteDrink = () => {
-        if (deleteTarget) {
-            // 로컬 상태에서 음료 삭제
-            setDrinks((prevDrinks) => {
-                // 삭제된 음료를 제외한 새로운 배열을 반환
-                const updatedDrinks = prevDrinks.filter((drink) => drink.id !== deleteTarget.id);
-    
-                // 로컬 스토리지에서 'tastingNote_{name}_{category}' 관련 항목들 삭제
-                const tastingNoteKey = `tastingNote_${deleteTarget.name}_${deleteTarget.category}`;
-                const addNoteKey = `AddNote_${deleteTarget.name}_${deleteTarget.category}`;
-                const editNoteKey = `EditNote_${deleteTarget.name}_${deleteTarget.category}`;
-    
-                // tastingNote_{name}_category, AddNote, EditNote가 있으면 삭제
-                if (localStorage.getItem(tastingNoteKey)) {
-                    localStorage.removeItem(tastingNoteKey);
-                }
-                if (localStorage.getItem(addNoteKey)) {
-                    localStorage.removeItem(addNoteKey);
-                }
-                if (localStorage.getItem(editNoteKey)) {
-                    localStorage.removeItem(editNoteKey);
-                }
-    
-                // 삭제된 음료를 제외한 새로운 배열을 반환
-                localStorage.setItem("drinks", JSON.stringify(updatedDrinks)); // 상태를 다시 localStorage에 저장
-    
-                return updatedDrinks;
-            });
-    
-            setDeleteTarget(null); // 삭제 모달 닫기
-        }
-    };
-    
-
-    const handleEditDrink = (updatedDrink: Drink) => {
-        const updatedDrinks = drinks.map((drink) =>
-            drink.id === updatedDrink.id ? updatedDrink : drink
-        );
-        setDrinks(updatedDrinks);
-    
-        // 새로운 로컬 스토리지 키 생성 (EditNote_{name}_{category})
-        const editNoteKey = `EditNote_${updatedDrink.name}_${updatedDrink.category}`;
-        
-        // 로컬 스토리지에 수정된 데이터 저장
-        localStorage.setItem(editNoteKey, JSON.stringify(updatedDrinks));
-    
-        setIsEditModalOpen(false);
-        setEditTarget(null);
-    };
-    
 
     // 카테고리 매핑
     const categoryMap: Record<string, string[]> = {
@@ -149,7 +184,6 @@ const TasteNote: React.FC = () => {
 
         return dateB.getTime() - dateA.getTime();
     });
-
 
     return (
         <>
@@ -282,6 +316,7 @@ const TasteNote: React.FC = () => {
             <EditNoteModal
                 isOpen={isEditModalOpen}
                 initialData={{
+                    noteId: editTarget.noteId,
                     name: editTarget.name,
                     category: editTarget.category,
                     flavors: editTarget.flavors || [],
