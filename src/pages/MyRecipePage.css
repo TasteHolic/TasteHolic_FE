@@ -135,7 +135,7 @@ body::-webkit-scrollbar {
     z-index: 1000;
 }
 
-.empty-message {
+.my-empty-message {
     transform: translate(370px, 121px);
     text-align: center;
     font-size: 20px;
@@ -148,9 +148,9 @@ body::-webkit-scrollbar {
     transform: translate(-50%, -50%);
 
   }
-  .emptyicon{
+  .my-emptyicon{
     margin-bottom: 31px ;
   }
-  .empty-message p{
+  .my-empty-message p{
     margin: 10px 0px;
   }
