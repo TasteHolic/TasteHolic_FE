@@ -9,35 +9,21 @@ body.modal-open {
     width: 100%;
 }
 .ownmodal-overlay {
+    width: 100vw;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.90) 40.5%);
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
-    
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.90) 40.5%, #000 100%);
-    background: linear-gradient(
-        to bottom, 
-        rgba(0, 0, 0, 0) calc(743px),
-        rgba(0, 0, 0, 0.9) calc(743px + 800px), /* 100px 동안 그라데이션 */
-        black 100%
-    );
-    backdrop-filter: blur(50px);
-    z-index: 1050; /* 배경보다 위로 */
-    pointer-events: none;
-    width: 100%;
-    height: 2290px;
+    z-index: 999;
 }
 .ownpopup{
-    
-    left: calc((100vw - 742px) / 2);
-    position: absolute;
-    top: 446px;
-    /* left: 276px; */
-
-    z-index: 1100;
-    display: flex;
-    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
     pointer-events: auto;
-    
 }
 .ownmodal-content {
     
@@ -53,8 +39,7 @@ body.modal-open {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(50px);
     width: 620px;
-    height: 1121px;
-    overflow-y: auto;
+    height: 1012px;
     box-sizing: content-box;
 }
 
@@ -108,6 +93,11 @@ body.modal-open {
 
 .search{
     padding:4px 8px;
+    background: rgba(255, 255, 255, 0.10);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .search-bar{
     display: flex;
@@ -116,6 +106,8 @@ body.modal-open {
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
     box-shadow: 0px 4px 10px 0px rgba(255, 255, 255, 0.10);
     padding-left: 16px;
+    width: 296px;
+    height: 36px;
 }
 .search-icon{
     display: flex;
@@ -144,8 +136,8 @@ body.modal-open {
 }
 
 .cocktail-input.border-green-500 {
-    border-color: green;
-    color: green;
+    border-color:  var(--subgreen-400-main, #4ECE95);
+    color:  var(--subgreen-400-main, #4ECE95);
 }
 
 .cocktail-input.active {
@@ -159,13 +151,14 @@ body.modal-open {
 }
 
 .dropdown{
-    max-height: 265px;
+    max-height: 275px;
     margin: 0px 149px ;
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 8px 0 0 0px;
+
     font-size: 14px;
     box-sizing: content-box;
+    background: var(--grayscale-gray800, #242525);
 }
 
 .owndropdown-menu {
@@ -179,7 +172,7 @@ body.modal-open {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     background: var(--grayscale-gray800, #242525);
-    max-height: 216px;
+    max-height: 207px;
     overflow-y: auto;
     box-sizing: border-box;
 }
@@ -234,11 +227,11 @@ body.modal-open {
 }
 
 .border-green-500 .text-green-500{
-    color: green;
+    color: var(--subgreen-400-main, #4ECE95);
 }
 
 .border-green-500 svg {
-    stroke: green !important;
+    stroke: var(--subgreen-400-main, #4ECE95);
 }
 
 .owndropdown-menu::-webkit-scrollbar {
