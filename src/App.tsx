@@ -14,8 +14,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProfileNextPage from "./pages/ProfileEditNextPage";
 import DeleteAccountNextPage from "./pages/DeleteAccountNextPage";
 import SearchResults from "./pages/SearchResults";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+const GOOGLE_CLIENT_ID = "401407075309-feg0m1p3i01i1rvb7ukhii37qlvg1mu4.apps.googleusercontent.com";
+
 const App: React.FC = () => {
   return (
+   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -37,6 +42,7 @@ const App: React.FC = () => {
         <Route path="/search-results" element={<SearchResults />} />
       </Routes>
     </Router>
+   </GoogleOAuthProvider> 
   );
 };
 

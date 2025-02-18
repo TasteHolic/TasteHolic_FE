@@ -7,7 +7,7 @@ const DeleteAccountNextPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleGoHome = () => {
-        navigate('/home'); //나중에 app.tsx에서 지정한 경로로 수정하기(메인페이지 route로 변경)
+        navigate('/'); 
     };
 
     return (

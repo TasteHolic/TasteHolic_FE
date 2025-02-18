@@ -45,18 +45,6 @@ const SignupForm: React.FC = () => {
   const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
   const nicknameInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const dummyUsers = [
-      { email: "testUser1", nickname: "테스트닉1" },
-      { email: "sampleUser2", nickname: "샘플닉2" },
-      { email: "demoUser3", nickname: "데모닉3" },
-      { email: "umcmember", nickname: "UMC" },
-    ];
-
-    if (!localStorage.getItem("registeredUsers")) {
-      localStorage.setItem("registeredUsers", JSON.stringify(dummyUsers));
-    }
-  }, []);
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -157,40 +145,77 @@ const SignupForm: React.FC = () => {
     setValidation((prev) => ({ ...prev, [name]: isValid }));
   };
 
-  const handleIdCheck = () => {
-    const storedUsers = JSON.parse(
-      localStorage.getItem("registeredUsers") || "[]"
-    );
-    const isDuplicate = storedUsers.some(
-      (user: { email: string }) => user.email === form.email
-    );
+  // const handleIdCheck = () => {
+  //   const storedUsers = JSON.parse(
+  //     localStorage.getItem("registeredUsers") || "[]"
+  //   );
+  //   const isDuplicate = storedUsers.some(
+  //     (user: { email: string }) => user.email === form.email
+  //   );
 
-    if (isDuplicate) {
-      setIsIdChecked(true);
-      setIsIdDuplicate(true);
-      setMessages((prev) => ({
-        ...prev,
-      }));
-      setValidation((prev) => ({
-        ...prev,
-        idDuplicate: false, // 중복된 경우 유효성 실패
-      }));
-      alert("이미 사용 중인 이메일입니다.");
-    } else {
-      setIsIdChecked(true);
-      setIsIdDuplicate(false);
-      setMessages((prev) => ({
-        ...prev,
-      }));
-      setValidation((prev) => ({
-        ...prev,
-        idDuplicate: true, // 중복되지 않은 경우 유효성 성공
-        email: validation.idLength &&!isIdDuplicate,
-      }));
-      alert("사용할 수 있는 이메일입니다.");
+  //   if (isDuplicate) {
+  //     setIsIdChecked(true);
+  //     setIsIdDuplicate(true);
+  //     setMessages((prev) => ({
+  //       ...prev,
+  //     }));
+  //     setValidation((prev) => ({
+  //       ...prev,
+  //       idDuplicate: false, // 중복된 경우 유효성 실패
+  //     }));
+  //     alert("이미 사용 중인 이메일입니다.");
+  //   } else {
+  //     setIsIdChecked(true);
+  //     setIsIdDuplicate(false);
+  //     setMessages((prev) => ({
+  //       ...prev,
+  //     }));
+  //     setValidation((prev) => ({
+  //       ...prev,
+  //       idDuplicate: true, // 중복되지 않은 경우 유효성 성공
+  //       email: validation.idLength &&!isIdDuplicate,
+  //     }));
+  //     alert("사용할 수 있는 이메일입니다.");
+  //   }
+  // };
+  const handleIdCheck = async () => {
+    if (!form.email) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://54.180.45.230:3000/api/v1/users/check-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: form.email }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.status === 200) {
+        setIsIdChecked(true);
+        setIsIdDuplicate(false);
+        setMessages((prev) => ({ ...prev, idDuplicate: "사용 가능한 이메일입니다." }));
+        setValidation((prev) => ({ ...prev, idDuplicate: true, email: true }));
+        alert(data.message);
+      } else if (response.status === 409) {
+        setIsIdChecked(true);
+        setIsIdDuplicate(true);
+        setMessages((prev) => ({ ...prev, idDuplicate: "이미 사용 중인 이메일입니다." }));
+        setValidation((prev) => ({ ...prev, idDuplicate: false }));
+        alert("이미 사용 중인 이메일입니다.");
+      } else if (response.status === 400) {
+        alert(data.error || "이메일을 입력하세요.");
+      }
+    } catch (error) {
+      console.error("이메일 중복 확인 실패:", error);
+      alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     validation.password=validation.passwordComplexity&&validation.passwordLength;
@@ -227,7 +252,7 @@ const SignupForm: React.FC = () => {
         const data = await response.json();
   
         if (response.status === 201) {
-          alert(data.message); // "회원가입이 완료되었습니다."
+          alert("회원가입이 완료되엇습니다."); // "회원가입이 완료되었습니다."
           console.log("회원가입성공");
            navigate("/signup/done");
         } else if (response.status === 400) {

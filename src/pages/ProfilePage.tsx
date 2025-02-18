@@ -37,18 +37,54 @@ const ProfilePage: React.FC = () => {
   const carouselViewRef = useRef<HTMLDivElement | null>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    if (token) {
-      setNickname(localStorage.getItem("nickname") || "기본닉넴");
-      setIntroText(localStorage.getItem("introText") || "본인을 설명해봐요");
-      setProfileImage(localStorage.getItem("profileImage") || "/image/basicimage.png");
-    } else {
-      setNickname(null);
-      setIntroText(null);
-      setProfileImage("/image/basicimage.png");
-    }
+  //   if (token) {
+  //     setNickname(localStorage.getItem("nickname") || "기본닉넴");
+  //     setIntroText(localStorage.getItem("introText") || "본인을 설명해봐요");
+  //     setProfileImage(localStorage.getItem("profileImage") || "/image/basicimage.png");
+  //   } else {
+  //     setNickname(null);
+  //     setIntroText(null);
+  //     setProfileImage("/image/basicimage.png");
+  //   }
+  // }, [token]);
+  console.log("요청 전 토큰:", token);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!token) return; // 토큰 없으면 API 호출 X
+  
+      try {
+        const response = await fetch("http://54.180.45.230:3000/api/v1/users/info", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`서버 오류: ${response.status}`);
+        }
+  
+        const data = await response.json();
+  
+        if (data.resultType === "SUCCESS") {
+          const userInfo = data.success.data;
+          setNickname(userInfo.nickname);
+          setIntroText(userInfo.message || "한줄 메세지");
+          setProfileImage(userInfo.imageUrl || "/image/basicimage.png"); // 기본 이미지 처리
+        } else {
+          console.error("프로필 조회 실패:", data.error);
+        }
+      } catch (error) {
+        console.error("네트워크 오류:", error);
+      }
+    };
+  
+    fetchUserProfile();
   }, [token]);
+  
   
   useLayoutEffect(() => {
     if (carouselViewRef.current && slideRefs.current[currentMenu]) {

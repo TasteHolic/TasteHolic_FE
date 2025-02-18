@@ -241,11 +241,11 @@ body.modal-open {
     stroke: green !important;
 }
 
-.dropdown-menu::-webkit-scrollbar {
+.owndropdown-menu::-webkit-scrollbar {
     width: 22px; 
 }
 
-.dropdown-menu::-webkit-scrollbar-thumb {
+.owndropdown-menu::-webkit-scrollbar-thumb {
     height: 20%;
     border-radius: 33.814px; /* 둥근 모서리 */
     background: rgba(243, 245, 246, 0.30); /* 썸의 색상 */
@@ -253,7 +253,7 @@ body.modal-open {
     
 }
 
-.dropdown-menu::-webkit-scrollbar-track {
+.owndropdown-menu::-webkit-scrollbar-track {
     background: var(--grayscale-gray800, #242525);
     max-height: fit-content;
     border-radius: 33.814px; /* 둥근 모서리 */

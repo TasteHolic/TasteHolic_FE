@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
+import { useGoogleLogin } from "@react-oauth/google";
 import MainHeader from "../components/Header/MainHeader";
 import Footer from "../components/Footer";
 
@@ -70,6 +71,68 @@ const LoginPage: React.FC = () => {
       setErrorMessage("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+  useEffect(() => {
+    console.log("window.Kakao:", window.Kakao);
+    // 카카오 SDK 초기화
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init("a4a032ccb88436f7bf873bf2fe5c3429");
+      console.log("Kakao SDK 초기화 완료");
+    }
+  }, []);
+  const handleKakaoLogin = () => {
+    window.Kakao.Auth.authorize({
+      redirectUri: "http://54.180.45.230:3000/oauth/kakao",
+    });
+  };  
+
+   const googleLogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        console.log("Google Login Success:", response);
+  
+        // 구글에서 받은 access_token으로 사용자 정보 가져오기
+      const userInfoResponse = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${response.access_token}`,
+        },
+      });
+      const userInfo = await userInfoResponse.json();
+      console.log("Decoded Google User:", userInfo);
+        // 백엔드 API 호출
+        const apiResponse = await fetch(
+          "http://54.180.45.230:3000/api/v1/users/google-callback",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: userInfo.email,
+              name: userInfo.name,
+              googleId: userInfo.sub, // Google User ID
+              profileImg: userInfo.picture, // 프로필 이미지이미지
+            }),
+          }
+        );
+  
+        if (!apiResponse.ok) {
+          throw new Error("구글 로그인 API 요청 실패");
+        }
+  
+        const result = await apiResponse.json();
+        console.log("백엔드 응답:", result);
+        // 로그인 성공 시 토큰 저장
+        localStorage.setItem("token", result.token);
+        navigate("/");
+      } catch (error) {
+        console.error("Google Login Error:", error);
+      }
+    },
+    onError: () => {
+      console.log("Google Login Failed");
+    },
+  
+  });
 
   return (
     <>
@@ -106,7 +169,7 @@ const LoginPage: React.FC = () => {
                   <img
                     src="src/components/icons/signupIcons/x-circle.png"
                     alt="clear"
-                    className="clear-icon"
+                    className="email-clear-icon"
                     onClick={() => {
                       setEmail("");
                       emailInputRef.current?.focus();
@@ -156,7 +219,7 @@ const LoginPage: React.FC = () => {
                           : "src/components/icons/signupIcons/eye-off.png"
                       }
                       alt={showPassword ? "숨기기" : "보기"}
-                      className="toggle-password-icon"
+                      className="toggle-pw-icon"
                       onClick={toggleShowPassword}
                     />
                     <img
@@ -200,8 +263,7 @@ const LoginPage: React.FC = () => {
         {/* 카카오 & 구글 로그인 버튼 */}
         <button
           className="kakao-login"
-          onClick={() => (window.location.href = "https://your-kakao-auth.com")}
-        >
+          onClick={handleKakaoLogin}>
           <svg
             className="kakaoicon"
             xmlns="http://www.w3.org/2000/svg"
@@ -215,17 +277,15 @@ const LoginPage: React.FC = () => {
               d="M6 34L8 25L17 27L6 34Z"
               fill="black"
               stroke="black"
-              stroke-linejoin="round"
+              strokeLinejoin="round"
             />
           </svg>
           Login With KaKao
         </button>
+        
         <button
           className="google-login"
-          onClick={() =>
-            (window.location.href = "https://your-google-auth.com")
-          }
-        >
+          onClick={() => googleLogin()}>
           <svg
             className="googleicon"
             width="36"

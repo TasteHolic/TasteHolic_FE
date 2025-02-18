@@ -10,7 +10,7 @@ const AccountManagement: React.FC<AccountManagementProps> = ({ setLogoutModalOpe
     const navigate = useNavigate();
 
     const handleDeleteAccount = () => {
-        navigate('/delete-account');
+        navigate('/mypage/delete-account');
     };
 
     return (

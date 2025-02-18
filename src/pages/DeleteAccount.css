@@ -223,7 +223,7 @@ button {
 }
 
 .home-button {
-    padding: 16px 32px;
+    /* padding: 16px 32px; */
     width: 105px;
     height: 51px;
     border: 1px solid #00000033;
