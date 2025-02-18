@@ -72,7 +72,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
             {recipeDetails && (
                 <div className="explore-recipe-container">
                     <div className="gradient-over-img"/>
-                    <img src={recipeDetails.imageUrl || "/image/default.png"} className="background-img" />
+                    <img src={recipeDetails.imageUrl || "/image/image 92.png"} className="background-img" />
                     <div className="contents">
                         <div className="title">
                             <div className="explore-title">{recipeDetails.name}</div>
