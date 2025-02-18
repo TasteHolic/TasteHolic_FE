@@ -65,8 +65,12 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
           레시피 등록하기
         </button>
       </div>
-
-      {isRecipeModalOpen && <RecipeModal isOpen={isRecipeModalOpen} onClose={() => setIsRecipeModalOpen(false)} />}
+      
+      {isRecipeModalOpen &&
+            <RecipeModal 
+            isOpen={isRecipeModalOpen} 
+            onClose={() => setIsRecipeModalOpen(false)} />
+      }
 
       <div className="recipes-container">
         {loading ? (
@@ -82,7 +86,37 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             />
           ))
         ) : (
-          <p>텅 비었네요! 새로운 레시피를 추가해보세요.</p>
+          <div className="empty-message">
+          <svg
+            className="emptyicon"
+            width="131"
+            height="131"
+            viewBox="0 0 131 131"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
+            <path
+              d="M38 63H92"
+              stroke="#C8CACB"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M65 38L65 92"
+              stroke="#C8CACB"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+            <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
+            <path
+              d="M70.5312 36.4375L69.8281 76.6719H62.0938L61.3906 36.4375H70.5312ZM60.4531 88C60.4141 84.9531 62.9531 82.4531 66 82.4531C69.0078 82.4531 71.5078 84.9531 71.5469 88C71.5078 91.0469 69.0078 93.5078 66 93.5469C62.9531 93.5078 60.4141 91.0469 60.4531 88Z"
+              fill="#C8CACB"
+            />
+          </svg>
+          <p>텅 비었네요!</p>
+          <p>오늘의 특별한 한 잔을 기록하러 가볼까요?</p>
+        </div>
         )}
       </div>
 
