@@ -48,7 +48,13 @@ const SearchPageUp: React.FC = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
+  const categoryMapping: Record<string, string> = {
+    칵테일: "Cocktail",
+    위스키: "Whiskey",
+    "진,럼,데낄라": "Gin/Rum/Tequila",
+    기타: "Others",
+    "전체 선택": "All",
+  };
   const handleSearchClick = async (query: string) => {
     setSearchQuery(query); // 검색어 업데이트
 
@@ -56,8 +62,12 @@ const SearchPageUp: React.FC = () => {
       alert("검색어 또는 카테고리를 선택해야 합니다!");
       return;
     }
+    const translatedCategory =
+      selectedCategories.length > 0
+        ? categoryMapping[selectedCategories[0]] || selectedCategories[0]
+        : "";
     const requestData = {
-      category: selectedCategories.length > 0 ? selectedCategories[0] : "",
+      category: translatedCategory,
       query: query.trim(),
       minAbv: selectedRange.min,
       maxAbv: selectedRange.max,
@@ -80,7 +90,6 @@ const SearchPageUp: React.FC = () => {
 
       const data = await response.json();
       console.log("✅ 검색 결과:", data);
-      console.log(data.data);
 
       if (data.success) {
         navigate("/search-results", {

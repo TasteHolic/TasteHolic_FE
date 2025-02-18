@@ -47,7 +47,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
 
   useEffect(() => {
-    console.log("📌 검색 필터 데이터:", location.state?.searchedTypes);
     if (location.state?.searchedTypes) {
       setAppliedFilters(location.state.searchedTypes);
       console.log(
@@ -84,11 +83,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
   const noResults = !filteredResults.length; // 검색 결과 여부 수정
 
-  console.log("🔍 원본 검색 결과:", results);
-  console.log("📌 필터링된 결과:", filteredResults);
-  console.log("📢 공식 레시피 개수:", officialCards.length);
-  console.log("📢 유저 레시피 개수:", userCards.length);
-
   return (
     <>
       <div className="search-results-container">
@@ -105,8 +99,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           <div className="type-labels-container">
             {appliedFilters && appliedFilters.length > 0 ? (
               appliedFilters.map((type, index) => {
-                console.log("🔍 렌더링할 필터:", type);
-
                 let icon;
                 if (type.type === "variety") {
                   switch (type.label) {
