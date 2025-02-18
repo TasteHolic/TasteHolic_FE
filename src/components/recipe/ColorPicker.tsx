@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const ColorPickerContainer = styled.div`
@@ -27,18 +27,25 @@ interface ColorPickerProps {
   color1?: string;
   color2?: string;
   color3?: string;
+  onChange?: (selectedItems: string[]) => void; 
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ color1, color2, color3 }) => {
+const ColorPicker: React.FC<ColorPickerProps> = ({ color1, color2, color3, onChange }) => {
     const [colorValues, setColorValues] = useState({
       color1: color1 || "#636363",
       color2: color2 || "#636363",
       color3: color3 || "#636363",
     });
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>, key: string) => {
-    setColorValues((prev) => ({ ...prev, [key]: event.target.value }));
-  };
+    useEffect(() => {
+      if (onChange) {
+        onChange(Object.values(colorValues));
+      }
+    }, [colorValues, onChange]);
+
+    const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>, key: string) => {
+      setColorValues((prev) => ({ ...prev, [key]: event.target.value }));
+    };
 
   return (
     <ColorPickerContainer>

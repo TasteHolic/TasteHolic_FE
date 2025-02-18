@@ -1,8 +1,4 @@
-.viewcontainer {
-    position: absolute;
-    top: 695px;
-    left: 278px;
-    z-index: 12;
+.container {
     width: 740px;
     display: inline-flex;
     padding: 60px 0 60px 0;
@@ -27,7 +23,7 @@
     margin-bottom: 48px;
 }
 .drink-name {
-    color: #FFFFFF;
+    color: #ffffff;
 
     font-family: Pretendard;
     font-size: 32px;

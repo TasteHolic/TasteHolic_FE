@@ -5,13 +5,14 @@ interface DropdownProps {
     option?: string;
     placeholder: string;
     options: string[];
-    onSelect: (selected: string) => void; // Callback function for state lifting
+    
 }
+
 
 const DropdownContainer = styled.div`
     position: relative;
     width: 200px;
-    height: 52px;
+
 `;
 
 const DropdownButton = styled.div`
@@ -38,51 +39,20 @@ const DropdownContent = styled.div`
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     padding-top: 8px;
     padding-bottom: 8px;
-    
-    max-height: 270px;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(243, 245, 246, 0.30);
-        border-radius: 33.814px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-        background: #888; /* Darker shade when hovered */
-    }
-
-
-    // .::-webkit-scrollbar {
-    // width: 22px; 
-    // }
-
-    // .::-webkit-scrollbar-thumb {
-    //     height: 20%;
-    //     border-radius: 33.814px; /* 둥근 모서리 */
-    //     background: rgba(243, 245, 246, 0.30); /* 썸의 색상 */
-    //     border: 9px solid var(--grayscale-gray800, #242525);
-        
-    // }
-
-    // .::-webkit-scrollbar-track {
-    //     background: none;
-    //     max-height: fit-content;
-    //     border-radius: 33.814px; /* 둥근 모서리 */
-    // }
 `;
 
 const DropdownItem = styled.div`
     padding: 10px 10px 10px 30px;
     cursor: pointer;
+    text-align: center;
     position: relative;
     text-align: left;
 
     &:hover {
         background: var(--grayscale-gray700, #383939);
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 10px 10px 10px 10px;
     }
 
     &::after {
@@ -101,27 +71,19 @@ const DropdownItem = styled.div`
         display: none;
     }
 `;
-
-const OptionText = styled.div`
+const OptionText = styled.div`a
     color: #FFF;
+
+    /* 기본 본문 */
     font-family: Pretendard;
     font-size: 14px;
+    font-style: normal;
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.56px;
     text-transform: capitalize;
 `;
 
-const ButtonText = styled.p`
-color: var(--grayscale-gray400, #8D8F90);
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-letter-spacing: -0.64px;
-text-transform: capitalize;
-`;
 
 const ArrowDown = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -135,28 +97,27 @@ const ArrowUp = () => (
     </svg>
 );
 
-const RecipeDropdown: React.FC<DropdownProps> = ({ placeholder, options, option, onSelect }) => {
-    const [isActive, setIsActive] = useState(false);
-    const [selected, setSelected] = useState<string | null>(option || null);
 
-    const handleSelect = (selectedItem: string) => {
-        setSelected(selectedItem);
-        setIsActive(false);
-        onSelect(selectedItem);
-    };
+const RecipeDropdown: React.FC<DropdownProps> = ({ placeholder, options, option }) => {
+    const [isActive, setIsActive] = useState(false);
+    const [selected, setSelected] = useState<string | null>(option || null); // Use option if provided, otherwise null
 
     return (
         <DropdownContainer>
             <DropdownButton onClick={() => setIsActive(!isActive)}>
-                <ButtonText style={{ color: selected ? "#ffffff" : "var(--grayscale-gray400, #8D8F90)" }}>
-                    {selected || placeholder}
-                </ButtonText>
+                {selected || placeholder}
                 {isActive ? <ArrowUp /> : <ArrowDown />}
             </DropdownButton>
             {isActive && (
                 <DropdownContent>
                     {options.map((optionItem, index) => (
-                        <DropdownItem key={index} onClick={() => handleSelect(optionItem)}>
+                        <DropdownItem
+                            key={index}
+                            onClick={() => {
+                                setSelected(optionItem);
+                                setIsActive(false);
+                            }}
+                        >
                             <OptionText>{optionItem}</OptionText>
                         </DropdownItem>
                     ))}
@@ -167,3 +128,4 @@ const RecipeDropdown: React.FC<DropdownProps> = ({ placeholder, options, option,
 };
 
 export default RecipeDropdown;
+

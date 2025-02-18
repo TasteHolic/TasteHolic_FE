@@ -8,7 +8,6 @@ const DropdownContainer = styled.div`
     border: 1px solid var(--grayscale-gray50, #F3F5F6);
     background: var(--grayscale-gray800, #242525);
     box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.51);
-
     
 `;
 

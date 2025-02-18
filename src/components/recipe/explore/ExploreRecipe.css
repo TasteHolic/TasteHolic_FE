@@ -168,6 +168,7 @@
     align-items: center;
     border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(190, 97, 235, 0.60); 
 
     color: #FFF;
     text-align: center;
@@ -179,14 +180,11 @@
     letter-spacing: -0.8px;
     text-transform: capitalize;
 }
-.label-1 {
+.Tsp-label {
     background: rgba(244, 43, 114, 0.60);
 
 }
-.label-2 {
-    background: rgba(190, 97, 235, 0.60); 
-}
-.label-3 {
+.Splash-label {
     background: var(--glass, rgba(128, 128, 128, 0.30));
 }
 .recipe {
