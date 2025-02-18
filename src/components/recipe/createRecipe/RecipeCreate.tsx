@@ -2,7 +2,6 @@ import "./RecipeCreate.css";
 import { useState } from "react";
 import axios from "axios";
 import ItemList from "./ItemList";
-import VarietyItem from "./VarietyItem";
 import RecipeDropdown from "./RecipeDropdown";
 import CreateWriteRecipe from "./CreateWriteRecipe";
 import ColorPicker from "../ColorPicker";
@@ -73,8 +72,7 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
             <div className="container">
                 <div className="top">
                     <p className="drink-name">{drinkName}</p>
-                    <VarietyItem
-                    options={["Cocktail", "whiskey", "gin, rum, tequilla"]}/>
+                    <p className="cocktail-text">Cocktail</p>
                 </div>
 
                 <div className="categories">
