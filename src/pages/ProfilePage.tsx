@@ -49,17 +49,19 @@ const ProfilePage: React.FC = () => {
   //     setProfileImage("/image/basicimage.png");
   //   }
   // }, [token]);
-  console.log("요청 전 토큰:", token);
+ 
+  
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!token) return; // 토큰 없으면 API 호출 X
-  
+
       try {
         const response = await fetch("http://54.180.45.230:3000/api/v1/users/info", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            
           },
         });
   

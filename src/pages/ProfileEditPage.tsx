@@ -6,11 +6,17 @@ import Footer from "../components/Footer";
 
 const ProfileEditPage: React.FC = () => {
     const navigate = useNavigate();
-    const storedEmail = localStorage.getItem("email") || "example@example.com";
+    const [email, setEmail] = useState("example@example.com");
 
     const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
     const [introText, setIntroText] = useState(localStorage.getItem("introText") || "");
-    const [profileImage, setProfileImage] = useState(localStorage.getItem("profileImage") || "");
+    // const [profileImage, setProfileImage] = useState<File | string | null>(
+    //     localStorage.getItem("profileImage") || null
+    // );
+    const [profileImage, setProfileImage] = useState<File | null>(null); // 🔵 API 전송용
+    const [previewImage, setPreviewImage] = useState<string | null>(null); // 🟢 미리보기용 (Base64 URL)
+
+    
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -34,25 +40,45 @@ const ProfileEditPage: React.FC = () => {
 
     const isPasswordChangeRequired = password.length > 0; // 비밀번호 변경 여부 확인
     const isFormValid = (!isPasswordChangeRequired || (validation.passwordLength && validation.passwordComplexity && validation.confirmPassword));
-
+    const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
     useEffect(() => {
-        // 로컬스토리지에서 최신 정보 불러오기 및 검증
-        const storedNickname = localStorage.getItem("nickname");
-        const storedIntroText = localStorage.getItem("introText");
-        const storedProfileImage = localStorage.getItem("profileImage");
-
-        // 상태와 로컬스토리지 값이 다를 경우에만 업데이트
-        if (storedNickname && storedNickname !== nickname) {
-            setNickname(storedNickname);
-        }
-        if (storedIntroText && storedIntroText !== introText) {
-            setIntroText(storedIntroText);
-        }
-        if (storedProfileImage && storedProfileImage !== profileImage) {
-            setProfileImage(storedProfileImage);
-        }
-
-    }, []);  // useEffect가 처음 한번만 실행되도록 의존성 배열에 빈 배열을 추가
+        const fetchUserInfo = async () => {
+          const token = localStorage.getItem("token"); // 저장된 토큰 가져오기
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+          }
+      
+          try {
+            const response = await fetch("http://54.180.45.230:3000/api/v1/users/info", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // 토큰 포함
+              },
+            });
+      
+            if (!response.ok) {
+              throw new Error(`서버 오류: ${response.status}`);
+            }
+      
+            const data = await response.json();
+      
+            if (data.resultType === "SUCCESS") {
+              const userInfo = data.success.data;
+              setEmail(userInfo.email); // API에서 받아온 이메일 설정
+              setPreviewImage(userInfo.profileImageUrl || "/image/basicimage.png");
+            } else {
+              console.error("사용자 정보 조회 실패:", data.error);
+            }
+          } catch (error) {
+            console.error("네트워크 오류:", error);
+          }
+        };
+      
+        fetchUserInfo();
+      }, []);
+   
 
     const handlePasswordChange = (value: string) => {
         const isLengthValid = value.length >= 10;
@@ -94,16 +120,16 @@ const ProfileEditPage: React.FC = () => {
         setConfirmPassword(value);
     };
 
-    const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            setProfileImage(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                const imageData = reader.result as string;
-                setProfileImage(imageData);
-                localStorage.setItem("profileImage", imageData);
+                setPreviewImage(reader.result as string); 
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // Base64 변환
+            await handleProfileUpdate("image", file);
         }
     };
 
@@ -111,13 +137,61 @@ const ProfileEditPage: React.FC = () => {
         return isEmpty ? "#A8AAAB" : isValid ? "#4ECE95" : "#FDA4C7";
     };
 
+    const handleProfileUpdate = async (field: string, file?: File) => {
+        if (!token) {
+          alert("로그인이 필요합니다.");
+          return;
+        }
+      
+        const formData = new FormData();
+      
+        if (field === "image" && file) {
+          formData.append("image", file);
+        }
+      
+        if (field === "nickname") {
+          formData.append("nickname", nickname);
+        }
+      
+        if (field === "message") {
+          formData.append("message", introText);
+        }
+      
+        if (field === "password") {
+          formData.append("password", password);
+        }
+      
+        try {
+          const response = await fetch("http://54.180.45.230:3000/api/v1/users/profile/change", {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            alert(`${field}이(가) 성공적으로 변경되었습니다.`); 
+             if (field === "image") {
+                setProfileImage(null); //  성공 후 파일 초기화
+            }
+         
+          }
+        } catch (error) {
+          console.error("변경 실패:", error);
+          alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      };
+            
     return (
         <>
             <Header/>
                 <div className="profile-edit-page">
                     <div className="profile-edit-section">
                         <div className="profile-edit-image-container">
-                            <img src={profileImage || "/image/basicimage.png"} alt="프로필 사진" />
+                            <img src={previewImage || "/image/basicimage.png"} alt="프로필 사진" />
                             <label className="custom-file-upload">
                                 <img src="/image/imageChange.png" alt="프로필 사진 변경" />
                                 <input
@@ -140,8 +214,7 @@ const ProfileEditPage: React.FC = () => {
                                 />
                                 <button onClick={() => {
                                     if (nickname.length >= 2 && /^[a-zA-Z0-9가-힣]+$/.test(nickname)) {
-                                        localStorage.setItem("nickname", nickname);
-                                        alert("닉네임이 변경되었습니다.");
+                                        handleProfileUpdate("nickname");
                                     } else {
                                         alert("닉네임은 2자 이상의 한글, 영문, 숫자만 가능합니다.");
                                     }
@@ -161,8 +234,7 @@ const ProfileEditPage: React.FC = () => {
                                     maxLength={100}
                                 />
                                 <button onClick={() => {
-                                    localStorage.setItem("introText", introText);
-                                    alert("자기소개가 변경되었습니다.");
+                                    handleProfileUpdate("message")
                                 }}>수정</button>
                             </div>
                         </div>
@@ -173,7 +245,7 @@ const ProfileEditPage: React.FC = () => {
                     </div>
 
                     <div className="security-section">
-                        <div className="email-fixed">이메일 <span>{storedEmail}</span></div>
+                        <div className="email-fixed">이메일 <span>{email}</span></div>
 
                         <div className="profile-edit-container">
                             <label>새 비밀번호 </label><span>*</span>
@@ -201,8 +273,8 @@ const ProfileEditPage: React.FC = () => {
                             <button
                                 onClick={() => {
                                     if (validation.passwordLength && validation.passwordComplexity) {
-                                        localStorage.setItem("password", password);
-                                        alert("비밀번호가 변경되었습니다.");
+                                        // handleProfileUpdate("password")
+                                        
                                     } else {
                                         alert("비밀번호 조건을 충족해주세요.");
                                     }
@@ -247,8 +319,7 @@ const ProfileEditPage: React.FC = () => {
                             <button
                                 onClick={() => {
                                     if (confirmPassword === password && validation.passwordLength && validation.passwordComplexity) {
-                                        localStorage.setItem("password", password);
-                                        alert("비밀번호가 변경되었습니다.");
+                                        handleProfileUpdate("password")
                                     } else {
                                         alert("비밀번호가 일치하는지 확인하세요.");
                                     }
@@ -266,17 +337,19 @@ const ProfileEditPage: React.FC = () => {
                     <div className="edit-done-btn">
                         <button
                             onClick={() => {
-                                if (isFormValid) {
-                                    if (isPasswordChangeRequired) {
-                                        localStorage.setItem("password", password);
-                                    }
-                                    localStorage.setItem("nickname", nickname);
-                                    localStorage.setItem("introText", introText);
-                                    alert("변경 사항이 저장되었습니다.");
-                                    navigate("/mypage/edit-profile/done");
-                                } else {
-                                    alert("비밀번호 변경 조건을 확인해주세요.");
-                                }
+                                // if (isFormValid) {
+                                //     if (isPasswordChangeRequired) {
+                                //         localStorage.setItem("password", password);
+                                //     }
+                                //     localStorage.setItem("nickname", nickname);
+                                //     localStorage.setItem("introText", introText);
+                                //     alert("변경 사항이 저장되었습니다.");
+                                //     navigate("/mypage/edit-profile/done");
+                                // } else {
+                                //     alert("비밀번호 변경 조건을 확인해주세요.");
+                                // }
+                                alert("변경 사항이 저장되었습니다.");
+                                navigate("/mypage/edit-profile/done");
                             }}
                             className={`edit-done-button ${isFormValid ? "" : "disabled"}`} // 버튼 비활성화 스타일 추가 가능
                             disabled={!isFormValid}

@@ -127,6 +127,7 @@ button {
 }
 
 .profile-security-text img {
+    box-sizing: content-box;
     padding-top: auto;
     padding-bottom: auto;
     padding-right: 0;
