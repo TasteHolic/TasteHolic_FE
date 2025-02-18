@@ -16,7 +16,7 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
   onClick,
 }) => {
   const [name, setName] = useState("");
-  const [image, setImage] = useState("/image/default.png");
+  const [image, setImage] = useState("/image/image 92.png");
   const [description, setDescription] = useState("");
   const [views, setViews] = useState(0);
   const [likes, setLikes] = useState(0);
@@ -34,7 +34,7 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
         if (response.data.resultType === "SUCCESS") {
           const recipe = response.data.success.recipe;
           setName(recipe.nameEng);
-          setImage(recipe.imageUrl || "/image/default.png");
+          setImage(recipe.imageUrl || "/image/image 92.png");
           setViews(recipe.views);
           setLikes(recipe.likes);
 
