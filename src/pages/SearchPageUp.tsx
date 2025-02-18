@@ -39,8 +39,6 @@ const SearchPageUp: React.FC = () => {
   const [showAllMood, setShowAllMood] = useState(false);
 
   const [showEtcVariety, setShowEtcVariety] = useState(false);
-  const [showEtcAroma, setShowEtcAroma] = useState(false);
-  const [showEtcFlavor, setShowEtcFlavor] = useState(false);
   const [showEtcMood, setShowEtcMood] = useState(false);
 
   useEffect(() => {
@@ -137,8 +135,6 @@ const SearchPageUp: React.FC = () => {
     // (1) 기존 label 매핑
     const labelMapping: Record<string, string> = {
       etcVariety: "기타 주종",
-      etcAroma: "기타 맛",
-      etcFlavor: "기타 향",
       etcMood: "기타 분위기",
     };
     const displayName = labelMapping[type as keyof typeof labelMapping] || type;
@@ -166,7 +162,6 @@ const SearchPageUp: React.FC = () => {
         "오크",
         "커피",
         "오렌지",
-      "etcAroma",
       "allAroma",
     ];
     const tasteTypes = [
@@ -179,7 +174,6 @@ const SearchPageUp: React.FC = () => {
         "프루티",
         "허브",
         "짭짤함",
-      "etcFlavor",
       "allFlavor",
     ];
 
@@ -268,8 +262,6 @@ const SearchPageUp: React.FC = () => {
       "모든 향 포함": "allFlavor",
       "모든 여운 포함": "allMood",
       "기타 주종": "etcVariety",
-      "기타 맛": "etcAroma",
-      "기타 향": "etcFlavor",
       "기타 분위기": "etcMood",
     };
 
@@ -308,8 +300,6 @@ const SearchPageUp: React.FC = () => {
     setShowAllMood(false);
 
     setShowEtcVariety(true);
-    setShowEtcAroma(false);
-    setShowEtcFlavor(false);
     setShowEtcMood(false);
   };
 
@@ -341,8 +331,6 @@ const SearchPageUp: React.FC = () => {
     setShowAllMood(false);
 
     setShowEtcVariety(false);
-    setShowEtcAroma(true);
-    setShowEtcFlavor(false);
     setShowEtcMood(false);
   };
 
@@ -370,8 +358,6 @@ const SearchPageUp: React.FC = () => {
     setShowAllMood(false);
 
     setShowEtcVariety(false);
-    setShowEtcAroma(false);
-    setShowEtcFlavor(true);
     setShowEtcMood(false);
   };
 
@@ -395,8 +381,6 @@ const SearchPageUp: React.FC = () => {
     setShowAllMood(true);
 
     setShowEtcVariety(false);
-    setShowEtcAroma(false);
-    setShowEtcFlavor(false);
     setShowEtcMood(true);
   };
 
@@ -482,24 +466,6 @@ const SearchPageUp: React.FC = () => {
               />
             )}
 
-            {showEtcAroma && (
-              <CategoryType
-                key="etcAroma"
-                type="기타"
-                onClick={() => handleCategoryTypeClick("etcAroma")}
-                isActive={activeCategories.includes("etcAroma")}
-              />
-            )}
-
-            {showEtcFlavor && (
-              <CategoryType
-                key="etcFlavor"
-                type="기타"
-                onClick={() => handleCategoryTypeClick("etcFlavor")}
-                isActive={activeCategories.includes("etcFlavor")}
-              />
-            )}
-
             {showEtcMood && (
               <CategoryType
                 key="etclMood"
@@ -528,11 +494,6 @@ const SearchPageUp: React.FC = () => {
 
               case "진,럼,데낄라":
                 imgSrc = "/image/gin-rum-teq-icon.svg";
-                break;
-
-              case "맥주":
-                imgSrc =
-                  "https://s3-alpha-sig.figma.com/img/cf15/52b4/ce55312d1404ec4272da0eaa4338814b?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=WF7poQQzAWoZrMJ52B98rSHoaVUZnYHZUHvRCXhhG-DER3EnLVETzU-os~AONfVSCvkI5LiK66qrFY-kQ~uOTVufrMscVlmIZG8kcHNl4gX-x5zUpVCbfY0d-WbiQvJK20~1AiFi-6HrFD-8WTNMYQ0PZFjFMDlCycFI3isdNdNeB95hY6MthBjfL4V0QlKqGj-BIfD5G4PldWTbwcKZkE1KIsPg7-oQXp5Y5K-FBENfxu6xozQqT5exCLG4rsSm52Eco1b5onMMVMXlGP8VNifh~cSf4Dpvt6jribY5WwQ89F7AiZcY7dhLWkR6UFnXlASucpB-u9kTi3XdjX6UIA__";
                 break;
 
               default:
