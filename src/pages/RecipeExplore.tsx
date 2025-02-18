@@ -1,161 +1,32 @@
-import React, { useState } from "react";
-import CocktailRecipeCard from "../components/CocktailRecipeCard";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import CocktailRecipeCard from "../components/MyRecCocktailRecipeCard";
 import "./RecipeExplore.css";
-// import FloatingButton from "../components/FloatingButton";
+import FloatingButton from "../components/FloatingButton";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import RecipeHeader from "../components/Header/RecipeHeader";
 import Footer from "../components/Footer";
 
-const cocktailData = [
-  {
-    id: 1,
-    name: "피냐콜라다 정복하기",
-    drinkName: "올드 패션드",
-    image: "/image/recipe1.png",
-    description: "1 bottle, beverage coconut cream",
-    views: 21,
-    likes: 3,
-    category: "user",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-  {
-    id: 2,
-    name: "내 방이 칵테일 바가 되는 방법",
-    drinkName: "올드 패션드",
-    image: "/image/recipe2.png",
-    description: "1 bottle, beverage sugar syrup",
-    views: 18,
-    likes: 5,
-    category: "low-alcohol",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-  {
-    id: 3,
-    name: "3가지 재료로 만드는 다이키리",
-    drinkName: "올드 패션드",
-    image: "/image/recipe3.png",
-    description: "1 bottle, beverage honey",
-    views: 30,
-    likes: 8,
-    category: "fruity",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-  {
-    id: 4,
-    name: "피냐콜라다",
-    drinkName: "올드 패션드",
-    image: "/image/recipe1.png",
-    description: "1 bottle, beverage coconut cream",
-    views: 21,
-    likes: 3,
-    category: "user",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-  {
-    id: 5,
-    name: "입문용 칵테일",
-    drinkName: "올드 패션드",
-    image: "/image/recipe1.png",
-    description: "1 bottle, beverage coconut cream",
-    views: 11,
-    likes: 3,
-    category: "user",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-  {
-    id: 6,
-    name: "칵테일",
-    drinkName: "올드 패션드",
-    image: "/image/recipe1.png",
-    description: "1 bottle, beverage coconut cream",
-    views: 11,
-    likes: 18,
-    category: "user",
-    amount1: "1 Tsp",
-    amount2: "1 Tsp",
-    amount3: "1 Splash",
-    ingredient1: "vodka",
-    ingredient2: "coffee Liqueur",
-    ingredient3: "얼음",
-    recipeLine1: "올드 패션드 글라스에 [얼음]을 채웁니다.",
-    recipeLine2: "[Vodka]와 [Coffee Liqueur]를 차례로 추가합니다.",
-    recipeLine3: "스푼으로 부드럽게 저어서 음료를 섞습니다.",
-  },
-];
-
 const categories = [
-  { id: "user", label: "유저등록" },
-  { id: "low-alcohol", label: "논알콜" },
-  { id: "high-alcohol", label: "고도수" },
+  { id: "my", label: "유저등록" },
+  { id: "zero", label: "논알콜" },
+  { id: "high", label: "고도수" },
   { id: "fruity", label: "프루티" },
-  { id: "few-ingredients", label: "재료 2개 이하" },
+  { id: "under2", label: "재료 2개 이하" },
   {
-    id: "saved",
+    id: "user",
     icon: (
-      <svg
-        width="30"
-        height="30"
-        viewBox="0 0 30 30"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="Group 728">
-          <circle
-            id="Ellipse 106"
-            cx="15"
-            cy="15"
-            r="15"
-            fill="white"
-            fill-opacity="0.2"
-          />
+          <circle id="Ellipse 106" cx="15" cy="15" r="15" fill="white" fillOpacity="0.2" />
           <g id="Group 720">
             <path
               id="Vector 209"
               d="M8.65283 6.92383V23.0777L15.4081 18.6295L21.9221 23.0777V6.92383H8.65283Z"
               stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </g>
         </g>
@@ -165,17 +36,41 @@ const categories = [
 ];
 
 const RecipeExplore: React.FC = () => {
-  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-  const [selectedCategory, setSelectedCategory] = useState("user");
+  const [recipes, setRecipes] = useState<any[]>([]);
+  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>({});
+  const [selectedCategory, setSelectedCategory] = useState("my");
   const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const toggleSaveRecipe = (id: number) => {
-    setSavedRecipes((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  useEffect(() => {
+    fetchRecipes(selectedCategory);
+  }, [selectedCategory]);
+
+  const fetchRecipes = async (category: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes?type=${category}`);
+      if (response.data.recipes) {
+        setRecipes(response.data.recipes);
+      }
+    } catch (error) {
+      console.error("레시피 목록 불러오기 실패:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSaveRecipe = async (id: number, type: string) => {
+    try {
+      if (savedRecipes[id]) {
+        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`);
+      } else {
+        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=cocktail`);
+      }
+      setSavedRecipes((prev) => ({ ...prev, [id]: !prev[id] }));
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+    }
   };
 
   const handleCategoryClick = (category: string) => {
@@ -190,11 +85,6 @@ const RecipeExplore: React.FC = () => {
     setSelectedRecipe(null);
   };
 
-  const filteredRecipes =
-    selectedCategory === "saved"
-      ? cocktailData.filter((recipe) => savedRecipes[recipe.id])
-      : cocktailData.filter((recipe) => recipe.category === selectedCategory);
-
   return (
     <>
       <RecipeHeader />
@@ -207,42 +97,32 @@ const RecipeExplore: React.FC = () => {
         {/* 메뉴바 */}
         <div className="menu-bar">
           <div className="buttons">
-            {categories.map(({ id, label, icon }) => (
-              <button
-                key={id}
-                className={`menu-item ${
-                  selectedCategory === id ? "active" : ""
-                }`}
-                onClick={() => handleCategoryClick(id)}
-              >
-                {icon && <span className="menu-icon">{icon}</span>}
-                {label}
-              </button>
-            ))}
+          {categories.map(({ id, label, icon }) => (
+            <button
+              key={id}
+              className={`menu-item ${selectedCategory === id ? "active" : ""}`}
+              onClick={() => handleCategoryClick(id)}
+            >
+              {icon && <span className="menu-icon">{icon}</span>}
+              {label}
+            </button>
+            
+          ))}
           </div>
-          <div
-            className="active-indicator"
-            style={{
-              left: `${
-                categories.findIndex((c) => c.id === selectedCategory) * 190
-              }px`,
-            }}
-          />
+          <div className="active-indicator" style={{ left: `${categories.findIndex(c => c.id === selectedCategory) * 190}px` }} />
         </div>
 
         {/* 칵테일 카드 리스트 */}
         <div className="recipe-list">
-          {filteredRecipes.length > 0 ? (
-            filteredRecipes.map((recipe) => (
+          {loading ? (
+            <p>loading...</p>
+          ) : recipes.length > 0 ? (
+            recipes.map((recipe) => (
               <CocktailRecipeCard
                 key={recipe.id}
-                name={recipe.name}
-                image={recipe.image}
-                description={recipe.description}
-                views={recipe.views}
-                likes={recipe.likes}
-                isSaved={!!savedRecipes[recipe.id]}
-                onToggleSave={() => toggleSaveRecipe(recipe.id)}
+                recipeId={recipe.id}
+                type={recipe.type}
+                onToggleSave={(newType) => toggleSaveRecipe(recipe.id, newType)}
                 onClick={() => handleCardClick(recipe)}
               />
             ))
@@ -280,32 +160,20 @@ const RecipeExplore: React.FC = () => {
             </div>
           )}
         </div>
-        {/* <FloatingButton/> */}
+
         {selectedRecipe && (
           <div className="explore-recipe-background">
             <div className="explore-recipe">
               <ExploreRecipe
-                exploreTitle={selectedRecipe.name}
-                drinkName={selectedRecipe.drinkName}
-                imgSrc={selectedRecipe.image}
-                viewCount={selectedRecipe.views}
-                favoriteCount={selectedRecipe.likes}
-                amount1={selectedRecipe.amount1}
-                amount2={selectedRecipe.amount2}
-                amount3={selectedRecipe.amount3}
-                ingredient1={selectedRecipe.ingredient1}
-                ingredient2={selectedRecipe.ingredient2}
-                ingredient3={selectedRecipe.ingredient3}
-                recipeLine1={selectedRecipe.recipeLine1}
-                recipeLine2={selectedRecipe.recipeLine2}
-                recipeLine3={selectedRecipe.recipeLine3}
+                recipeId={selectedRecipe.id}
+                type={selectedRecipe.type}
                 onCancel={handleCloseExploreRecipe}
-                onSave={() => toggleSaveRecipe(selectedRecipe.id)}
               />
             </div>
           </div>
         )}
       </div>
+      <FloatingButton/>
       <Footer />
     </>
   );
