@@ -402,7 +402,18 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   // ─────────────────────────
   // "생성하기" 버튼 핸들러
   // ─────────────────────────
-  const handleCreate = () => {
+  const finalData: FinalData = {
+    name: drinkName || "",
+    category: category,
+    flavors: selectedFlavors,
+    aromas: selectedAromas,
+    alcohol: selectedAlcohol,
+    colors: selectedColors,
+    finish: selectedFinish,
+    note: tastingNote,
+  };
+
+  const handleCreate = async () => {
     if (selectedFlavors.length === 0) {
       alert("맛은 필수 항목입니다. 입력해주세요.");
       return;
@@ -420,28 +431,46 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       return;
     }
 
+    try {
+      // API로 POST 요청 보내기
+      const response = await fetch("/api/v1/users/tasting-note?type=cocktail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // 토큰 추가
+        },
+        body: JSON.stringify({
+          name: finalData.name,
+          tasteRating: finalData.flavors,
+          aromaRating: finalData.aromas,
+          abv: finalData.alcohol,
+          color: finalData.colors,
+          description: finalData.note,
+        }),
+      });
 
-    const finalData: FinalData = {
-      name: drinkName || "",
-      category: category,
-      flavors: selectedFlavors,
-      aromas: selectedAromas,
-      alcohol: selectedAlcohol,
-      colors: selectedColors,
-      finish: selectedFinish,
-      note: tastingNote,
-    };
+      if (!response.ok) {
+        throw new Error("Failed to submit tasting note");
+      }
 
-    console.log("🔹 handleCreate 실행됨");
-    console.log("📌 finalData:", finalData);
-    localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
+      const data = await response.json();
+      console.log("테이스팅 노트 작성 성공:", data);
 
-    requestAnimationFrame(() => {
-      console.log("🟢 onComplete 실행 직전");
-      onComplete(finalData);
-      console.log("🟢 onComplete 실행 완료");
-    });
+      // 로컬 스토리지에 저장
+      localStorage.setItem(
+        `tastingNote_${finalData.name}_${finalData.category}`,
+        JSON.stringify(finalData)
+      );
+
+      // onComplete 콜백 호출
+      requestAnimationFrame(() => {
+        onComplete(finalData);
+      });
+    } catch (error) {
+      console.error("테이스팅 노트 작성 중 오류 발생:", error);
+    }
   };
+
 
   if (!isOpen) return null;
 
