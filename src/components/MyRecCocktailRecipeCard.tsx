@@ -4,9 +4,10 @@ import "./MyRecCocktailRecipeCard.css";
 
 interface CocktailRecipeCardProps {
   recipeId: number;
-  type: "cocktail" | "user";
-  onToggleSave: (newType: "cocktail" | "user") => void;
+  type: "user" | "cocktail";
+  onToggleSave: () => void;
   onClick: () => void;
+  isMyBar: boolean;
 }
 
 const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
@@ -14,15 +15,15 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
   type,
   onToggleSave,
   onClick,
+  isMyBar
 }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("/image/image 92.png");
   const [description, setDescription] = useState("");
   const [views, setViews] = useState(0);
   const [likes, setLikes] = useState(0);
-  const [isMyBar, setIsMyBar] = useState(false);
-
-  const isSaved = type === "user";
+  const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+  
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -33,7 +34,7 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
 
         if (response.data.resultType === "SUCCESS") {
           const recipe = response.data.success.recipe;
-          setName(recipe.nameEng);
+          setName(recipe.name);
           setImage(recipe.imageUrl || "/image/image 92.png");
           setViews(recipe.views);
           setLikes(recipe.likes);
@@ -49,52 +50,29 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
       }
     };
 
-    const fetchMyBar = async () => {
-      try {
-        const response = await axios.get("http://54.180.45.230:3000/api/v1/users/my-bar/view");
-        if (response.data.resultType === "SUCCESS") {
-          const myBarList = response.data.success.data;
-          setIsMyBar(myBarList.some((item: any) => item.id === recipeId));
-        }
-      } catch (error) {
-        console.error("마이바 정보 불러오기 실패:", error);
-      }
-    };
-
     fetchRecipeDetails();
-    fetchMyBar();
   }, [recipeId, type]);
 
-  const handleToggleLike = async () => {
-    try {
-      const newType = isSaved ? "cocktail" : "user";
-      const url = isSaved
-        ? `http://54.180.45.230:3000/api/v1/recipes/${recipeId}/like/cancel?type=${type}`
-        : `http://54.180.45.230:3000/api/v1/recipes/${recipeId}/like?type=${type}`;
+  useEffect(() => {
+    const fetchFavRecipes = async () => {
+        try {
+            const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
 
-      const response = await axios.patch(url);
-
-      if (response.data.resultType === "SUCCESS") {
-        setLikes(response.data.success.likes);
-        onToggleSave(newType);
-        setIsMyBar(newType === "user");
-      }
-    } catch (error: any) {
-      if (error.response) {
-        const { status, data } = error.response;
-        if (status === 400 && data.error?.errorCode === "R001") {
-          alert("존재하지 않는 레시피입니다.");
-        } else if (status === 409 && data.error?.errorCode === "R002") {
-          alert("이미 좋아요를 눌렀습니다.");
-        } else {
-          alert("좋아요 처리 중 오류가 발생했습니다.");
+            if (response.data.success && response.data.success.recipes) {
+                const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
+                setFavRecipes(favIds);
+            }
+        } catch (error) {
+            console.error("좋아요한 레시피 목록 불러오기 실패:", error);
         }
-      } else {
-        alert("서버와의 연결이 원활하지 않습니다.");
-      }
-      console.error("좋아요 처리 실패:", error);
-    }
-  };
+    };
+
+    fetchFavRecipes();
+}, []);
+
+const isSaved = favRecipes.has(recipeId);
 
   return (
     <div className="cocktailrecipe-card" onClick={onClick}>
@@ -102,7 +80,7 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
         className="save-icon"
         onClick={(e) => {
           e.stopPropagation();
-          handleToggleLike();
+          onToggleSave();
         }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="26" viewBox="0 0 23 26" fill={isSaved ? "#ffffff" : "none"}>
