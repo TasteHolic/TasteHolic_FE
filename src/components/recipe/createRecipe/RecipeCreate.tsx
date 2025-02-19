@@ -1,5 +1,5 @@
 import "./RecipeCreate.css";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import ItemList from "./ItemList";
 import RecipeDropdown from "./RecipeDropdown";
@@ -24,17 +24,37 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
     const [selectedGlass, setSelectedGlass] = useState<string | null>(null);
     const [selectedColors, setSelectedColors] = useState<string[]>([]);
     const [recipeLines, setRecipeLines] = useState({ line1: "", line2: "", line3: "" });
+    
+    const defaultColors = ["#636363", "#636363", "#636363"];
 
-    const isFormChanged = 
-        selectedFlavors.length > 0 ||
-        selectedAromas.length > 0 ||
-        selectedIngredients.length > 0 ||
-        selectedAlcohol !== null ||
-        selectedGlass !== null ||
-        selectedColors.length > 0 ||
-        Object.values(recipeLines).some(line => line.trim() !== "");
-
+    const isFormChanged = useMemo(() => {
+        return (
+            selectedFlavors.length > 0 ||
+            selectedAromas.length > 0 ||
+            selectedIngredients.length > 0 ||
+            (selectedAlcohol !== null && selectedAlcohol !== "논알콜") ||
+            (selectedGlass !== null && selectedGlass !== "기본 글라스") ||
+            (selectedColors.length > 0 && JSON.stringify(selectedColors) !== JSON.stringify(defaultColors)) || 
+            Object.values(recipeLines).some(line => line.trim() !== "")
+        );
+    }, [
+        selectedFlavors,
+        selectedAromas,
+        selectedIngredients,
+        selectedAlcohol,
+        selectedGlass,
+        selectedColors,
+        recipeLines
+    ]);
+    
     const handleSaveRecipe = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("로그인 후 다시 시도하세요.");
+            return;
+        }
+
         try {
             const recipeData = {
                 name: drinkName,
@@ -49,16 +69,18 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                 colors: selectedColors,
                 abv: selectedAlcohol ? parseInt(selectedAlcohol) || 0 : 0,
             };
-
             const response = await axios.post("http://54.180.45.230:3000/api/v1/recipes", recipeData, {
-                headers: { "Content-Type": "application/json" }
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             if (response.data.resultType === "SUCCESS") {
-                alert("레시피 저장 완료!");
+                console.log("레시피 저장 완료!");
                 onCancel();
             } else {
-                alert("레시피 저장 실패!");
+                console.log("레시피 저장 실패!");
             }
         } catch (error) {
             console.error("레시피 저장 실패:", error);
@@ -110,7 +132,11 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                     </div>
                     <div className="category">
                         <div className="category-name">재료</div>
-                        <ItemList options={["vodka", "coffee", "etc"]} onChange={setSelectedIngredients} />
+                        <ItemList options={[
+                            "vodka", 
+                            "coffee", 
+                            "etc"]} 
+                            onChange={setSelectedIngredients} />
                     </div>
                     <div className="category">
                         <div className="category-name">도수</div>
@@ -159,7 +185,7 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                 <div className="bottom">
                     <button className="cancel-button" onClick={onCancel}>cancel</button>
                     <button 
-                        className={`save-button ${isFormChanged ? "active" : "disabled"}`} 
+                        className={`create-save-button ${isFormChanged ? "active" : "disabled"}`} 
                         onClick={isFormChanged ? handleSaveRecipe : undefined}
                         disabled={!isFormChanged}
                     >
