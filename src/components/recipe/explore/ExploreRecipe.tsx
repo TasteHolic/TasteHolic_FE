@@ -24,7 +24,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
     const [recipeDetails, setRecipeDetails] = useState<any>(null);
     const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
     useEffect(() => {
-        console.log("📢 ExploreRecipe 마운트됨");
+
     }, []);
     useEffect(() => {
         const fetchRecipeDetails = async () => {
@@ -54,10 +54,17 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
 
     useEffect(() => {
         const fetchFavRecipes = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.log("비로그인 유저");
+                return;
+            }
             try {
-                const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
-                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-                });
+                const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", 
+                 {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
                 if (response.data.success && response.data.success.recipes) {
                     const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
