@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./MyRecipePage.css";
 import RecipeHeader from "../components/Header/RecipeHeader";
@@ -32,9 +32,11 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
   const fetchMyRecipes = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes", {
+      const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes", 
+      {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      }
+    );
       if (response.data.success && response.data.success.recipes) {
         setRecipes(response.data.success.recipes);
       }
@@ -47,9 +49,15 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
 
   useEffect(() => {
     const fetchFavRecipes = async () => {
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
       try {
         const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` }, 
         });
   
         if (response.data.success && response.data.success.recipes) {
@@ -74,7 +82,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
   
       await axios.patch(url);
   
-      // 상태 업데이트: 좋아요 목록에서 추가/제거
+      //좋아요 목록에서 추가/제거
       setFavRecipes((prev) => {
         const newFavs = new Set(prev);
         isFav ? newFavs.delete(id) : newFavs.add(id);
@@ -157,14 +165,14 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             <path
               d="M38 63H92"
               stroke="#C8CACB"
-              stroke-width="4"
-              stroke-linecap="round"
+              strokeWidth="4"
+              strokeLinecap="round"
             />
             <path
               d="M65 38L65 92"
               stroke="#C8CACB"
-              stroke-width="4"
-              stroke-linecap="round"
+              strokeWidth="4"
+              strokeLinecap="round"
             />
             <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
             <path
