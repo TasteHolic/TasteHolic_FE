@@ -161,7 +161,7 @@
     border: 1px solid rgba(0, 0, 0, 0.20);
 }
 
-.save-button {
+.create-save-button {
     display: flex;
     padding: 12px 24px;
     justify-content: center;
@@ -183,7 +183,7 @@
     cursor: not-allowed;
 }
 
-.save-button.active {
+.create-save-button.active {
 
     display: flex;
     padding: 12px 24px;
@@ -204,6 +204,8 @@
     line-height: normal;
     letter-spacing: -0.8px;
     text-transform: capitalize;
+    
+    cursor: pointer;
 }
 
 .save-button:hover {
