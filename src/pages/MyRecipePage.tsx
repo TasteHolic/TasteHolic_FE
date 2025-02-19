@@ -55,6 +55,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
         alert("로그인이 필요합니다.");
         return;
       }
+      
       try {
         const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
           headers: { Authorization: `Bearer ${token}` }, 
@@ -74,13 +75,23 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
 
   const toggleSaveRecipe = async (id: number, type: string) => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+          alert("로그인이 필요합니다.");
+          return;
+      }
       const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
   
       const url = isFav
-        ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
-        : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
-  
-      await axios.patch(url);
+        ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`
+        : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=user`;
+
+      await axios.patch(url, {}, {
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          }
+      });
   
       //좋아요 목록에서 추가/제거
       setFavRecipes((prev) => {
@@ -88,7 +99,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
         isFav ? newFavs.delete(id) : newFavs.add(id);
         return newFavs;
       });
-  
+
     } catch (error: any) {
       if (error.response) {
         const { status, data } = error.response;
@@ -145,7 +156,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             <RecipeCard
               key={recipe.id}
               recipeId={recipe.id}
-              type={recipe.type}
+              type={"user"}
               onClick={() => setSelectedCocktail(recipe)}
               isSelected={selectedCocktail?.id === recipe.id}
               isMyBar={recipe.myBar}
@@ -201,7 +212,6 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
               setIsEditMode(false);
             }}
             onSave={() => {
-              console.log("레시피 수정 완료");
               setIsEditMode(false);
               setSelectedCocktail(null);
             }}
@@ -231,7 +241,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
           <div className="myrecipe-modal">
             <ExploreRecipe
               recipeId={exploreCocktail.id}
-              type={exploreCocktail.type}
+              type={"user"}
               onCancel={() => setIsExploreOpen(false)}
               onSave={() => toggleSaveRecipe(exploreCocktail.id, exploreCocktail.type)}
             />
