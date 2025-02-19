@@ -12,16 +12,20 @@ interface ExploreRecipeProps {
     recipeId: number;
     type: "user" | "cocktail";
     onCancel: () => void;
+    onSave: () => void;
 }
 
 const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
     recipeId,
     type,
     onCancel,
+    onSave
 }) => {
     const [recipeDetails, setRecipeDetails] = useState<any>(null);
-    const [isSaved, setIsSaved] = useState(type === "user");
-
+    const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+    useEffect(() => {
+        console.log("📢 ExploreRecipe 마운트됨");
+    }, []);
     useEffect(() => {
         const fetchRecipeDetails = async () => {
             try {
@@ -29,7 +33,6 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                     `http://54.180.45.230:3000/api/v1/recipes/${recipeId}?type=${type}`
                 );
                 setRecipeDetails(response.data.success.recipe);
-                alert(null);
             } catch (error: any) {
                 console.error("레시피 상세 정보 불러오기 실패:", error);
 
@@ -49,23 +52,26 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
         fetchRecipeDetails();
     }, [recipeId, type]);
 
-    const handleToggleLike = async () => {
-        try {
-            const newType = isSaved ? "cocktail" : "user";
-            const url = isSaved
-                ? `http://54.180.45.230:3000/api/v1/recipes/${recipeId}/like/cancel?type=${type}`
-                : `http://54.180.45.230:3000/api/v1/recipes/${recipeId}/like?type=${type}`;
+    useEffect(() => {
+        const fetchFavRecipes = async () => {
+            try {
+                const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                });
 
-            const response = await axios.patch(url);
-
-            if (response.data.resultType === "SUCCESS") {
-                setIsSaved(newType === "user");
+                if (response.data.success && response.data.success.recipes) {
+                    const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
+                    setFavRecipes(favIds);
+                }
+            } catch (error) {
+                console.error("좋아요한 레시피 목록 불러오기 실패:", error);
             }
-        } catch (error: any) {
-            alert("좋아요 처리 중 오류가 발생했습니다.");
-            console.error("좋아요 처리 실패:", error);
-        }
-    };
+        };
+
+        fetchFavRecipes();
+    }, []);
+
+    const isSaved = favRecipes.has(recipeId);
 
     return (
         <>
@@ -127,7 +133,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                             <button className="cancel-button" onClick={onCancel}>
                                 cancel
                             </button>
-                            <button className="save-button" onClick={handleToggleLike}>
+                            <button className="save-button" onClick={onSave}>
                                 {isSaved ? "저장됨" : "저장하기"}
                             </button>
                         </div>
