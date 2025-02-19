@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./MyRecipes.css";
 
 import arrowDown from "/image/arrow-down.png";
@@ -16,6 +17,7 @@ interface Recipe {
 }
 
 const MyRecipe: React.FC = () => {
+    const navigate = useNavigate();
     const [sortOption, setSortOption] = useState<string>("최신순");
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -49,6 +51,9 @@ const MyRecipe: React.FC = () => {
         return 0;
     });
 
+    // 최대 2개의 레시피만 표시
+    const visibleRecipes = sortedRecipes.slice(0, 2);
+
     return (
         <div className="my-recipe-container">
             <div className="my-recipe-dropdown">
@@ -80,7 +85,7 @@ const MyRecipe: React.FC = () => {
             </div>
 
             <div className="slide-my-recipe-list">
-                {sortedRecipes.map((recipe) => (
+                {visibleRecipes.map((recipe) => (
                     <div key={recipe.id} className="slide-my-recipe-card">
                         <div className="slide-my-recipe-header">
                             <div>{recipe.createdAt}</div>
@@ -121,6 +126,19 @@ const MyRecipe: React.FC = () => {
                         </div>
                     </div>
                 ))}
+            </div>
+
+
+            <div className="my-recipe-button-navigate">
+                {/* "레시피 더 보기" 버튼을 map 밖으로 이동 */}
+                {sortedRecipes.length > 1 && (
+                    <button
+                        className="show-more-my-recipes"
+                        onClick={() => navigate("/my-recipe")}
+                    >
+                        내 레시피에서 전체보기 →
+                    </button>
+                )}
             </div>
         </div>
     );

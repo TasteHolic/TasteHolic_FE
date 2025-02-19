@@ -205,3 +205,24 @@ button {
     background: #FFFFFF;
     color: #000000;
 }
+
+.my-recipe-button-navigate {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.show-more-my-recipes {
+    width: 228px;
+    height: 52px;
+    border-radius: 16px;
+    padding: 16px 32px;
+    margin: 0 auto;
+    background-color: #00000000;
+    color: #C8CACB;
+    border: 1px solid #C8CACB;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    letter-spacing: -0.64px;
+}
