@@ -30,34 +30,70 @@ const TasteNote: React.FC = () => {
     const [editTarget, setEditTarget] = useState<Drink | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    useEffect(() => {
-        const fetchTastingNotes = async () => {
-            try {
-                const response = await fetch("http://54.180.45.230:3000/api/v1/users/tasting-notes", {
+    const fetchTastingNotes = async (category: string) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("액세스 토큰이 없습니다. 로그인 후 다시 시도하세요.");
+                return [];
+            }
+
+            const response = await fetch(
+                `http://54.180.45.230:3000/api/v1/users/tasting-notes?type=${category}`,
+                {
                     method: "GET",
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                if (response.ok) {
-                    const data = await response.json();
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`✅ ${category} 테이스팅 노트 불러오기 성공:`, data);
+                return data.tastingNotes;
+            } else {
+                const errorData = await response.json();
+                console.error(`🚨 ${category} 테이스팅 노트 불러오기 실패:`, errorData);
+                return [];
+            }
+        } catch (error) {
+            console.error("서버 요청 중 오류 발생:", error);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        const loadTastingNotes = async () => {
+            if (filter === "전체") {
+                const categories = ["cocktail", "whiskey", "gin&rum&tequila", "wine", "other"];
+                const allData = await Promise.all(categories.map(fetchTastingNotes));
+                const mergedData = allData.flat();
+                setDrinks(mergedData);
+                localStorage.setItem("tastingNotes", JSON.stringify(mergedData));
+            } else {
+                const categoryMap: Record<string, string> = {
+                    칵테일: "cocktail",
+                    위스키: "whiskey",
+                    "진, 럼, 데낄라": "gin&rum&tequila",
+                    와인: "wine",
+                    기타: "other",
+                };
+                const categoryKey = categoryMap[filter];
+                if (categoryKey) {
+                    const data = await fetchTastingNotes(categoryKey);
                     setDrinks(data);
                     localStorage.setItem("tastingNotes", JSON.stringify(data));
                 }
-            } catch (error) {
-                console.error("Failed to fetch tasting notes from server", error);
-                const storedData = localStorage.getItem("tastingNotes");
-                if (storedData) {
-                    setDrinks(JSON.parse(storedData));
-                }
             }
         };
-        fetchTastingNotes();
-    }, []);
+
+        loadTastingNotes();
+    }, [filter]);
     
     const handleAddDrink = async (data: { name: string; category: string }) => {
         const imageUrl = "/image/default.png";
-        
+    
         // 이미지 API 호출 부분 주석 처리
         // try {
         //     const response = await fetch(`/api/v1/drinks?name=${data.name}`);
@@ -68,14 +104,14 @@ const TasteNote: React.FC = () => {
         // } catch (error) {
         //     console.error("Failed to fetch drink image", error);
         // }
-    
+
         const newDrink: Drink = {
             id: Date.now(),
             name: data.name,
             image: imageUrl,
             createdAt: new Date(),
             category: data.category,
-            noteId: ""
+            noteId: "", // API 응답 후 업데이트할 예정
         };
     
         const updatedDrinks = [...drinks, newDrink];
@@ -84,7 +120,6 @@ const TasteNote: React.FC = () => {
         setIsCompleteModalOpen(true);
     
         try {
-            // API에 새 음료 정보 추가
             const response = await fetch("http://54.180.45.230:3000/api/v1/users/tasting-note", {
                 method: "POST",
                 headers: {
@@ -93,41 +128,69 @@ const TasteNote: React.FC = () => {
                 },
                 body: JSON.stringify(newDrink),
             });
+    
             if (!response.ok) {
                 throw new Error("Failed to save drink to server");
             }
-            const data = await response.json();
-            console.log("음료 추가 성공:", data);
+    
+            const responseData = await response.json();
+            console.log("음료 추가 성공:", responseData);
+    
+            // 📌 새롭게 생성된 noteId를 로컬 데이터에 반영
+            const drinkWithNoteId = { ...newDrink, noteId: responseData.noteId };
+    
+            const updatedDrinksWithId = drinks.map((drink) =>
+                drink.id === newDrink.id ? drinkWithNoteId : drink
+            );
+    
+            setDrinks(updatedDrinksWithId);
+            localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinksWithId));
+    
         } catch (error) {
             console.error("음료 추가 실패:", error);
         }
     };
-
+    
     const handleDeleteDrink = async () => {
-        if (deleteTarget) {
+        if (!deleteTarget || !deleteTarget.noteId) {
+            console.error("삭제할 음료의 noteId가 없습니다.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(
+                `http://54.180.45.230:3000/api/v1/users/tasting-note/${deleteTarget.noteId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error("Failed to delete drink from server");
+            }
+    
             setDrinks((prevDrinks) => {
-                const updatedDrinks = prevDrinks.filter((drink) => drink.id !== deleteTarget.id);
+                const updatedDrinks = prevDrinks.filter(
+                    (drink) => drink.noteId !== deleteTarget.noteId
+                );
                 localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinks));
                 return updatedDrinks;
             });
-            
-            try {
-                await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${deleteTarget.id}`, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-            } catch (error) {
-                console.error("Failed to delete drink from server", error);
-            }
+    
+            console.log(`음료 삭제 성공: ${deleteTarget.name}`);
+        } catch (error) {
+            console.error("음료 삭제 실패:", error);
+        } finally {
             setDeleteTarget(null);
         }
     };
-
+    
     const handleEditDrink = async (updatedDrink: Drink) => {
         const updatedDrinks = drinks.map((drink) =>
-            drink.id === updatedDrink.id ? updatedDrink : drink
+            drink.noteId === updatedDrink.noteId ? updatedDrink : drink
         );
         setDrinks(updatedDrinks);
         localStorage.setItem("tastingNotes", JSON.stringify(updatedDrinks));
@@ -135,18 +198,22 @@ const TasteNote: React.FC = () => {
         setEditTarget(null);
     
         try {
-            // API에 음료 정보 수정
-            const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${updatedDrink.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify(updatedDrink),
-            });
+            const response = await fetch(
+                `http://54.180.45.230:3000/api/v1/users/tasting-note/${updatedDrink.noteId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify(updatedDrink),
+                }
+            );
+    
             if (!response.ok) {
                 throw new Error("Failed to update drink on server");
             }
+    
             const data = await response.json();
             console.log("음료 수정 성공:", data);
         } catch (error) {

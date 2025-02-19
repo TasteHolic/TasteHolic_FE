@@ -26,30 +26,37 @@ interface EditNoteModalProps {
 }
 
 
-const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData | null> => {
-    const token = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
-    const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${noteId}?type=${type}`;
+const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData | null> => { 
+    const token = localStorage.getItem("token");
 
     if (!token) {
-        throw new Error('액세스 토큰이 필요합니다.');
+        throw new Error("액세스 토큰이 필요합니다.");
     }
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-        },
-    });
+    const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${noteId}?type=${type}`;
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || '서버 오류');
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null); // JSON 파싱 실패 방지
+            throw new Error(errorData?.error || errorData?.message || "서버 오류");
+        }
+
+        const data = await response.json();
+        return data.result ?? data; // data.result가 undefined이면 data 전체 반환
+    } catch (error) {
+        console.error("테이스팅 노트 가져오기 실패:", error);
+        return null;
     }
-
-    const data = await response.json();
-    return data.result;
 };
+
 
 const EditNoteModal: React.FC<EditNoteModalProps> = ({
     isOpen,

@@ -431,14 +431,21 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       return;
     }
   
-    const type = category === "cocktail" ? "cocktail" : "alcohol";
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+  
+    const validTypes = ["cocktail", "whiskey", "gin", "rum", "tequila", "wine", "beer", "other"];
+    const type = validTypes.includes(category) ? category : "other"; 
   
     try {
       const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note?type=${type}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: finalData.name,
@@ -446,33 +453,31 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           aromaRating: finalData.aromas,
           abv: finalData.alcohol,
           color: finalData.colors,
+          finishRating: finalData.finish,
           description: finalData.note,
         }),
       });
   
       if (!response.ok) {
-        throw new Error("Failed to submit tasting note");
+        const errorData = await response.json();
+        console.error("테이스팅 노트 작성 실패:", errorData);
+        alert(`테이스팅 노트 작성 실패: ${errorData.error || "알 수 없는 오류"}`);
+        return;
       }
   
       const data = await response.json();
       console.log("테이스팅 노트 작성 성공:", data);
-  
-      // 로컬 스토리지에 저장
-      localStorage.setItem(
-        `tastingNote_${finalData.name}_${finalData.category}`,
-        JSON.stringify(finalData)
-      );
-  
-      // onComplete 콜백 호출
+
+      localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
+
       requestAnimationFrame(() => {
         onComplete(finalData);
       });
     } catch (error) {
       console.error("테이스팅 노트 작성 중 오류 발생:", error);
+      alert(`테이스팅 노트 작성 중 오류 발생: ${error}`);
     }
   };
-  
-
 
   if (!isOpen) return null;
 
