@@ -190,7 +190,7 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
           </div>
         )}
         {step === 3 &&(
-          <RecipeCreate drinkName={cocktailName} onCancel={onClose} onSave={() => { onClose(); }} />
+          <RecipeCreate drinkName={cocktailName} onCancel={onClose} onSave={() => {}} />
         )}
       </Modal>
     </div>
