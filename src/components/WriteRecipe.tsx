@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./WriteRecipe.css";
 import RecipeCreate from "./recipe/createRecipe/RecipeCreate";
+import axios from "axios";
 
 function Modal({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) {
     if (!isOpen) return null;
@@ -41,18 +42,7 @@ function Input({ placeholder, value, onChange }: { placeholder: string; value: s
     );
 }
 
-const cocktailOptions = [
-  "기넷 드래프트",
-  "버드와이저",
-  "블루문 벨지안 화이트",
-  "스텔라 아르투아",
-  "아사히 슈퍼 드라이",
-  "칼스버그",
-  "코로나 엑스트라",
-  "하이네켄",
-  "호가든",
-  "필스너 우르켈",
-];
+const categories = ["Beer", "Gin", "Rum", "Tequila", "Whiskey", "Cocktail"];
 
 export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     const [step, setStep] = useState(1);
@@ -62,9 +52,53 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
     const [borderColor, setBorderColor] = useState("border-white");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+    const [allAlcoholNames, setAllAlcoholNames] = useState<string[]>([]);
 
-  const filteredOptions = cocktailOptions.filter((option) => option.includes(searchTerm));
-  const showAddOption = searchTerm && !cocktailOptions.includes(searchTerm);
+
+  const filteredOptions = allAlcoholNames.filter((option) => option.includes(searchTerm));
+  const showAddOption = searchTerm && !allAlcoholNames.includes(searchTerm);
+
+  useEffect(() => {
+    const fetchAllAlcohols = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("로그인이 필요합니다.");
+          return;
+        }
+
+        const results = await Promise.all(
+          categories.map(async (category) => {
+            try {
+              const response = await axios.post(
+                "http://54.180.45.230:3000/api/v1/users/my-bar/show-alcohols",
+                { category },
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                  }
+                }
+              );
+              console.log(response.data.success.alcohols.map((item: any) => item.nameKor))
+              return response.data.success.alcohols.map((item: any) => item.nameKor) || [];
+              
+            } catch (error) {
+              console.error(`술 목록 가져오기 실패:`, error);
+              return []; 
+            }
+          })
+        );
+
+        setAllAlcoholNames(results.flat()); // 모든 카테고리의 술 이름을 하나의 배열로 저장
+      } catch (error) {
+        console.error("전체 술 목록 가져오기 실패:", error);
+        setAllAlcoholNames([]);
+      }
+    };
+
+    fetchAllAlcohols();
+  }, []);
 
   useEffect(() => {
     if (step === 1) {
