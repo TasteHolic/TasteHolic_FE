@@ -45,10 +45,12 @@ const RecipeExplore: React.FC = () => {
   const [hasMore, setHasMore] = useState(true); 
   const loader = useRef<HTMLDivElement | null>(null);
 
+   const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+
   useEffect(() => {
 
-    setCursor(null); // ⬅ 페이지네이션도 초기화
-    setHasMore(true); // ⬅ 다시 데이터를 불러올 수 있도록 설정
+    setCursor(null); 
+    setHasMore(true);
     setRecipes([]);
     
     const fetchData = async () => {
@@ -113,31 +115,52 @@ const RecipeExplore: React.FC = () => {
 
   const toggleSaveRecipe = async (id: number, type: string) => {
     try {
-      // 현재 선택된 카테고리가 "fav"라면 like 취소, 아니면 like 추가
-      const isSavedRecipe = selectedCategory === "fav";
+      const token = localStorage.getItem("token");
+      if (!token) {
+          alert("로그인이 필요합니다.");
+          return;
+      }
+      const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
+  
+      const url = isFav
+        ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
+        : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
+        console.log("📌 요청 URL:", url);
+      await axios.patch(url, {}, {
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          }
+      });
+  
+      //좋아요 목록에서 추가/제거
+      setFavRecipes((prev) => {
+        const newFavs = new Set(prev);
+        isFav ? newFavs.delete(id) : newFavs.add(id);
+        return newFavs;
+      });
 
-      const url = isSavedRecipe
-          ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
-          : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
-
-      await axios.patch(url);
-
-  } catch (error: any) {
+    } catch (error: any) {
       if (error.response) {
-        const { status, data } = error.response;
-        if (status === 400 && data.error?.errorCode === "R001") {
-          alert("존재하지 않는 레시피입니다.");
-        } else if (status === 409 && data.error?.errorCode === "R002") {
-          alert("이미 좋아요를 눌렀습니다.");
-        } else {
-          alert("좋아요 처리 중 오류가 발생했습니다.");
-        }
+          const { status, data } = error.response;
+          console.error("서버 응답 에러:", error.response);
+          console.log("서버 응답 데이터:", error.response.data);
+
+          if (status === 400) {
+              alert("잘못된 요청: " + (data.error?.reason || "서버 오류"));
+          } else if (status === 403) {
+              alert("접근 권한 없음");
+          } else if (status === 404) {
+              alert("존재하지 않는 레시피입니다.");
+          } else {
+              alert("좋아요 처리 중 오류가 발생했습니다.");
+          }
       } else {
-        alert("서버와의 연결이 원활하지 않습니다.");
+          alert("서버와의 연결이 원활하지 않습니다.");
       }
       console.error("좋아요 처리 실패:", error);
-    }
-  };
+  }
+};
 
 const handleCategoryClick = (category: string) => {
   if (selectedCategory !== category) {
