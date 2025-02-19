@@ -6,33 +6,19 @@ import FloatingButton from "../components/FloatingButton";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import RecipeHeader from "../components/Header/RecipeHeader";
 import Footer from "../components/Footer";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const categories = [
-  { id: "my", label: "유저등록" },
+  { id: "user", label: "유저등록" },
   { id: "zero", label: "논알콜" },
   { id: "high", label: "고도수" },
   { id: "fruity", label: "프루티" },
   { id: "under2", label: "재료 2개 이하" },
   {
-    id: "user",
+    id: "fav", //저장한 레시피
     icon: (
-      <svg
-        width="30"
-        height="30"
-        viewBox="0 0 30 30"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="Group 728">
-          <circle
-            id="Ellipse 106"
-            cx="15"
-            cy="15"
-            r="15"
-            fill="white"
-            fillOpacity="0.2"
-          />
+          <circle id="Ellipse 106" cx="15" cy="15" r="15" fill="white" fillOpacity="0.2" />
           <g id="Group 720">
             <path
               id="Vector 209"
@@ -51,84 +37,113 @@ const categories = [
 
 const RecipeExplore: React.FC = () => {
   const [recipes, setRecipes] = useState<any[]>([]);
-  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-  const [selectedCategory, setSelectedCategory] = useState("my");
+  const [selectedCategory, setSelectedCategory] = useState("user");
   const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [cursor, setCursor] = useState<number | null>(null);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true); 
   const loader = useRef<HTMLDivElement | null>(null);
 
-  const location = useLocation();
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const categoryParam = params.get("category");
-    if (categoryParam && categoryParam !== selectedCategory) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [location.search]);
 
-  useEffect(() => {
-    fetchRecipes(selectedCategory);
+    setCursor(null); // ⬅ 페이지네이션도 초기화
+    setHasMore(true); // ⬅ 다시 데이터를 불러올 수 있도록 설정
+    setRecipes([]);
+    
+    const fetchData = async () => {
+
+      await fetchRecipes(selectedCategory);
+    };
+    
+    fetchData();
   }, [selectedCategory]);
-
+  
   useEffect(() => {
     const handleScroll = () => {
       if (loader.current) {
         const { bottom } = loader.current.getBoundingClientRect();
-        if (bottom <= window.innerHeight) {
+        if (bottom <= window.innerHeight && hasMore && !loading) {
+          console.log("스크롤 끝, 추가 데이터 요청");
           fetchRecipes(selectedCategory, true);
         }
       }
     };
-
+  
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [selectedCategory, cursor]);
+  }, []);
 
   const fetchRecipes = async (category: string, loadMore = false) => {
-    if (!hasMore) return;
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `http://54.180.45.230:3000/api/v1/recipes?type=${category}`
-      );
-      if (response.data.recipes) {
-        setRecipes(response.data.recipes);
+    if (!hasMore && loadMore) return;
+    if (!loadMore) {
+      setLoading(true);
+      setCursor(null);
+      setHasMore(true);
+    }
 
-        setCursor(response.data.nextCursor || null);
-        setHasMore(!!response.data.nextCursor);
+    try {
+      const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes?type=${category}`);
+
+      if (response.data.success && response.data.success.recipes) {
+
+        setRecipes(response.data.success.recipes);
+        setCursor(response.data.success.nextCursor || null);
+        setHasMore(!!response.data.success.nextCursor);
+      } else {console.warn("recipes 데이터 없음:", response.data);
       }
-    } catch (error) {
-      console.error("레시피 목록 불러오기 실패:", error);
+  
+
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400 && data.error?.errorCode === "R103") {
+          alert("타입 값이 잘못되었습니다.");
+        } else {
+          console.error("레시피 목록 불러오기 실패:", error);
+        }
+      } else {
+        console.error("네트워크 오류 또는 서버 응답 없음:", error);
+      }
     } finally {
+
       setLoading(false);
     }
   };
 
   const toggleSaveRecipe = async (id: number, type: string) => {
     try {
-      if (savedRecipes[id]) {
-        await axios.patch(
-          `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`
-        );
+      // 현재 선택된 카테고리가 "fav"라면 like 취소, 아니면 like 추가
+      const isSavedRecipe = selectedCategory === "fav";
+
+      const url = isSavedRecipe
+          ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
+          : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
+
+      await axios.patch(url);
+
+  } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400 && data.error?.errorCode === "R001") {
+          alert("존재하지 않는 레시피입니다.");
+        } else if (status === 409 && data.error?.errorCode === "R002") {
+          alert("이미 좋아요를 눌렀습니다.");
+        } else {
+          alert("좋아요 처리 중 오류가 발생했습니다.");
+        }
       } else {
-        await axios.patch(
-          `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=cocktail`
-        );
+        alert("서버와의 연결이 원활하지 않습니다.");
       }
-      setSavedRecipes((prev) => ({ ...prev, [id]: !prev[id] }));
-    } catch (error) {
       console.error("좋아요 처리 실패:", error);
     }
   };
 
-  const handleCategoryClick = (category: string) => {
+const handleCategoryClick = (category: string) => {
+  if (selectedCategory !== category) {
     setSelectedCategory(category);
-  };
+  }
+};
 
   const handleCardClick = (recipe: any) => {
     setSelectedRecipe(recipe);
@@ -137,6 +152,9 @@ const RecipeExplore: React.FC = () => {
   const handleCloseExploreRecipe = () => {
     setSelectedRecipe(null);
   };
+
+  useEffect(() => {
+}, [selectedRecipe]);
 
   return (
     <>
@@ -150,44 +168,40 @@ const RecipeExplore: React.FC = () => {
         {/* 메뉴바 */}
         <div className="menu-bar">
           <div className="buttons">
-            {categories.map(({ id, label, icon }) => (
-              <button
-                key={id}
-                className={`menu-item ${
-                  selectedCategory === id ? "active" : ""
-                }`}
-                onClick={() => handleCategoryClick(id)}
-              >
-                {icon && <span className="menu-icon">{icon}</span>}
-                {label}
-              </button>
-            ))}
+          {categories.map(({ id, label, icon }) => (
+            <button
+              key={id}
+              className={`menu-item ${selectedCategory === id ? "active" : ""}`}
+              onClick={() => handleCategoryClick(id)}
+            >
+              {icon && <span className="menu-icon">{icon}</span>}
+              {label}
+            </button>
+            
+          ))}
           </div>
-          <div
-            className="active-indicator"
-            style={{
-              left: `${
-                categories.findIndex((c) => c.id === selectedCategory) * 190
-              }px`,
-            }}
-          />
+          <div className="active-indicator" style={{ left: `${categories.findIndex(c => c.id === selectedCategory) * 190}px` }} />
         </div>
 
         {/* 칵테일 카드 리스트 */}
         <div className="recipe-list">
           {loading ? (
-            <p>loading...</p>
-          ) : recipes.length > 0 ? (
-            recipes.map((recipe) => (
-              <CocktailRecipeCard
-                key={recipe.id}
-                recipeId={recipe.id}
-                type={recipe.type}
-                onToggleSave={(newType) => toggleSaveRecipe(recipe.id, newType)}
-                onClick={() => handleCardClick(recipe)}
-              />
-            ))
-          ) : (
+            <h3>loading...</h3>
+          ) : recipes && recipes.length > 0 ? (
+            recipes.map((recipe) => {
+              return (
+                <CocktailRecipeCard
+                  key={recipe.id}
+                  recipeId={recipe.id}
+                  type={recipe.type}
+                  onToggleSave={() => toggleSaveRecipe(recipe.id, recipe.type)}
+                  onClick={() => handleCardClick(recipe)}
+                  isMyBar={recipe.myBar}
+                />
+              );
+            })
+        ) : (
+        
             <div className="empty-message">
               <svg
                 className="emptyicon"
@@ -201,14 +215,14 @@ const RecipeExplore: React.FC = () => {
                 <path
                   d="M38 63H92"
                   stroke="#C8CACB"
-                  stroke-width="4"
-                  stroke-linecap="round"
+                  strokeWidth="4"
+                  strokeLinecap="round"
                 />
                 <path
                   d="M65 38L65 92"
                   stroke="#C8CACB"
-                  stroke-width="4"
-                  stroke-linecap="round"
+                  strokeWidth="4"
+                  strokeLinecap="round"
                 />
                 <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
                 <path
@@ -229,13 +243,14 @@ const RecipeExplore: React.FC = () => {
                 recipeId={selectedRecipe.id}
                 type={selectedRecipe.type}
                 onCancel={handleCloseExploreRecipe}
+                onSave={() => toggleSaveRecipe(selectedRecipe.id, selectedRecipe.type)}
               />
             </div>
           </div>
         )}
       </div>
       <div ref={loader} style={{ height: "10px", background: "transparent" }} />
-      <FloatingButton />
+      <FloatingButton/>
       <Footer />
     </>
   );
