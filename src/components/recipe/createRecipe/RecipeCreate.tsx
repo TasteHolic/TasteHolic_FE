@@ -133,9 +133,23 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                     <div className="category">
                         <div className="category-name">재료</div>
                         <ItemList options={[
-                            "vodka", 
-                            "coffee", 
-                            "etc"]} 
+                                "보드카",  
+                                "라임 주스",  
+                                "진",  
+                                "럼",  
+                                "심플 시럽",  
+                                "레몬 주스",  
+                                "버몬트",  
+                                "오렌지 주스",  
+                                "아마레토",  
+                                "위스키",  
+                                "가루 설탕",  
+                                "소다수",  
+                                "데킬라",  
+                                "크렘 드 멘트",  
+                                "트리플 섹",  
+                                "얼음" 
+                            ]} 
                             onChange={setSelectedIngredients} />
                     </div>
                     <div className="category">
