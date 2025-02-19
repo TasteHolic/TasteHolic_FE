@@ -29,7 +29,8 @@
 }
 .background-img {
     width: 466px;
-    height: 645px;
+    height: auto;
+    max-height: 800px;
     flex-shrink: 0;
     top: 32px;
     position: absolute;
@@ -187,6 +188,7 @@
 .Splash-label {
     background: var(--glass, rgba(128, 128, 128, 0.30));
 }
+
 .recipe {
     align-self: flex-start;
 }
