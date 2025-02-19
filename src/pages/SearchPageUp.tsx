@@ -25,6 +25,7 @@ const SearchPageUp: React.FC = () => {
     min: 0,
     max: 100,
   });
+  const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
 
   const [varietyLabels, setVarietyLabels] = useState<{ name: string }[]>([]);
   const [rangeLabels, setRangeLabels] = useState<{ name: string }[]>([]);
@@ -75,29 +76,26 @@ const SearchPageUp: React.FC = () => {
       maxAbv: selectedRange.max,
       aroma: selectedAromas,
       taste: selectedTastes,
+      timing: selectedMoods,
     };
     console.log("📡 서버로 보낼 데이터:", requestData);
     // API 요청
     try {
-      const response = await fetch(
-        "http://54.180.45.230:3000/api/v1/users/search/category",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
+      const response = await fetch("http://54.180.45.230:3000/api/v1/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
 
       const data = await response.json();
       console.log("✅ 검색 결과:", data);
-      console.log(data.data);
 
       if (data.success) {
         navigate("/search-results", {
           state: {
-            results: data.data,
+            results: { success: true, data: data.success },
             searched: query,
             searchedTypes: [
               ...selectedCategories.map((cat, index) => ({
@@ -115,11 +113,21 @@ const SearchPageUp: React.FC = () => {
                 label: taste,
                 type: "flavor",
               })),
+              ...selectedMoods.map((mood, index) => ({
+                id:
+                  selectedCategories.length +
+                  selectedAromas.length +
+                  selectedTastes.length +
+                  index,
+                label: mood,
+                type: "mood",
+              })),
               {
                 id:
                   selectedCategories.length +
                   selectedAromas.length +
-                  selectedTastes.length,
+                  selectedTastes.length +
+                  selectedMoods.length,
                 label: `${selectedRange.min}% ~ ${selectedRange.max}%`,
                 type: "abv",
               },
@@ -190,6 +198,14 @@ const SearchPageUp: React.FC = () => {
       "짭짤함",
       "allFlavor",
     ];
+    const moodTypes = [
+      "로맨틱한",
+      "취하고 싶은 날",
+      "홈바(혼술)",
+      "여름",
+      "겨울",
+      "비 오는 날",
+    ];
 
     // (4) 해당 그룹에 따라 선택 상태 업데이트
     if (varietyTypes.includes(type)) {
@@ -206,6 +222,12 @@ const SearchPageUp: React.FC = () => {
       );
     } else if (tasteTypes.includes(type)) {
       setSelectedTastes((prev) =>
+        prev.includes(type)
+          ? prev.filter((item) => item !== type)
+          : [...prev, type]
+      );
+    } else if (moodTypes.includes(type)) {
+      setSelectedMoods((prev) =>
         prev.includes(type)
           ? prev.filter((item) => item !== type)
           : [...prev, type]

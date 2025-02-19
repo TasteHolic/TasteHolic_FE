@@ -28,7 +28,34 @@ const Icons = {
   WhiskeyIcon:
     "https://s3-alpha-sig.figma.com/img/6ad8/8422/2c0b2b6ac687ca49ed46c32c93aa120d?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=KdGeYB3nVl64dqpzfAZ4zkYDifRbfVU9P3WJlBbQ0Rz~T7TlNK-hn7ViGUoJVCm5y31XegEeUeABzckBPA5KjhKxjpmpnkxuPzbOMSmunztcXFCa0NBwnekJi3gIQawVODzatsfTDKfuxFsh2WVnLuq2d2RlPYAnxiST9bcGYNTrRXMx4o66~h8BXZe47L4Uhus2Xatc8A5A39d9mFY0Z2PSb6AwhF4KrQU9XBZ~rzc6X9TwtHnn9eNXLAwu2JZx6ZXA5QXZ9L9r91THdM~Xc1~w-yH0~LvSHOeO6GM9YOY79he0jsuBuvxo2n-zOqr5ZThIPkPhNvZSin0gQ4ZXvw__",
 };
-
+//검색결과 카드로 변환.
+const transformCard = (recipe: any) => {
+  return {
+    id: recipe.id,
+    name: recipe.name || recipe.nameEng,
+    image: recipe.imageUrl || "/image/default-placeholder.png",
+    keyWords: [
+      ...(recipe.aromas || []),
+      ...(recipe.tastes || []),
+      ...(recipe.timing || []),
+    ].join(", "),
+    isMyBar: recipe.myBar || false,
+    flavor: recipe.tastes?.[0] || "",
+    aroma: recipe.aromas?.[0] || "",
+    ingredients: Object.entries(recipe.ingredients || {}).map(
+      ([ingredient, amount]) => `${ingredient} (${amount})`
+    ),
+    alcoholPer: recipe.abv || 0,
+    glass: recipe.glassType || "",
+    hexColor1: recipe.colors?.[0] || "",
+    hexColor2: recipe.colors?.[1] || "",
+    hexColor3: recipe.colors?.[2] || "",
+    recipeLine1: recipe.recipe?.[0] || "",
+    recipeLine2: recipe.recipe?.[1] || "",
+    recipeLine3: recipe.recipe?.[2] || "",
+    type: recipe.type === "cocktail" ? "official" : "user", // 공식 레시피와 유저 레시피 구분
+  };
+};
 const SearchResults: React.FC<SearchResultsProps> = ({
   searched: propsSearched,
   results = [],
@@ -37,6 +64,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 }) => {
   const location = useLocation();
   const searched = propsSearched || location.state?.searched || "";
+  const searchResults = location.state?.results || { success: false, data: [] }; //searchPageUp에서 받아온 검색 결과.
   const [appliedFilters, setAppliedFilters] = useState(
     location.state?.searchedTypes ?? []
   );
@@ -45,14 +73,25 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
-
   useEffect(() => {
+    console.log("📡 서버에서 받아온 검색 결과:", searchResults);
+    if (searchResults && searchResults.success) {
+      console.log("✅ 유효한 검색 결과:", searchResults.data);
+    } else {
+      console.warn("❌ 검색 결과가 유효하지 않음");
+    }
     if (location.state?.searchedTypes) {
       setAppliedFilters(location.state.searchedTypes);
       console.log(
         "✅ `searchedTypes` 상태 업데이트됨:",
         location.state.searchedTypes
       );
+    }
+  }, [location.state?.searchedTypes, searchResults]);
+
+  useEffect(() => {
+    if (location.state?.searchedTypes) {
+      setAppliedFilters(location.state.searchedTypes);
     }
   }, [location.state?.searchedTypes]);
   const myBarClick = () => {
@@ -66,23 +105,29 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     setAppliedFilters((prev) => prev.filter((filter) => filter.id !== id));
   };
   const handleCardClick = (id: number) => {
-    const foundCocktail = cocktails.find((cocktail) => cocktail.id === id);
-    setSelectedCocktail(foundCocktail || null);
+    const foundCocktail = filteredResults.find((card) => card.id === id);
+
+    if (!foundCocktail) {
+      console.error(`🚨 클릭한 카드의 데이터를 찾을 수 없음: ID=${id}`);
+      return;
+    }
+
+    console.log("✅ 선택된 칵테일:", foundCocktail);
+    setSelectedCocktail(foundCocktail);
   };
 
-  const filteredResults = results?.data?.length
-    ? isMyBar
-      ? results.data.filter((item) => item.isMyBar)
-      : results.data
-    : [];
-
+  const transformedCards = Array.isArray(searchResults.data)
+    ? searchResults.data.map(transformCard).filter(Boolean)
+    : []; //응답을 레시피로 변환 후 매핑.
+  console.log("🔍 변환된 카드 데이터:", transformedCards);
+  const filteredResults = isMyBar
+    ? transformedCards.filter((card) => card.isMyBar)
+    : transformedCards;
   const officialCards = filteredResults.filter(
-    (item) => item.type === "official"
+    (card) => card.type === "official"
   );
-  const userCards = filteredResults.filter((item) => item.type === "user");
-
-  const noResults = !filteredResults.length; // 검색 결과 여부 수정
-
+  const userCards = filteredResults.filter((card) => card.type === "user");
+  const noResults = !filteredResults || filteredResults.length === 0;
   return (
     <>
       <div className="search-results-container">
@@ -91,9 +136,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           <div className="results-string">"{searched}" 검색 결과</div>
           <SearchBar
             myBarClick={myBarClick}
-            searchClick={() => {
-              onSearch;
-            }}
+            searchClick={() => {}}
             searched={searched}
           />
           <div className="type-labels-container">
@@ -173,7 +216,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                       keyWords={card.keyWords}
                       onClick={() => handleCardClick(card.id)}
                       isMyBar={card.isMyBar}
-                      isSelected={selectedCocktail?.name === card.name}
+                      isSelected={selectedCocktail?.id === card.id}
                     />
                   ))}
                 </div>
@@ -195,7 +238,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                       keyWords={card.keyWords}
                       onClick={() => handleCardClick(card.id)}
                       isMyBar={card.isMyBar}
-                      isSelected={selectedCocktail?.name === card.name}
+                      isSelected={selectedCocktail?.id === card.id}
                     />
                   ))}
                 </div>
