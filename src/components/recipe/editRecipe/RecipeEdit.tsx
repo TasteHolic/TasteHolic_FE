@@ -21,21 +21,49 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
 }) => {
     const [recipe, setRecipe] = useState<any>(null);
 
+    const [name, setName] = useState<string>("");
+    const [ingredients, setIngredients] = useState<{ [key: string]: string }>({});
+    const [recipeSteps, setRecipeSteps] = useState<string[]>([]);
+    const [glassType, setGlassType] = useState<string>("");
+    const [status, setStatus] = useState<string>("published");
+    const [tastes, setTastes] = useState<string[]>([]);
+    const [aromas, setAromas] = useState<string[]>([]);
+    const [colors, setColors] = useState<string[]>([]);
+    const [abv, setAbv] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
+
+
     useEffect(() => {
         const fetchRecipeDetails = async () => {
+    
             try {
-                const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes/${recipeId}`);
+                const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes/${recipeId}?type=user`);
+    
                 if (response.data.resultType === "SUCCESS") {
-                    setRecipe(response.data.success.recipe);
+                    const recipeData = response.data.success.recipe;
+                    setRecipe(recipeData);
+  
+    
+                    setName(recipeData.name);
+                    setIngredients(recipeData.ingredients);
+                    setRecipeSteps(recipeData.recipe);
+                    setGlassType(recipeData.glassType);
+                    setStatus(recipeData.status);
+                    setTastes(recipeData.tastes);
+                    setAromas(recipeData.aromas);
+                    setColors(recipeData.colors || []); // 색상이 null일 수도 있음
+                    setAbv(recipeData.abv);
+                    setIsLoading(false);
                 } else {
                     alert("레시피 정보를 불러오는 데 실패했습니다.");
+                    setIsLoading(false);
                 }
             } catch (error) {
                 console.error("레시피 상세 정보 불러오기 실패:", error);
-                alert("레시피 정보를 불러오는 중 오류가 발생했습니다.");
+                setIsLoading(false);
             }
         };
-
+    
         fetchRecipeDetails();
     }, [recipeId]);
 
@@ -46,28 +74,28 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                 alert("레시피 소유자만 수정할 수 있습니다.");
                 return;
             }
-
+    
             const updatedRecipe = {
-                name: recipe.name,
-                ingredients: recipe.ingredients,
-                recipe: recipe.recipe,
-                glassType: recipe.glassType,
-                status: "published",
-                tastes: recipe.tastes,
-                aromas: recipe.aromas,
-                colors: recipe.colors,
-                abv: recipe.abv,
+                name,
+                ingredients, 
+                recipe: recipeSteps,
+                glassType,
+                status,
+                tastes,
+                aromas,
+                colors,
+                abv,
             };
-
+    
             const response = await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${recipeId}`, updatedRecipe, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
             });
-
+    
             if (response.data.resultType === "SUCCESS") {
-                alert("레시피 수정 완료!");
+                console.log("레시피 수정 완료!");
                 onCancel();
             } else {
                 alert("레시피 수정 실패!");
@@ -78,12 +106,13 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
         }
         onSave();
     };
+    
 
-    if (!recipe) return <p>로딩 중...</p>;
+    if (isLoading) return  <p style={{ color: "#ffffff" }}>로딩 중...</p>;
 
     return (
         <>
-            <div className="container">
+            <div className="edit-container">
                 <div className="top">
                     <p className="drink-name">{recipe.name}</p>
                     <button className="read-more-button" onClick={onReadMore}>
@@ -128,23 +157,25 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                     </div>
                     <div className="category">
                         <div className="category-name">재료</div>
-                        <ItemList items={Object.keys(recipe.ingredients)} options={[
-                                "보드카",  
-                                "라임 주스",  
-                                "진",  
-                                "럼",  
-                                "심플 시럽",  
-                                "레몬 주스",  
-                                "버몬트",  
-                                "오렌지 주스",  
-                                "아마레토",  
-                                "위스키",  
-                                "가루 설탕",  
-                                "소다수",  
-                                "데킬라",  
-                                "크렘 드 멘트",  
-                                "트리플 섹",  
-                                "얼음" 
+                        <ItemList 
+                        items={Object.keys(recipe.ingredients)} 
+                        options={[
+                            "보드카",  
+                            "라임 주스",  
+                            "진",  
+                            "럼",  
+                            "심플 시럽",  
+                            "레몬 주스",  
+                            "버몬트",  
+                            "오렌지 주스",  
+                            "아마레토",  
+                            "위스키",  
+                            "가루 설탕",  
+                            "소다수",  
+                            "데킬라",  
+                            "크렘 드 멘트",  
+                            "트리플 섹",  
+                            "얼음" 
                             ]} />
                     </div>
                     <div className="category">
