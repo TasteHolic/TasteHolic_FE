@@ -69,11 +69,13 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                 colors: selectedColors,
                 abv: selectedAlcohol ? parseInt(selectedAlcohol) || 0 : 0,
             };
+
             const response = await axios.post("http://54.180.45.230:3000/api/v1/recipes", recipeData, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
+                
             });
 
             if (response.data.resultType === "SUCCESS") {
@@ -148,8 +150,9 @@ const RecipeCreate: React.FC<RecipeCreateProps> = ({
                                 "데킬라",  
                                 "크렘 드 멘트",  
                                 "트리플 섹",  
-                                "얼음" 
-                            ]} 
+                                "얼음"  
+
+                        ]} 
                             onChange={setSelectedIngredients} />
                     </div>
                     <div className="category">
