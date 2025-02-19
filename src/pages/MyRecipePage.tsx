@@ -1,182 +1,239 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CocktailRecipeCard from "../components/MyRecCocktailRecipeCard";
-import "./RecipeExplore.css";
-import FloatingButton from "../components/FloatingButton";
-import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
+import "./MyRecipePage.css";
 import RecipeHeader from "../components/Header/RecipeHeader";
+import RecipeCard from "../components/ReipeCard";
+import RecipeModal from "../components/WriteRecipe";
+import FloatingButton from "../components/FloatingButton";
 import Footer from "../components/Footer";
+import RecipeView from "../components/recipe/viewRecipe/RecipeView";
+import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
+import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 
-const categories = [
-  { id: "my", label: "유저등록" },
-  { id: "zero", label: "논알콜" },
-  { id: "high", label: "고도수" },
-  { id: "fruity", label: "프루티" },
-  { id: "under2", label: "재료 2개 이하" },
-  {
-    id: "user",
-    icon: (
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g id="Group 728">
-          <circle id="Ellipse 106" cx="15" cy="15" r="15" fill="white" fillOpacity="0.2" />
-          <g id="Group 720">
-            <path
-              id="Vector 209"
-              d="M8.65283 6.92383V23.0777L15.4081 18.6295L21.9221 23.0777V6.92383H8.65283Z"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </g>
-        </g>
-      </svg>
-    ),
-  },
-];
+// props에 onCocktailSelect 추가
+interface MyRecipePageProps {
+  onCocktailSelect?: (cocktail: { name: string; image: string }) => void;
+}
 
-const RecipeExplore: React.FC = () => {
+const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
+  const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
   const [recipes, setRecipes] = useState<any[]>([]);
-  const [savedRecipes, setSavedRecipes] = useState<{ [key: number]: boolean }>({});
-  const [selectedCategory, setSelectedCategory] = useState("my");
-  const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
+  const [selectedCocktail, setSelectedCocktail] = useState<any | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    fetchRecipes(selectedCategory);
-  }, [selectedCategory]);
+    fetchMyRecipes();
+  }, []);
 
-  const fetchRecipes = async (category: string) => {
+  const fetchMyRecipes = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes?type=${category}`);
-      if (response.data.recipes) {
-        setRecipes(response.data.recipes);
+      const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (response.data.success && response.data.success.recipes) {
+        setRecipes(response.data.success.recipes);
       }
     } catch (error) {
-      console.error("레시피 목록 불러오기 실패:", error);
+      console.error("내 레시피 불러오기 실패:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    const fetchFavRecipes = async () => {
+      try {
+        const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+  
+        if (response.data.success && response.data.success.recipes) {
+          const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
+          setFavRecipes(favIds);
+        }
+      } catch (error) {
+        console.error("좋아요한 레시피 목록 불러오기 실패:", error);
+      }
+    };
+  
+    fetchFavRecipes();
+  }, []);
+
   const toggleSaveRecipe = async (id: number, type: string) => {
     try {
-      if (savedRecipes[id]) {
-        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`);
+      const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
+  
+      const url = isFav
+        ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
+        : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
+  
+      await axios.patch(url);
+  
+      // 상태 업데이트: 좋아요 목록에서 추가/제거
+      setFavRecipes((prev) => {
+        const newFavs = new Set(prev);
+        isFav ? newFavs.delete(id) : newFavs.add(id);
+        return newFavs;
+      });
+  
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400 && data.error?.errorCode === "R001") {
+          alert("존재하지 않는 레시피입니다.");
+        } else if (status === 409 && data.error?.errorCode === "R002") {
+          alert("이미 좋아요를 눌렀습니다.");
+        } else {
+          alert("좋아요 처리 중 오류가 발생했습니다.");
+        }
       } else {
-        await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=cocktail`);
+        alert("서버와의 연결이 원활하지 않습니다.");
       }
-      setSavedRecipes((prev) => ({ ...prev, [id]: !prev[id] }));
-    } catch (error) {
       console.error("좋아요 처리 실패:", error);
     }
   };
-
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-  };
-
-  const handleCardClick = (recipe: any) => {
-    setSelectedRecipe(recipe);
-  };
-
-  const handleCloseExploreRecipe = () => {
-    setSelectedRecipe(null);
-  };
+  
 
   return (
     <>
       <RecipeHeader />
-      <div className="recipe-explore">
-        <h1>레시피 탐색</h1>
-        <p className="subtitle">
-          원하는 레시피 및 Drink와 레시피를 자유롭게 찾아보세요.
-        </p>
+      <div className="Myrecipe-title">
+        <h1>내 레시피</h1>
+        <h3>나만의 칵테일을 만들고, 공유해보세요.</h3>
+      </div>
+      <div className="list-title">
+        <h2>레시피 리스트</h2>
+      </div>
+      <div className="line-container">
+        <div className="long-line"></div>
+        <div className="short-line"></div>
+      </div>
 
-        {/* 메뉴바 */}
-        <div className="menu-bar">
-          <div className="buttons">
-          {categories.map(({ id, label, icon }) => (
-            <button
-              key={id}
-              className={`menu-item ${selectedCategory === id ? "active" : ""}`}
-              onClick={() => handleCategoryClick(id)}
-            >
-              {icon && <span className="menu-icon">{icon}</span>}
-              {label}
-            </button>
-            
-          ))}
-          </div>
-          <div className="active-indicator" style={{ left: `${categories.findIndex(c => c.id === selectedCategory) * 190}px` }} />
+      <div className="addrecipe-container">
+        <button className="addrecipe" onClick={() => setIsRecipeModalOpen(true)}>
+          <svg className="plusicon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 10.8327H11.3333V14.9993C11.3333 15.4577 10.9583 15.8327 10.5 15.8327C10.0416 15.8327 9.66663 15.4577 9.66663 14.9993V10.8327H5.49996C5.04163 10.8327 4.66663 10.4577 4.66663 9.99935C4.66663 9.54102 5.04163 9.16602 5.49996 9.16602H9.66663V4.99935C9.66663 4.54102 10.0416 4.16602 10.5 4.16602C10.9583 4.16602 11.3333 4.54102 11.3333 4.99935V9.16602H15.5C15.9583 9.16602 16.3333 9.54102 16.3333 9.99935C16.3333 10.4577 15.9583 10.8327 15.5 10.8327Z" fill="#F3F5F6"/>
+          </svg>
+          레시피 등록하기
+        </button>
+      </div>
+      
+      {isRecipeModalOpen &&
+            <RecipeModal 
+            isOpen={isRecipeModalOpen} 
+            onClose={() => setIsRecipeModalOpen(false)} />
+      }
+
+      <div className="recipes-container">
+        {loading ? (
+          <p>loading...</p>
+        ) : recipes.length > 0 ? (
+          recipes.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              recipeId={recipe.id}
+              type={recipe.type}
+              onClick={() => setSelectedCocktail(recipe)}
+              isSelected={selectedCocktail?.id === recipe.id}
+              isMyBar={recipe.myBar}
+            />
+          ))
+        ) : (
+          <div className="my-empty-message">
+          <svg
+            className="my-emptyicon"
+            width="131"
+            height="131"
+            viewBox="0 0 131 131"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
+            <path
+              d="M38 63H92"
+              stroke="#C8CACB"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M65 38L65 92"
+              stroke="#C8CACB"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+            <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
+            <path
+              d="M70.5312 36.4375L69.8281 76.6719H62.0938L61.3906 36.4375H70.5312ZM60.4531 88C60.4141 84.9531 62.9531 82.4531 66 82.4531C69.0078 82.4531 71.5078 84.9531 71.5469 88C71.5078 91.0469 69.0078 93.5078 66 93.5469C62.9531 93.5078 60.4141 91.0469 60.4531 88Z"
+              fill="#C8CACB"
+            />
+          </svg>
+          <p>텅 비었네요!</p>
+          <p>오늘의 특별한 한 잔을 기록하러 가볼까요?</p>
         </div>
-
-        {/* 칵테일 카드 리스트 */}
-        <div className="recipe-list">
-          {loading ? (
-            <p>loading...</p>
-          ) : recipes.length > 0 ? (
-            recipes.map((recipe) => (
-              <CocktailRecipeCard
-                key={recipe.id}
-                recipeId={recipe.id}
-                type={recipe.type}
-                onToggleSave={(newType) => toggleSaveRecipe(recipe.id, newType)}
-                onClick={() => handleCardClick(recipe)}
-              />
-            ))
-          ) : (
-            <div className="empty-message">
-              <svg
-                className="emptyicon"
-                width="131"
-                height="131"
-                viewBox="0 0 131 131"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
-                <path
-                  d="M38 63H92"
-                  stroke="#C8CACB"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M65 38L65 92"
-                  stroke="#C8CACB"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                />
-                <circle cx="65.2471" cy="65.2471" r="65.2471" fill="#292929" />
-                <path
-                  d="M70.5312 36.4375L69.8281 76.6719H62.0938L61.3906 36.4375H70.5312ZM60.4531 88C60.4141 84.9531 62.9531 82.4531 66 82.4531C69.0078 82.4531 71.5078 84.9531 71.5469 88C71.5078 91.0469 69.0078 93.5078 66 93.5469C62.9531 93.5078 60.4141 91.0469 60.4531 88Z"
-                  fill="#C8CACB"
-                />
-              </svg>
-              <p>텅 비었네요!</p>
-              <p>오늘의 특별한 한 잔을 기록하러 가볼까요?</p>
-            </div>
-          )}
-        </div>
-
-        {selectedRecipe && (
-          <div className="explore-recipe-background">
-            <div className="explore-recipe">
-              <ExploreRecipe
-                recipeId={selectedRecipe.id}
-                type={selectedRecipe.type}
-                onCancel={handleCloseExploreRecipe}
-              />
-            </div>
-          </div>
         )}
       </div>
-      <FloatingButton/>
+
+      {selectedCocktail &&
+        (isEditMode ? (
+          <div className="myrecipe-recipe-background">
+          <div className="myrecipe-modal">
+          <RecipeEdit
+            recipeId={selectedCocktail.id}
+            onReadMore={() => {
+              setExploreCocktail(selectedCocktail);
+              setIsExploreOpen(true);
+              setSelectedCocktail(null);
+            }}
+            onCancel={() => {
+              setIsEditMode(false);
+            }}
+            onSave={() => {
+              console.log("레시피 수정 완료");
+              setIsEditMode(false);
+              setSelectedCocktail(null);
+            }}
+          />
+          </div>
+          </div>
+        ) : (
+          <div className="myrecipe-recipe-background">
+          <div className="myrecipe-modal">
+          <RecipeView
+            recipeId={selectedCocktail.id}
+            type={"user"}
+            onReadMore={() => {
+              setExploreCocktail(selectedCocktail);
+              setIsExploreOpen(true);
+              setSelectedCocktail(null);
+            }}
+            onCancel={() => setSelectedCocktail(null)} // 모달 닫기
+            onEdit={() => setIsEditMode(true)}
+          />
+          </div>
+          </div>
+        ))}
+
+      {isExploreOpen && exploreCocktail && (
+        <div className="myrecipe-recipe-background">
+          <div className="myrecipe-modal">
+            <ExploreRecipe
+              recipeId={exploreCocktail.id}
+              type={exploreCocktail.type}
+              onCancel={() => setIsExploreOpen(false)}
+              onSave={() => toggleSaveRecipe(exploreCocktail.id, exploreCocktail.type)}
+            />
+          </div>
+        </div>
+      )}
+      <FloatingButton />
       <Footer />
     </>
   );
 };
 
-export default RecipeExplore;
+export default MyRecipePage;
