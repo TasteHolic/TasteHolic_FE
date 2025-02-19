@@ -12,6 +12,7 @@ interface RecipeCardProps {
   type: "cocktail" | "user";
   isSelected: boolean;
   onClick: () => void;
+  isMyBar: boolean
 }
 
 const Icons = {
@@ -28,11 +29,10 @@ const getAlcoholLabel = (abv: number): string => {
   return "Strong";
 };
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSelected }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSelected, isMyBar }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("/image/image 92.png");
   const [keyWords, setKeyWords] = useState<Keyword[]>([]);
-  const [isMyBar, setIsMyBar] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -60,20 +60,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSele
       }
     };
 
-    const fetchMyBar = async () => {
-      try {
-        const response = await axios.get("http://54.180.45.230:3000/api/v1/users/my-bar/view");
-        if (response.data.resultType === "SUCCESS") {
-          const myBarList = response.data.success.data;
-          setIsMyBar(myBarList.some((item: any) => item.id === recipeId));
-        }
-      } catch (error) {
-        console.error("마이바 정보 불러오기 실패:", error);
-      }
-    };
-
     fetchRecipeDetails();
-    fetchMyBar();
   }, [recipeId, type]);
 
   
