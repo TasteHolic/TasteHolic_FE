@@ -251,6 +251,15 @@ const handleCategoryClick = (category: string) => {
     setSelectedRecipe(null);
   };
 
+  const customPositions: Record<string, number> = {
+    user: 0,
+    zero: 190,
+    high: 375,
+    fruity: 555,
+    under2: 765,
+    fav: 935
+  };
+
   return (
     <>
       <RecipeHeader />
@@ -275,7 +284,10 @@ const handleCategoryClick = (category: string) => {
             
           ))}
           </div>
-          <div className="active-indicator" style={{ left: `${categories.findIndex(c => c.id === selectedCategory) * 190}px` }} />
+          <div
+            className="active-indicator"
+            style={{ left: `${customPositions[selectedCategory] || 0}px`, transition: "left 0.3s ease-in-out" }}
+          />
         </div>
 
         {/* 칵테일 카드 리스트 */}
