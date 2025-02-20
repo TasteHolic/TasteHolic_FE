@@ -123,16 +123,20 @@ const SearchBar: React.FC<MainSearch> = ({
           >
             <path
               d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z"
-              style={styles.searchButtonSvg}
+              style={{
+                fill: inputValue ? "#F42B72" : "#fff",
+                transition: "fill 0.3s ease-in-out",
+              }}
             />
           </svg>
         </button>
+
       </div>
     </div>
   );
 };
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   searchBarContainer: {
     display: "flex",
     justifyContent: "center",
@@ -140,7 +144,9 @@ const styles = {
   },
   searchBar: {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     width: "586px",
     height: "64px",
     borderRadius: "16px",
@@ -158,7 +164,7 @@ const styles = {
   },
   searchInput: {
     borderRadius: "16px",
-    width: "335px",
+    width: "355px",
     height: "19px",
     background: "#121212",
     color: "#FFF",
@@ -176,17 +182,19 @@ const styles = {
     background: "#818181",
     marginLeft: "26.16px",
     marginRight: "25px",
+    marginTop: "5px",
   },
   clearButton: {
     position: "absolute" as const,
     top: "50%",
-    right: "14px",
+    right: "-1px",
     transform: "translateY(-50%)",
     background: "none",
     border: "none",
     cursor: "pointer",
     color: "#9E9E9E",
     fontSize: "18px",
+    marginTop: "2px",
   },
   toggleContainer: {
     display: "flex",
@@ -224,6 +232,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "20px",
     color: "white",
+    marginTop: "5px",
   },
   searchButtonSvg: {
     width: "24px",
