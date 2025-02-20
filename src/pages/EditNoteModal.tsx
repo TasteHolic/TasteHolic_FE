@@ -25,8 +25,7 @@ interface EditNoteModalProps {
     initialData: FinalData;
 }
 
-
-const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData | null> => { 
+const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData | null> => {
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -45,18 +44,17 @@ const fetchTastingNote = async (noteId: string, type: string): Promise<FinalData
         });
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => null); // JSON 파싱 실패 방지
+            const errorData = await response.json().catch(() => null);
             throw new Error(errorData?.error || errorData?.message || "서버 오류");
         }
 
         const data = await response.json();
-        return data.result ?? data; // data.result가 undefined이면 data 전체 반환
+        return data.success ?? null; // 수정: data.success가 존재하면 반환
     } catch (error) {
         console.error("테이스팅 노트 가져오기 실패:", error);
         return null;
     }
 };
-
 
 const EditNoteModal: React.FC<EditNoteModalProps> = ({
     isOpen,
@@ -64,15 +62,15 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
     onComplete,
     initialData,
 }) => {
-  //모달이 열릴 때 body 스크롤을 막음
+    // 모달이 열릴 때 body 스크롤을 막음
     useEffect(() => {
         if (isOpen) {
-        document.body.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
         } else {
-        document.body.style.overflow = "auto";
+            document.body.style.overflow = "auto";
         }
         return () => {
-        document.body.style.overflow = "auto";
+            document.body.style.overflow = "auto";
         };
     }, [isOpen]);
 
@@ -85,40 +83,48 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
     const [selectedFinish, setSelectedFinish] = useState(initialData.finish);
 
     useEffect(() => {
-        if (isOpen) {
-            // API에서 데이터 불러오기
-            const loadData = async () => {
-                try {
-                    const data = await fetchTastingNote(initialData.noteId, initialData.category);
-                    setFinalData(data);
-                    setTastingNote(data?.note || '');
-                    setSelectedFlavors(data?.flavors || []);
-                    setSelectedAromas(data?.aromas || []);
-                    setSelectedAlcohol(data?.alcohol || '');
-                    setSelectedColors(data?.colors || []);
-                    setSelectedFinish(data?.finish || []);
-                } catch (error) {
-                    console.error(error);
-                    // 오류 처리 (로컬 스토리지 사용 또는 에러 메시지 표시 등)
-                    const storedData = localStorage.getItem(
-                        `tastingNote_${initialData.name}_${initialData.category}`
-                    );
+        if (!isOpen) return;
+    
+        const loadData = async () => {
+            try {
+                if (!initialData.noteId) {
+                    console.warn("⚠️ noteId가 없습니다. 로컬 데이터 사용");
+    
+                    const storageKey = `tastingnote_${initialData.name}_${initialData.category}`;
+                    const storedData = localStorage.getItem(storageKey);
+    
                     if (storedData) {
                         const parsedData = JSON.parse(storedData);
                         setFinalData(parsedData);
-                        setTastingNote(parsedData.note);
-                        setSelectedFlavors(parsedData.flavors);
-                        setSelectedAromas(parsedData.aromas);
-                        setSelectedAlcohol(parsedData.alcohol);
-                        setSelectedColors(parsedData.colors);
-                        setSelectedFinish(parsedData.finish);
+                        setTastingNote(parsedData.note || "");
+                        setSelectedFlavors(parsedData.flavors || []);
+                        setSelectedAromas(parsedData.aromas || []);
+                        setSelectedAlcohol(parsedData.alcohol || "");
+                        setSelectedColors(parsedData.colors || []);
+                        setSelectedFinish(parsedData.finish || []);
                     }
+                    return;
                 }
-            };
-
-            loadData();
-        }
-    }, [isOpen, initialData]);
+    
+                const data = await fetchTastingNote(initialData.noteId, initialData.category);
+                if (data) {
+                    setFinalData(data);
+                    setTastingNote(data.note || "");
+                    setSelectedFlavors(data.flavors || []);
+                    setSelectedAromas(data.aromas || []);
+                    setSelectedAlcohol(data.alcohol || "");
+                    setSelectedColors(data.colors || []);
+                    setSelectedFinish(data.finish || []);
+                } else {
+                    throw new Error("API에서 유효한 데이터를 받지 못했습니다.");
+                }
+            } catch (error) {
+                console.error("❌ 테이스팅 노트 불러오기 실패:", error);
+            }
+        };
+    
+        loadData();
+    }, [isOpen, initialData.noteId, initialData.category]);
 
       // [맛]
     const [isFlavorDropdownOpen, setIsFlavorDropdownOpen] = useState(false);
@@ -486,49 +492,49 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
             return;
         }
     
-        const finalData: FinalData = {
-            noteId: initialData.noteId,
-            name: initialData.name,
-            category: initialData.category,
-            flavors: selectedFlavors,
-            aromas: selectedAromas,
-            alcohol: selectedAlcohol,
-            colors: selectedColors,
-            finish: selectedFinish,
-            note: tastingNote,
+        const requestData = {
+            tasteRating: selectedFlavors,
+            aromaRating: selectedAromas,
+            abv: Number(selectedAlcohol),
+            color: selectedColors,
+            finishRating: selectedFinish,
+            description: tastingNote,
         };
     
-        console.log("🔹 handleSave 실행됨");
-        console.log("📌 EditData:", finalData);
-    
         try {
-            // API에 데이터 업데이트 요청 (PATCH 사용)
-            const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note/${finalData.noteId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(finalData),
-            });
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("액세스 토큰이 없습니다. 로그인 후 다시 시도해주세요.");
+    
+            const response = await fetch(
+                `http://54.180.45.230:3000/api/v1/users/tasting-note/${initialData.noteId}?type=${initialData.category}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestData),
+                }
+            );
     
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || '서버 오류');
+                throw new Error(errorData.error || "서버 오류");
             }
     
-            // 응답 성공 시
             const data = await response.json();
             console.log("📍 API 데이터 업데이트 성공:", data);
     
-            // 로컬 스토리지에 데이터 저장
-            localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
+            const localData = {
+                ...initialData,
+                ...requestData,
+            };
+            localStorage.setItem(`tastingnote_${initialData.name}_${initialData.category}`, JSON.stringify(localData));
             console.log("🟢 로컬 스토리지에 데이터 저장 완료");
     
-            // 완료 후 onComplete 호출
             requestAnimationFrame(() => {
                 console.log("🟢 onComplete 실행 직전");
-                onComplete(finalData); // 완료 시 최종 데이터 전달
+                onComplete(localData);
                 console.log("🟢 onComplete 실행 완료");
             });
         } catch (error) {
@@ -536,8 +542,6 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
             alert("데이터 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     };
-    
-
     if (!isOpen) return null;
 
     return (

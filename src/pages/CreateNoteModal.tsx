@@ -7,6 +7,7 @@ import { SketchPicker } from "react-color";
 import "./CreateNoteModal.css";
 
 interface FinalData {
+  id: number | null;
   name: string;
   category: string;
   flavors: string[];
@@ -402,82 +403,87 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   // ─────────────────────────
   // "생성하기" 버튼 핸들러
   // ─────────────────────────
-  const finalData: FinalData = {
-    name: drinkName || "",
-    category: category,
-    flavors: selectedFlavors,
-    aromas: selectedAromas,
-    alcohol: selectedAlcohol,
-    colors: selectedColors,
-    finish: selectedFinish,
-    note: tastingNote,
-  };
-
-  const handleCreate = async () => {
+  // FinalData 타입을 수정 (타입 정의 파일에서 변경 필요)
+  const handleCreate = async () => { 
     if (selectedFlavors.length === 0) {
-      alert("맛은 필수 항목입니다. 입력해주세요.");
-      return;
+        alert("맛은 필수 항목입니다. 입력해주세요.");
+        return;
     }
     if (selectedAromas.length === 0) {
-      alert("향은 필수 항목입니다. 입력해주세요.");
-      return;
+        alert("향은 필수 항목입니다. 입력해주세요.");
+        return;
     }
     if (!selectedAlcohol) {
-      alert("도수는 필수 항목입니다. 선택해주세요.");
-      return;
+        alert("도수는 필수 항목입니다. 선택해주세요.");
+        return;
     }
     if (!tastingNote.trim()) {
-      alert("한줄평은 필수 항목입니다. 입력해주세요.");
-      return;
+        alert("한줄평은 필수 항목입니다. 입력해주세요.");
+        return;
     }
-  
+
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("로그인이 필요합니다.");
-      return;
+        alert("로그인이 필요합니다.");
+        return;
     }
-  
+
     const validTypes = ["cocktail", "whiskey", "gin", "rum", "tequila", "wine", "beer", "other"];
     const type = validTypes.includes(category) ? category : "other"; 
-  
+
     try {
-      const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note?type=${type}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: finalData.name,
-          tasteRating: finalData.flavors,
-          aromaRating: finalData.aromas,
-          abv: finalData.alcohol,
-          color: finalData.colors,
-          finishRating: finalData.finish,
-          description: finalData.note,
-        }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("테이스팅 노트 작성 실패:", errorData);
-        alert(`테이스팅 노트 작성 실패: ${errorData.error || "알 수 없는 오류"}`);
-        return;
-      }
-  
-      const data = await response.json();
-      console.log("테이스팅 노트 작성 성공:", data);
+        const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note?type=${type}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                name: drinkName || "",
+                tasteRating: selectedFlavors,
+                aromaRating: selectedAromas,
+                abv: selectedAlcohol,
+                color: selectedColors,
+                finishRating: selectedFinish,
+                description: tastingNote,
+            }),
+        });
 
-      localStorage.setItem(`tastingNote_${finalData.name}_${finalData.category}`, JSON.stringify(finalData));
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            console.error("테이스팅 노트 작성 실패:", errorData);
+            alert(`테이스팅 노트 작성 실패: ${errorData?.error || "알 수 없는 오류"}`);
+            return;
+        }
 
-      requestAnimationFrame(() => {
-        onComplete(finalData);
-      });
+        const data = await response.json();
+        console.log("✅ 음료 생성 성공:", data);
+
+        const savedData: FinalData = {
+            id: data.success?.id ?? null,  // 서버에서 받은 ID 적용
+            name: drinkName || "",
+            category,
+            flavors: selectedFlavors,
+            aromas: selectedAromas,
+            alcohol: selectedAlcohol,
+            colors: selectedColors,
+            finish: selectedFinish,
+            note: tastingNote,
+        };
+
+        // 로컬스토리지에 저장
+        localStorage.setItem(`tastingnote_${savedData.name}_${savedData.category}`, JSON.stringify(savedData));
+
+        // 상태 업데이트를 비동기적으로 실행
+        requestAnimationFrame(() => {
+            onComplete(savedData);
+        });
     } catch (error) {
-      console.error("테이스팅 노트 작성 중 오류 발생:", error);
-      alert(`테이스팅 노트 작성 중 오류 발생: ${error}`);
+        console.error("테이스팅 노트 작성 중 오류 발생:", error);
+        alert(`테이스팅 노트 작성 중 오류 발생: ${JSON.stringify(error)}`);
     }
-  };
+};
+
 
   if (!isOpen) return null;
 
