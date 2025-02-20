@@ -27,6 +27,9 @@
     color: white;
     z-index: 3;
   }
+  .save-icon:hover svg path {
+    fill: rgba(255, 255, 255, 0.5); /* #ffffff50 */
+  }
   
   /* My Bar 라벨 */
   .my-bar-label {
