@@ -67,8 +67,8 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
           headers: { Authorization: `Bearer ${token}` }, 
         });
   
-        if (response.data.success && response.data.success.recipes) {
-          const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
+        if (response.data && response.data.recipes) {
+          const favIds = new Set<number>(response.data.recipes.map((recipe: any) => recipe.id));
           setFavRecipes(favIds);
         }
       } catch (error) {
@@ -282,7 +282,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
           <DeleteRecipeWindow
             deleteId={deleteId}
             deleteItem={deleteName}
-            onDelete={() => {setAskWindow(false); setDeleteId(null)}}
+            onDelete={() => {setAskWindow(false); setDeleteId(null); fetchMyRecipes();}}
             onCancel={() => {setAskWindow(false); setDeleteId(null)}}
           />
           </div>
