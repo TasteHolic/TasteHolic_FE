@@ -33,7 +33,7 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
 
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
   const nameDropdownRef = useRef<HTMLDivElement>(null);
-  const [originalData, setOriginalData] = useState<any[]>([]);
+
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
@@ -42,12 +42,12 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
   }, [isOpen]);
 
   const drinkCategories = [
-    "beer",
-    "cocktail",
-    "gin",
-    "rum",
-    "tequila",
-    "whiskey",
+    "Beer",
+    "Cocktail",
+    "Gin",
+    "Rum",
+    "Tequila",
+    "Whiskey",
   ];
   const [drinkNames, setDrinkNames] = useState<string[]>([]);
 
@@ -68,15 +68,13 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
 
           const data = await response.json();
 
-          if (data.resultType === "SUCCESS" && Array.isArray(data.success)) { 
-            setOriginalData(data.success);//원본 한글 영어 포함
-            setDrinkNames(data.success.map((drink: any) => drink.nameKor));
-            console.log("🔍 검색된 술 정보:", data.success);
+          if (data.success) {
+              setDrinkNames(data.data.map((drink: any) => drink.nameEng || drink.nameKor));
+              console.log("🔍 검색된 술 정보:", data.data);
           } else {
-            setApiError(data.message || "검색 중 오류가 발생했습니다.");
-            setDrinkNames([]);
+              setApiError(data.message || "검색 중 오류가 발생했습니다.");
+              setDrinkNames([]);
           }
-          
       } catch (error) {
           setApiError("검색 중 오류가 발생했습니다.");
           console.error("Error fetching drinks:", error);
@@ -120,15 +118,8 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
   };
   
   const filteredNames = searchTerm
-  ? originalData
-      .filter(
-        (drink) =>
-          drink.nameKor.includes(searchTerm) || // 🔹 한글 입력 시 한글 이름 검색
-          drink.nameEng.toLowerCase().includes(searchTerm.toLowerCase()) // 🔹 영어 입력 시 영어 이름 검색
-      )
-      .map((drink) => (searchTerm.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/) ? drink.nameKor : drink.nameEng)) // 🔹 한글 검색이면 한글, 영어 검색이면 영어 표시
-  : drinkNames;
-
+    ? drinkNames.filter((n) => n.toLowerCase().includes(searchTerm.toLowerCase()))
+    : drinkNames;
 
   const nextStep = () => {
     if (step === "intro") {
@@ -334,7 +325,6 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                                   key={index}
                                   className="dropdown-item"
                                   onClick={() => handleSelectDrink(n)}>
-                                    {n}
                                 </li>
                               ))}
                             </div>

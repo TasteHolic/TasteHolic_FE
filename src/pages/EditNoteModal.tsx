@@ -68,43 +68,41 @@ const fetchTastingNote = async (noteId: string): Promise<{ userTastingNote: Fina
     }
 };
 
-// 이전 noteId를 가져오는 함수 (예시)
+
 const getPreviousNoteId = async (currentNoteId: string): Promise<string> => {
-    // 여기서 이전 noteId를 가져오는 로직을 구현
-    // 예를 들어, API를 호출하거나 로컬 스토리지에서 가져오는 등의 방법을 사용
-    // 이 예시에서는 단순히 현재 noteId에서 1을 뺀 값을 반환
+
     return (parseInt(currentNoteId) - 1).toString();
 };
 
-// userTastingNote를 FinalData 형식으로 변환
+
 const transformUserTastingNote = (userTastingNote: any): FinalData => {
     return {
         noteId: userTastingNote.id,
         name: userTastingNote.name,
         category: userTastingNote.category,
-        flavors: userTastingNote.tasteRating ? userTastingNote.tasteRating.split(",") : [],
-        aromas: userTastingNote.aromaRating ? userTastingNote.aromaRating.split(",") : [],
+        flavors: Array.isArray(userTastingNote.tasteRating) ? userTastingNote.tasteRating : [], // ✅ split 제거
+        aromas: Array.isArray(userTastingNote.aromaRating) ? userTastingNote.aromaRating : [],
         alcohol: userTastingNote.abv,
-        colors: [], // userTastingNote에는 colors 정보가 없으므로 빈 배열로 설정
-        finish: userTastingNote.finishRating ? userTastingNote.finishRating.split(",") : [],
+        colors: [],
+        finish: Array.isArray(userTastingNote.finishRating) ? userTastingNote.finishRating : [],
         note: userTastingNote.description,
-        ingredients: [], // userTastingNote에는 ingredients 정보가 없으므로 빈 배열로 설정
+        ingredients: [],
     };
 };
 
-// expertTastingNote를 FinalData 형식으로 변환
+
 const transformExpertTastingNote = (expertTastingNote: any): FinalData => {
     return {
         noteId: expertTastingNote.id,
         name: expertTastingNote.nameKor,
-        category: expertTastingNote.category, // expertTastingNote에는 category 정보가 없으므로 빈 문자열로 설정
-        flavors: expertTastingNote.tastes || [],
-        aromas: expertTastingNote.aromas || [],
+        category: expertTastingNote.category || "", 
+        flavors: Array.isArray(expertTastingNote.tastes) ? expertTastingNote.tastes : [],
+        aromas: Array.isArray(expertTastingNote.aromas) ? expertTastingNote.aromas : [],
         alcohol: expertTastingNote.abv,
-        colors: [], // expertTastingNote에는 colors 정보가 없으므로 빈 배열로 설정
-        finish: expertTastingNote.finishes || [],
+        colors: [],
+        finish: Array.isArray(expertTastingNote.finishes) ? expertTastingNote.finishes : [],
         note: expertTastingNote.description,
-        ingredients: [], // expertTastingNote에는 ingredients 정보가 없으므로 빈 배열로 설정
+        ingredients: [],
     };
 };
 
