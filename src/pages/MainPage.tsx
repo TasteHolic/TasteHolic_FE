@@ -101,7 +101,7 @@ const MainPage: React.FC = () => {
   const categoryIcons: { [key: string]: keyof typeof iconPaths } = {
     Whiskey: "WhiskeyIcon",
     Beer: "BeerIcon",
-    Cocktail: "CocktailIcon",
+    cocktail: "CocktailIcon",
     Wine: "WineIcon",
     Rum: "GinrumteqIcon",
     Gin: "GinrumteqIcon",
