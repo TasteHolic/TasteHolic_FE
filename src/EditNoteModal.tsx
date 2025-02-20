@@ -167,7 +167,6 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
     
                 const data = await fetchTastingNote(initialData.noteId);
     
-                // userTastingNote와 expertTastingNote를 분리해서 설정
                 if (data) {
                     setUserTastingNote(data.userTastingNote || null);
                     setExpertTastingNote(data.expertTastingNote || null);
@@ -881,9 +880,10 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                             </div>
                             ))}
                         </div>
+                        
                         </div>
+                        
                     )}
-                    
                     </div>
                 )}
                 </div>
