@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useLocation } from "react-router-dom";
 import "./SearchResults.css";
 import SearchBar from "../components/search/searchBar";
@@ -9,6 +10,7 @@ import RecipeView from "../components/recipe/viewRecipe/RecipeView";
 import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
 import SearchHeader from "../components/Header/SearchHeader";
+import DeleteRecipeWindow from "../components/DeleteRecipeWindow";
 import Footer from "../components/Footer";
 
 interface SearchResultsProps {
@@ -28,120 +30,137 @@ const Icons = {
   WhiskeyIcon:
     "https://s3-alpha-sig.figma.com/img/6ad8/8422/2c0b2b6ac687ca49ed46c32c93aa120d?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=KdGeYB3nVl64dqpzfAZ4zkYDifRbfVU9P3WJlBbQ0Rz~T7TlNK-hn7ViGUoJVCm5y31XegEeUeABzckBPA5KjhKxjpmpnkxuPzbOMSmunztcXFCa0NBwnekJi3gIQawVODzatsfTDKfuxFsh2WVnLuq2d2RlPYAnxiST9bcGYNTrRXMx4o66~h8BXZe47L4Uhus2Xatc8A5A39d9mFY0Z2PSb6AwhF4KrQU9XBZ~rzc6X9TwtHnn9eNXLAwu2JZx6ZXA5QXZ9L9r91THdM~Xc1~w-yH0~LvSHOeO6GM9YOY79he0jsuBuvxo2n-zOqr5ZThIPkPhNvZSin0gQ4ZXvw__",
 };
-//검색결과 카드로 변환.
-const transformCard = (recipe: any) => {
-  return {
-    id: recipe.id,
-    name: recipe.name || recipe.nameEng,
-    image: recipe.imageUrl || "/image/default-placeholder.png",
-    keyWords: [
-      ...(recipe.aromas || []),
-      ...(recipe.tastes || []),
-      ...(recipe.timing || []),
-    ].join(", "),
-    isMyBar: recipe.myBar || false,
-    flavor: recipe.tastes?.[0] || "",
-    aroma: recipe.aromas?.[0] || "",
-    ingredients: Object.entries(recipe.ingredients || {}).map(
-      ([ingredient, amount]) => `${ingredient} (${amount})`
-    ),
-    alcoholPer: recipe.abv || 0,
-    glass: recipe.glassType || "",
-    hexColor1: recipe.colors?.[0] || "",
-    hexColor2: recipe.colors?.[1] || "",
-    hexColor3: recipe.colors?.[2] || "",
-    recipeLine1: recipe.recipe?.[0] || "",
-    recipeLine2: recipe.recipe?.[1] || "",
-    recipeLine3: recipe.recipe?.[2] || "",
-    type: recipe.type === "cocktail" ? "official" : "user", // 공식 레시피와 유저 레시피 구분
-  };
-};
+
 const SearchResults: React.FC<SearchResultsProps> = ({
-  searched: propsSearched,
-  results = [],
-  searchedTypes = [],
-  onSearch,
-}) => {
-  const location = useLocation();
-  const searched = propsSearched || location.state?.searched || "";
-  const searchResults = location.state?.results || { success: false, data: [] }; //searchPageUp에서 받아온 검색 결과.
-  const [appliedFilters, setAppliedFilters] = useState(
-    location.state?.searchedTypes ?? []
-  );
-  const [isMyBar, setIsMyBar] = useState(false);
-  const [selectedCocktail, setSelectedCocktail] = useState<any | null>(null);
-  const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
-  const [isExploreOpen, setIsExploreOpen] = useState(false);
-  const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
-  useEffect(() => {
-    console.log("📡 서버에서 받아온 검색 결과:", searchResults);
-    if (searchResults && searchResults.success) {
-      console.log("✅ 유효한 검색 결과:", searchResults.data);
-    } else {
-      console.warn("❌ 검색 결과가 유효하지 않음");
-    }
-    if (location.state?.searchedTypes) {
-      setAppliedFilters(location.state.searchedTypes);
-      console.log(
-        "✅ `searchedTypes` 상태 업데이트됨:",
-        location.state.searchedTypes
-      );
-    }
-  }, [location.state?.searchedTypes, searchResults]);
+    searched: propsSearched,
+    results = [],
+    searchedTypes = [],
+    onSearch,
+  }) => {
+    const location = useLocation();
+    const searched = propsSearched || location.state?.searched || "";
+    const searchResults = location.state?.results || { success: false, data: [] };
+    const [appliedFilters, setAppliedFilters] = useState(
+      location.state?.searchedTypes ?? []
+    );
+    const [isMyBar, setIsMyBar] = useState(false);
+    const [selectedCocktail, setSelectedCocktail] = useState<any | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isExploreOpen, setIsExploreOpen] = useState(false);
+    const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
+    const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+    const [askDelete, setAskWindow] = useState(false);
+    const [deleteName, setDeleteName] = useState<string>("");
+    const [deleteId, setDeleteId] = useState<number | any>(null);
+    
+    useEffect(() => {
+      console.log("📡 서버에서 받아온 검색 결과:", searchResults);
+      if (searchResults && searchResults.success) {
+        console.log("✅ 유효한 검색 결과:", searchResults.data);
+      } else {
+        console.warn("❌ 검색 결과가 유효하지 않음");
+      }
+      if (location.state?.searchedTypes) {
+        setAppliedFilters(location.state.searchedTypes);
+        console.log(
+          "✅ `searchedTypes` 상태 업데이트됨:",
+          location.state.searchedTypes
+        );
+      }
+    }, [location.state?.searchedTypes, searchResults]);
+  
+    useEffect(() => {
+      if (location.state?.searchedTypes) {
+        setAppliedFilters(location.state.searchedTypes);
+      }
+    }, [location.state?.searchedTypes]);
 
-  useEffect(() => {
-    if (location.state?.searchedTypes) {
-      setAppliedFilters(location.state.searchedTypes);
+    const myBarClick = () => {
+      setIsMyBar((prev) => !prev);
+    };
+
+      const handleDeleteType = (id: number) => {
+        setAppliedFilters((prev) => prev.filter((type) => type.id !== id));
+      };
+
+    const handleDeleteFilter = (id: number) => {
+      setAppliedFilters((prev: any[]) => prev.filter((filter) => filter.id !== id));
+    };
+  
+    const handleCardClick = (id: number) => {
+      const foundCocktail = searchResults.data.find((recipe: any) => recipe.id === id);
+      if (!foundCocktail) {
+        console.error(`🚨 클릭한 카드의 데이터를 찾을 수 없음: ID=${id}`);
+        return;
+      }
+      setSelectedCocktail(foundCocktail);
+    };
+  
+    const filteredResults = isMyBar
+      ? searchResults.data.filter((recipe: any) => recipe.myBar)
+      : searchResults.data;
+  
+    const officialCards = filteredResults.filter((recipe: any) => recipe.type === "cocktail");
+    const userCards = filteredResults.filter((recipe: any) => recipe.type !== "cocktail");
+    const noResults = !filteredResults || filteredResults.length === 0;
+    
+      //toggleSaveRecipe
+  const toggleSaveRecipe = async (id: number, type: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
     }
-  }, [location.state?.searchedTypes]);
-  const myBarClick = () => {
-    setIsMyBar((prev) => !prev);
+    
+    try {
+
+      const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
+  
+      const url = isFav
+        ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
+        : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
+
+      await axios.patch(url, {}, {
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          }
+      });
+  
+      //좋아요 목록에서 추가/제거
+      setFavRecipes((prev) => {
+        const newFavs = new Set(prev);
+        isFav ? newFavs.delete(id) : newFavs.add(id);
+        return newFavs;
+      });
+
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400 && data.error?.errorCode === "R001") {
+          alert("존재하지 않는 레시피입니다.");
+        } else if (status === 409 && data.error?.errorCode === "R002") {
+          alert("이미 좋아요를 눌렀습니다.");
+        } else {
+          alert("좋아요 처리 중 오류가 발생했습니다.");
+        }
+      } else {
+        alert("서버와의 연결이 원활하지 않습니다.");
+      }
+      console.error("좋아요 처리 실패:", error);
+    }
   };
 
-  const handleDeleteType = (id: number) => {
-    setAppliedFilters((prev) => prev.filter((type) => type.id !== id));
-  };
-  const handleDeleteFilter = (id: number) => {
-    setAppliedFilters((prev) => prev.filter((filter) => filter.id !== id));
-  };
-  const handleCardClick = (id: number) => {
-    const foundCocktail = filteredResults.find((card) => card.id === id);
-
-    if (!foundCocktail) {
-      console.error(`🚨 클릭한 카드의 데이터를 찾을 수 없음: ID=${id}`);
-      return;
-    }
-
-    console.log("✅ 선택된 칵테일:", foundCocktail);
-    setSelectedCocktail(foundCocktail);
-  };
-
-  const transformedCards = Array.isArray(searchResults.data)
-    ? searchResults.data.map(transformCard).filter(Boolean)
-    : []; //응답을 레시피로 변환 후 매핑.
-  console.log("🔍 변환된 카드 데이터:", transformedCards);
-  const filteredResults = isMyBar
-    ? transformedCards.filter((card) => card.isMyBar)
-    : transformedCards;
-  const officialCards = filteredResults.filter(
-    (card) => card.type === "official"
-  );
-  const userCards = filteredResults.filter((card) => card.type === "user");
-  const noResults = !filteredResults || filteredResults.length === 0;
-  return (
-    <>
-      <div className="search-results-container">
-        <SearchHeader />
-        <div className="search-bar-labels">
-          <div className="results-string">"{searched}" 검색 결과</div>
-          <SearchBar
-            myBarClick={myBarClick}
-            searchClick={() => {}}
-            searched={searched}
-          />
-          <div className="type-labels-container">
-            {appliedFilters && appliedFilters.length > 0 ? (
-              appliedFilters.map((type, index) => {
+    return (
+      <>
+        <div className="search-results-container">
+          <SearchHeader />
+          <div className="search-bar-labels">
+            <div className="results-string">'{searched}' 검색 결과</div>
+            <SearchBar myBarClick={myBarClick} searchClick={() => {}} searched={searched} />
+            <div className="type-labels-container">
+              {appliedFilters.length > 0 ? (
+              appliedFilters.map((type: { type: string; label: string | undefined; id: number; }, index: React.Key | null | undefined) => {
                 let icon;
                 if (type.type === "variety") {
                   switch (type.label) {
@@ -163,185 +182,156 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   <TypeLabelSvg
                     key={index}
                     svg={icon ? <img src={icon} alt={type.label} /> : null}
-                    name={type.label}
+                    name={type.label || ""}
                     onDelete={() => handleDeleteFilter(type.id)}
                   />
                 ) : type.type === "abv" ? ( // 도수 필터 렌더링 추가
                   <TypeLabel
                     key={index}
-                    name={type.label}
-                    category="abv"
+                    name={type.label || ""}
                     onDelete={() => handleDeleteFilter(type.id)}
                   />
                 ) : (
                   <TypeLabel
                     key={index}
-                    name={type.label}
+                    name={type.label || ""}
                     category={type.type as "aroma" | "flavor" | "mood"}
                     onDelete={() => handleDeleteFilter(type.id)}
                   />
                 );
               })
             ) : (
-              <div className="no-labels">❌ 필터 없음</div> // 디버깅용
+              <div className="no-labels"></div> // 디버깅용
             )}
-          </div>
-        </div>
-
-        {noResults ? (
-          <div className="no-search-results">
-            <img
-              src="/image/Frame 427319276.png"
-              className="no-results-image"
-            />
-            <div className="no-results-lines">
-              <div className="no-results">준비된 레시피가 아직 없어요.</div>
-              <div className="no-results">조금만 기다려주세요!</div>
             </div>
           </div>
-        ) : (
-          <div className="search-results">
-            {officialCards.length > 0 && (
-              <div className="official-recipes">
-                <div className="recipes-title">
-                  공식 레시피
-                  <div className="line" />
-                </div>
-                <div className="recipe-cards">
-                  {officialCards.map((card) => (
-                    <RecipeCard
-                      key={card.id}
-                      name={card.name}
-                      image={card.image}
-                      keyWords={card.keyWords}
-                      onClick={() => handleCardClick(card.id)}
-                      isMyBar={card.isMyBar}
-                      isSelected={selectedCocktail?.id === card.id}
-                    />
-                  ))}
-                </div>
+  
+          {noResults ? (
+            <div className="no-search-results">
+              <img src="/image/Frame 427319276.png" className="no-results-image" />
+              <div className="no-results-lines">
+                <div className="no-results">준비된 레시피가 아직 없어요.</div>
+                <div className="no-results">조금만 기다려주세요!</div>
               </div>
-            )}
-
-            {userCards.length > 0 && (
-              <div className="user-recipes">
-                <div className="recipes-title">
-                  유저 레시피
-                  <div className="line" />
+            </div>
+          ) : (
+            <div className="search-results">
+              {officialCards.length > 0 && (
+                <div className="official-recipes">
+                  <div className="recipes-title">
+                    공식 레시피
+                    <div className="line" />
+                  </div>
+                  <div className="recipe-cards">
+                    {officialCards.map((recipe: any) => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipeId={recipe.id}
+                        type={"cocktail"}
+                        onClick={() => { setSelectedCocktail(recipe); handleCardClick(recipe.id); }}
+                        onDelete={() => {
+                          setAskWindow(true);
+                          setDeleteName(recipe.name);
+                          setDeleteId(recipe.id);
+                        }}
+                        isSelected={selectedCocktail?.id === recipe.id}
+                        isMyBar={recipe.myBar}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="recipe-cards">
-                  {userCards.map((card) => (
-                    <RecipeCard
-                      key={card.id}
-                      name={card.name}
-                      image={card.image}
-                      keyWords={card.keyWords}
-                      onClick={() => handleCardClick(card.id)}
-                      isMyBar={card.isMyBar}
-                      isSelected={selectedCocktail?.id === card.id}
+              )}
+  
+              {userCards.length > 0 && (
+                <div className="user-recipes">
+                  <div className="recipes-title">
+                    유저 레시피
+                    <div className="line" />
+                  </div>
+                  <div className="recipe-cards">
+                    {userCards.map((recipe: any) => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipeId={recipe.id}
+                        type={"user"}
+                        onClick={() => { setSelectedCocktail(recipe); handleCardClick(recipe.id); }}
+                        onDelete={() => {
+                          setAskWindow(true);
+                          setDeleteName(recipe.name);
+                          setDeleteId(recipe.id);
+                        }}
+                        isSelected={selectedCocktail?.id === recipe.id}
+                        isMyBar={recipe.myBar}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+  
+              {selectedCocktail &&
+                (isEditMode ? (
+                  <div className="modal-container">
+                    <RecipeEdit
+                      recipeId={selectedCocktail.id}
+                      onReadMore={() => {
+                        setExploreCocktail(selectedCocktail);
+                        setIsExploreOpen(true);
+                        setSelectedCocktail(null);
+                      }}
+                      onCancel={() => setIsEditMode(false)}
+                      onSave={() => {
+                        setIsEditMode(false);
+                        setSelectedCocktail(null);
+                      }}
                     />
-                  ))}
-                </div>
-              </div>
-            )}
-            {selectedCocktail &&
-              (isEditMode ? (
-                <div className="modal-container">
-                  <RecipeEdit
-                    drinkName={selectedCocktail.name}
-                    flavor={selectedCocktail.flavor}
-                    aroma={selectedCocktail.aroma}
-                    ingredients={selectedCocktail.ingredients.map(
-                      (ingredient) =>
-                        typeof ingredient === "object"
-                          ? ingredient.ingredient
-                          : ingredient
-                    )}
-                    alcoholPer={
-                      selectedCocktail.alcoholPer
-                        ? selectedCocktail.alcoholPer[0]
-                        : ""
-                    }
-                    glass={
-                      selectedCocktail.glass ? selectedCocktail.glass[0] : ""
-                    }
-                    hexColor1={selectedCocktail.hexColor1}
-                    hexColor2={selectedCocktail.hexColor2}
-                    hexColor3={selectedCocktail.hexColor3}
-                    recipeLine1={selectedCocktail.recipeLine1}
-                    recipeLine2={selectedCocktail.recipeLine2}
-                    recipeLine3={selectedCocktail.recipeLine3}
-                    onReadMore={() => {
-                      setExploreCocktail(selectedCocktail);
-                      setIsExploreOpen(true);
-                      setSelectedCocktail(null);
-                    }}
-                    onCancel={() => {
-                      setIsEditMode(false);
-                    }}
-                    onSave={() => {
-                      console.log("레시피 저장 완료");
-                      setIsEditMode(false);
-                      setSelectedCocktail(null);
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="modal-container">
-                  <RecipeView
-                    drinkName={selectedCocktail.name}
-                    flavor={selectedCocktail.flavor}
-                    aroma={selectedCocktail.aroma}
-                    ingredients={selectedCocktail.ingredients.map(
-                      (ingredient) =>
-                        typeof ingredient === "object"
-                          ? ingredient.ingredient
-                          : ingredient
-                    )}
-                    alcoholPer={selectedCocktail.alcoholPer}
-                    glass={selectedCocktail.glass}
-                    hexColor1={selectedCocktail.hexColor1}
-                    hexColor2={selectedCocktail.hexColor2}
-                    hexColor3={selectedCocktail.hexColor3}
-                    recipeLine1={selectedCocktail.recipeLine1}
-                    recipeLine2={selectedCocktail.recipeLine2}
-                    recipeLine3={selectedCocktail.recipeLine3}
-                    onReadMore={() => {
-                      setExploreCocktail(selectedCocktail);
-                      setIsExploreOpen(true);
-                      setSelectedCocktail(null);
-                    }}
-                    onCancel={() => setSelectedCocktail(null)}
-                    onEdit={() => setIsEditMode(true)}
-                  />
-                </div>
-              ))}
-            <div className="modal-container">
+                  </div>
+                ) : (
+                  <div className="modal-container">
+                    <RecipeView
+                      recipeId={selectedCocktail.id}
+                      type={"user"}
+                      onReadMore={() => {
+                        setExploreCocktail(selectedCocktail);
+                        setIsExploreOpen(true);
+                        setSelectedCocktail(null);
+                      }}
+                      onCancel={() => setSelectedCocktail(null)}
+                      onEdit={() => setIsEditMode(true)}
+                    />
+                  </div>
+                ))}
+  
               {isExploreOpen && exploreCocktail && (
-                <ExploreRecipe
-                  exploreTitle="레시피 탐색"
-                  drinkName={exploreCocktail.name}
-                  imgSrc={exploreCocktail.image}
-                  viewCount={123}
-                  favoriteCount={45}
-                  ingredients={exploreCocktail.ingredients}
-                  recipeLine1={exploreCocktail.recipeLine1}
-                  recipeLine2={exploreCocktail.recipeLine2}
-                  recipeLine3={exploreCocktail.recipeLine3}
-                  onCancel={() => setIsExploreOpen(false)}
-                  onSave={() => {
-                    console.log("레시피 저장!");
-                    setIsExploreOpen(false);
-                  }}
-                />
+                <div className="modal-container">
+                  <ExploreRecipe
+                    recipeId={exploreCocktail.id}
+                    type={"user"}
+                    onCancel={() => setIsExploreOpen(false)}
+                    onSave={() => toggleSaveRecipe(exploreCocktail.id, exploreCocktail.type)}
+                  />
+                </div>
+              )}
+  
+              {askDelete && (
+                <>
+                  <div className="delete-window-background" />
+                  <div className="delete-window">
+                    <DeleteRecipeWindow
+                      deleteId={deleteId}
+                      deleteItem={deleteName}
+                      onDelete={() => { setAskWindow(false); setDeleteId(null); }}
+                      onCancel={() => { setAskWindow(false); setDeleteId(null); }}
+                    />
+                  </div>
+                </>
               )}
             </div>
-          </div>
-        )}
-        <Footer />
-      </div>
-    </>
-  );
-};
-
-export default SearchResults;
+          )}
+          <Footer />
+        </div>
+      </>
+    );
+  };
+  
+  export default SearchResults;
+  
