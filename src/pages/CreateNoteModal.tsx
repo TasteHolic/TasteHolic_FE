@@ -30,8 +30,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   isOpen,
   onClose,
   onComplete,
-  drinkName = "Merlot",
-  category = "Wine",
+  drinkName,
+  category,
 }) => {
   // 모달이 열릴 때 body 스크롤을 막음
   useEffect(() => {
@@ -197,6 +197,36 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
       document.removeEventListener("mousedown", handleClickOutsideFlavor);
     };
   }, [isFlavorDropdownOpen]);
+
+  useEffect(() => {
+    if (isOpen && drinkName && category) {
+      const fetchExpertNote = async () => {
+        try {
+          const response = await fetch(
+            `http://54.180.45.230:3000/api/v1/users/tasting-note/expert?name=${encodeURIComponent(drinkName)}&category=${encodeURIComponent(category)}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch expert note");
+          }
+  
+          const data = await response.json();
+          setExpertData(data);
+        } catch (error) {
+          console.error("Error fetching expert note:", error);
+          setExpertData(null);
+        }
+      };
+  
+      fetchExpertNote();
+    }
+  }, [isOpen, drinkName, category]);
 
   useEffect(() => {
     const handleClickOutsideAroma = (event: MouseEvent) => {
@@ -428,8 +458,28 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
         return;
     }
 
-    const validTypes = ["cocktail", "whiskey", "gin", "rum", "tequila", "wine", "beer", "other"];
-    const type = validTypes.includes(category) ? category : "other"; 
+    const validTypes = ["cocktail", "whiskey", "gin&rum&tequila", "wine", "beer", "other"];
+
+    console.log("전달된 카테고리 값:", category); // 로그 추가
+    
+    const normalizedCategory = category.toLowerCase(); // 카테고리를 소문자로 변환
+    
+    const type = (() => {
+      if (["gin", "rum", "tequila"].includes(normalizedCategory)) {
+        console.log("유효한 카테고리: gin&rum&tequila"); // 확인용 로그
+        return "gin&rum&tequila";
+      }
+      if (["cocktail", "whiskey"].includes(normalizedCategory)) {
+        console.log("유효한 카테고리:", normalizedCategory); // 확인용 로그
+        return normalizedCategory; // 'cocktail', 'whiskey'는 그대로
+      }
+      console.log("기타 카테고리로 처리:", normalizedCategory); // 확인용 로그
+      return validTypes.includes(normalizedCategory) ? normalizedCategory : "other";
+    })();
+    
+    console.log('최종 카테고리 처리 결과:', type); // 최종 결과 로그
+    
+
 
     try {
         const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note?type=${type}`, {
@@ -474,6 +524,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
         // 로컬스토리지에 저장
         localStorage.setItem(`tastingnote_${savedData.name}_${savedData.category}`, JSON.stringify(savedData));
+        console.log("저장된 음료 데이터:", savedData);
 
         // 상태 업데이트를 비동기적으로 실행
         requestAnimationFrame(() => {
@@ -668,9 +719,9 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
               {!isExpertDataAvailable ? (
                 <div className="expert-empty-state">
-                  <div className="expert-empty-icon">[ICON]</div>
-                  <p className="expert-empty-text">전문가 데이터가 없습니다.</p>
-                  <p className="expert-empty-text">추후에 추가될 예정입니다.</p>
+                  <img src="/image/expert-icon-image.png" className="expert-empty-icon"></img>
+                  <p className="expert-empty-text">조금만 기다려주세요!</p>
+                  <p className="expert-empty-text">전문가의 테이스팅을 준비중입니다</p>
                 </div>
               ) : (
                 <div className="expert-fields-wrapper">

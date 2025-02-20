@@ -1,3 +1,4 @@
+//TastingNoteModal.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CreateNoteModal from "./CreateNoteModal";
@@ -21,6 +22,8 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
   const [name, setName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
 
@@ -46,38 +49,77 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
     "Tequila",
     "Whiskey",
   ];
-  const [drinkNames, setDrinkNames] = useState([
-    "Heineken",
-    "Bombay Sapphire",
-    "Bacardi",
-    "Jose Cuervo",
-    "Jack Daniel's",
-  ]);
+  const [drinkNames, setDrinkNames] = useState<string[]>([]);
 
-  const filteredNames = searchTerm
-    ? drinkNames.filter((n) =>
-        n.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : drinkNames;
+  const searchDrinks = async (query: string, type: string) => {
+      try {
+          if (!query.trim()) return;
+          
+          setIsLoading(true);
+          setApiError(null);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+          const response = await fetch(
+              `http://54.180.45.230:3000/api/v1/users/tasting-note/search?query=${encodeURIComponent(query)}&type=${encodeURIComponent(type)}`
+          );
+
+          if (!response.ok) {
+              throw new Error("Network response was not ok");
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+              setDrinkNames(data.data.map((drink: any) => drink.nameEng || drink.nameKor));
+              console.log("🔍 검색된 술 정보:", data.data);
+          } else {
+              setApiError(data.message || "검색 중 오류가 발생했습니다.");
+              setDrinkNames([]);
+          }
+      } catch (error) {
+          setApiError("검색 중 오류가 발생했습니다.");
+          console.error("Error fetching drinks:", error);
+          setDrinkNames([]);
+      } finally {
+          setIsLoading(false);
+      }
   };
 
+  
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+  
+    if (searchTerm.trim() && category) {
+      setIsLoading(true);
+      setApiError(null);
+      await searchDrinks(searchTerm, category.toLowerCase());
+    } else {
+      setDrinkNames([]);
+    }
+  };
+  
+  const handleSelectDrink = (drink: string) => {
+    setName(drink);
+    setIsNameOpen(false);
+    setError(false);
+    console.log("✅ 선택된 술 정보:", drink);
+  };
+  
   const handleAddNewDrink = () => {
     if (!searchTerm.trim()) return;
+  
     setDrinkNames((prev) => [...prev, searchTerm]);
     setName(searchTerm);
     setHasAddedNewDrink(true);
     setSearchTerm("");
     setIsNameOpen(false);
-    const dropdownMenu = document.querySelector(
-      ".name-dropdown .dropdown-menu"
-    );
-    if (dropdownMenu) {
-      dropdownMenu.classList.add("highlight-border");
-    }
+  
+    console.log("➕ 새롭게 추가된 술:", searchTerm);
   };
+  
+  const filteredNames = searchTerm
+    ? drinkNames.filter((n) => n.toLowerCase().includes(searchTerm.toLowerCase()))
+    : drinkNames;
 
   const nextStep = () => {
     if (step === "intro") {
@@ -272,21 +314,21 @@ const TastingNoteModal: React.FC<TastingNoteModalProps> = ({
                               }}
                             />
                           </li>
-                          <div className="scroll-container">
-                            {filteredNames.map((n, index) => (
-                              <li
-                                key={index}
-                                className="dropdown-item"
-                                onClick={() => {
-                                  setName(n);
-                                  setIsNameOpen(false);
-                                  setError(false);
-                                }}
-                              >
-                                {n}
-                              </li>
-                            ))}
-                          </div>
+                          {isLoading ? (
+                            <li className="dropdown-item">Loading...</li>
+                          ) : apiError ? (
+                            <li className="dropdown-item error">{apiError}</li>
+                          ) : (
+                            <div className="scroll-container">
+                              {filteredNames.map((n, index) => (
+                                <li
+                                  key={index}
+                                  className="dropdown-item"
+                                  onClick={() => handleSelectDrink(n)}>
+                                </li>
+                              ))}
+                            </div>
+                          )}
                           {searchTerm &&
                             !filteredNames.includes(searchTerm) && (
                               <li

@@ -627,6 +627,7 @@
 /* 전문가 노트 빈 상태 (Empty State) */
 .expert-empty-state {
   margin-top: 40px;
+  margin-left: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -635,11 +636,8 @@
 
 /* 아이콘, 텍스트 등은 임의 */
 .expert-empty-icon {
-  width: 50px;
-  height: 50px;
-  background: #ccc;
-  border-radius: 50%;
-  margin-bottom: 16px;
+  width: 73.51px;
+  height: 73.51px;
 }
 .expert-empty-text {
   color: #fff;

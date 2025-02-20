@@ -571,7 +571,6 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
             alert("한줄평은 필수 항목입니다. 입력해주세요.");
             return;
         }
-    
         const requestData = {
             tasteRating: selectedFlavors,
             aromaRating: selectedAromas,
@@ -580,44 +579,44 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
             finishRating: selectedFinish,
             description: tastingNote,
         };
-    
+
         try {
             const token = localStorage.getItem("token");
             if (!token) throw new Error("액세스 토큰이 없습니다. 로그인 후 다시 시도해주세요.");
-    
+
             const response = await fetch(
-                `http://54.180.45.230:3000/api/v1/users/tasting-note/${initialData.noteId}?type=${initialData.category}`,
-                {
-                    method: "PATCH",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(requestData),
-                }
-            );
-    
+            `http://54.180.45.230:3000/api/v1/users/tasting-note/${initialData.noteId}?type=${initialData.category}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+            },
+                body: JSON.stringify(requestData),
+            }
+        );
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || "서버 오류");
             }
-    
+        
             const data = await response.json();
             console.log("📍 API 데이터 업데이트 성공:", data);
-    
+        
             const localData = {
                 ...initialData,
                 ...requestData,
             };
             localStorage.setItem(`tastingnote_${initialData.name}_${initialData.category}`, JSON.stringify(localData));
             console.log("🟢 로컬 스토리지에 데이터 저장 완료");
-    
+        
             requestAnimationFrame(() => {
                 console.log("🟢 onComplete 실행 직전");
                 onComplete(localData);
                 console.log("🟢 onComplete 실행 완료");
             });
-        } catch (error) {
+            } catch (error) {
             console.error("❌ 오류 발생:", error);
             alert("데이터 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
@@ -801,11 +800,11 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                     전문가 테이스팅 노트
                 </span>
 
-                {!isExpertDataAvailable ? (
+                {!expertTastingNote ? (
                     <div className="expert-empty-state">
-                    <div className="expert-empty-icon">[ICON]</div>
-                    <p className="expert-empty-text">전문가 데이터가 없습니다.</p>
-                    <p className="expert-empty-text">추후에 추가될 예정입니다.</p>
+                        <img src="/image/expert-icon-image.png" className="expert-empty-icon"></img>
+                        <p className="expert-empty-text">조금만 기다려주세요!</p>
+                        <p className="expert-empty-text">전문가의 테이스팅을 준비중입니다</p>
                     </div>
                 ) : (
                     <div className="expert-fields-wrapper">

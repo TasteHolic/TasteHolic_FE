@@ -75,15 +75,20 @@ const TasteNote: React.FC = () => {
     };
     
     const filteredDrinks = filter === "전체"
-        ? drinks
-        : drinks.filter((drink) => {
-            const drinkCategories = Array.isArray(drink.category) ? drink.category : [drink.category];
-            const filterCategories = categoryMap[filter] ? [categoryMap[filter]] : [filter];
-            
-            return drinkCategories.some((dCat) =>
-                filterCategories.includes(dCat)
-            );
-        });
+    ? drinks
+    : drinks.filter((drink) => {
+        const drinkCategories = Array.isArray(drink.category) ? drink.category : [drink.category];
+        const filterCategories = categoryMap[filter] ? [categoryMap[filter]] : [filter];
+
+        console.log("📌 필터:", filter);
+        console.log("📌 필터 매핑된 값:", filterCategories);
+        console.log("📌 현재 음료의 카테고리:", drinkCategories);
+
+        return drinkCategories.some((dCat) =>
+            filterCategories.includes(dCat)
+        );
+    });
+
     
     const sortedDrinks = [...filteredDrinks].sort((a, b) => {
         const dateA = new Date(a.createdAt);
@@ -94,33 +99,33 @@ const TasteNote: React.FC = () => {
     
     useEffect(() => {
         const loadTastingNotes = async () => {
-            const categoryKey = categoryMap[filter];
-            
-            const drinksFromApi = await fetchTastingNotes(categoryKey);
+        const categoryKey = categoryMap[filter];
+        
+        const drinksFromApi = await fetchTastingNotes(categoryKey);
     
-            if (drinksFromApi.length > 0) {
-                setDrinks(drinksFromApi);
-            } else {
-                if (categoryKey) {
-                    const categoryDrinks = Object.keys(localStorage)
-                        .filter((key) => key.startsWith(`tastingnote_${categoryKey}`))
-                        .map((key) => JSON.parse(localStorage.getItem(key)!));
+        if (drinksFromApi.length > 0) {
+            setDrinks(drinksFromApi);
+        } else {
+        if (categoryKey) {
+            const categoryDrinks = Object.keys(localStorage)
+                .filter((key) => key.startsWith(`tastingnote_${categoryKey}`))
+                .map((key) => JSON.parse(localStorage.getItem(key)!));
     
-                    setDrinks(categoryDrinks);
-                } else {
-                    const allDrinks = [];
-                    for (const key in localStorage) {
-                        if (key.startsWith("tastingnote_")) {
-                            const drink = JSON.parse(localStorage.getItem(key)!);
-                            allDrinks.push(drink);
-                        }
-                    }
-                    setDrinks(allDrinks);
+            setDrinks(categoryDrinks);
+        } else {
+            const allDrinks = [];
+            for (const key in localStorage) {
+                if (key.startsWith("tastingnote_")) {
+                    const drink = JSON.parse(localStorage.getItem(key)!);
+                    allDrinks.push(drink);
                 }
             }
-        };
+            setDrinks(allDrinks);
+            }
+        }
+    };
     
-        loadTastingNotes();
+    loadTastingNotes();
     }, [filter]);
 
     
