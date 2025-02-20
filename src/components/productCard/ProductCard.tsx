@@ -1,7 +1,7 @@
 // src/ProductCard.tsx
 import React from "react";
 import styled from "styled-components";
-import Icon from "../icons/drinkIcons/icon";
+// import Icon from "../icons/drinkIcons/icon";
 import { Icons } from "../icons/drinkIcons/index"; // 아이콘 URL 모음 파일 import
 
 // Props 타입 정의
@@ -9,7 +9,7 @@ interface ProductCardProps {
   name: string;
   description: string;
   imageUrl: string;
-  iconType: keyof typeof Icons; // 아이콘의 이름을 제한 (Icons 객체의 key만 사용 가능)
+  iconType: keyof typeof iconPaths;
 }
 
 // Styled-Components 정의
@@ -82,6 +82,18 @@ const ProductDescription = styled.p`
   margin: 8px 0 0;
   letter-spacing: -0.48px;
 `;
+const Icon = styled.img`
+  width: 34px;
+  height: 34px;
+`;
+export const iconPaths = {
+  BeerIcon: "/image/beer-icon.svg",
+  WineIcon: "/image/wine-icon.svg",
+  EtcIcon: "/image/etc-icon.svg",
+  GinrumteqIcon: "/image/gin-rum-teq-icon.svg",
+  WhiskeyIcon: "/image/whiskey-icon.svg",
+  CocktailIcon: "/image/cocktail-icon.svg",
+} as const;
 
 // ProductCard 컴포넌트
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -104,7 +116,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <ProductDescription>{description}</ProductDescription>
         </ProductText>
         {/* Icon 컴포넌트로 URL을 직접 전달 */}
-        <Icon src={Icons[iconType]} alt={`${name} icon`} size={34} />
+        <Icon src={iconPaths[iconType]} alt={`${name} icon`}/>
+        
       </InfoSection>
     </Card>
   );

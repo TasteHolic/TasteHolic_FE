@@ -15,7 +15,7 @@ import ProfileNextPage from "./pages/ProfileEditNextPage";
 import DeleteAccountNextPage from "./pages/DeleteAccountNextPage";
 import SearchResults from "./pages/SearchResults";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import KakaoCallback from "./components/login/KakaoCallback";
 const GOOGLE_CLIENT_ID =
   "401407075309-feg0m1p3i01i1rvb7ukhii37qlvg1mu4.apps.googleusercontent.com";
 
@@ -28,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/mypage" element={<ProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/kakao/callback" element={<KakaoCallback />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/signup/done" element={<SignupNextPage />} />
           <Route path="/my-recipe" element={<MyRecipePage />} />

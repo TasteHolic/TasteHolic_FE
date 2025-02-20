@@ -108,6 +108,7 @@ const ProfilePage: React.FC = () => {
       if (response.ok) {
         console.log(" 로그아웃 성공");
         localStorage.removeItem("token");
+        localStorage.clear();
         setToken(null);
         setLogoutModalOpen(false);// 로그아웃 모달 닫기
         navigate("/");// 메인으로 이동

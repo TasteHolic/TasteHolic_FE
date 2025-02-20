@@ -75,13 +75,13 @@ const LoginPage: React.FC = () => {
     console.log("window.Kakao:", window.Kakao);
     // 카카오 SDK 초기화
     if (!window.Kakao.isInitialized()) {
-      window.Kakao.init("a4a032ccb88436f7bf873bf2fe5c3429");
+      window.Kakao.init("58c6935306bfb845f56d1d1f374b545b");
       console.log("Kakao SDK 초기화 완료");
     }
   }, []);
   const handleKakaoLogin = () => {
     window.Kakao.Auth.authorize({
-      redirectUri: "http://54.180.45.230:3000/oauth/kakao",
+      redirectUri: "http://localhost:5173/kakao/callback",
     });
   };  
 

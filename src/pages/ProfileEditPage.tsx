@@ -37,6 +37,14 @@ const ProfileEditPage: React.FC = () => {
 
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
+    const [isKakaoUser, setIsKakaoUser] = useState(false);
+
+    useEffect(() => {
+            const kakaoToken = localStorage.getItem("kakao_token");
+            if (kakaoToken) {
+                     setIsKakaoUser(true); // 카카오 로그인 사용자인 경우 true
+            }
+    }, []);
 
     const isPasswordChangeRequired = password.length > 0; // 비밀번호 변경 여부 확인
     const isFormValid = (!isPasswordChangeRequired || (validation.passwordLength && validation.passwordComplexity && validation.confirmPassword));
@@ -200,6 +208,7 @@ const ProfileEditPage: React.FC = () => {
                                     accept="image/*"
                                     onChange={handleProfileImageChange}
                                     style={{ display: "none" }}
+                                    disabled={isKakaoUser}
                                 />
                             </label>
                         </div>
@@ -218,7 +227,7 @@ const ProfileEditPage: React.FC = () => {
                                     } else {
                                         alert("닉네임은 2자 이상의 한글, 영문, 숫자만 가능합니다.");
                                     }
-                                }}>수정</button>
+                                }}disabled={isKakaoUser}>수정</button>
                             </div>
 
                             <div className="edit-info-text2">
@@ -254,6 +263,7 @@ const ProfileEditPage: React.FC = () => {
                                 value={password}
                                 onChange={(e) => handlePasswordChange(e.target.value)}
                                 placeholder="비밀번호를 입력해주세요."
+                                disabled={isKakaoUser}
                             />
                             <img
                                 src={showPassword ? "/image/eye.png" : "/image/eye-off.png"}
@@ -300,6 +310,7 @@ const ProfileEditPage: React.FC = () => {
                                 value={confirmPassword}
                                 onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                                 placeholder="비밀번호를 한 번 더 입력해주세요."
+                                disabled={isKakaoUser}
                             />
                             <img
                                 src={showConfirmPassword ? "/image/eye.png" : "/image/eye-off.png"}

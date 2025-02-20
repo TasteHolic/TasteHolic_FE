@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SearchHeader.css";
 
 const SearchHeader: React.FC = () => {
+  const navigate = useNavigate();
   const [isRecipeHovered, setIsRecipeHovered] = useState(false);
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isMyHovered, setIsMyHovered] = useState(false);

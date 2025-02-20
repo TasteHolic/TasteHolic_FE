@@ -31,6 +31,7 @@ const RecipeHeader: React.FC = () => {
       if (response.ok) {
         console.log("로그아웃 성공");
         localStorage.removeItem("token");
+        localStorage.clear();
         setIsLoggedIn(false);
         navigate("/");
       } else {
