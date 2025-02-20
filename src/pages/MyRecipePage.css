@@ -154,3 +154,27 @@ body::-webkit-scrollbar {
   .my-empty-message p{
     margin: 10px 0px;
   }
+  .delete-window-background{
+    width: 100vw;
+    height: 100vh;
+    background: #12121235;
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+  }
+  .delete-window{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    backdrop-filter: blur(34px);
+  }
+
+  .no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
