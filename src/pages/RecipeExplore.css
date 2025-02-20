@@ -70,7 +70,7 @@ body{
   .active-indicator {
     position: absolute;
     bottom: -2px;
-    width: 90px;
+    width: 105px;
     height: 3px;
     background: white;
     transition: left 0.3s ease-in-out;
