@@ -31,6 +31,7 @@
   /* My Bar 라벨 */
   .my-bar-label {
     display: flex;
+    align-items: center;
     position: absolute;
     top: 20px;
     right: 30px;
@@ -44,8 +45,9 @@
     font-weight: 500;
     z-index: 3;
   }
-  .checkicon{
-    transform: translateY(-3px);
+  .my-bar-check-icon {
+    width: 20px;
+    height: 20px;
   }
   
   .image-container{
@@ -59,7 +61,7 @@
   /* 칵테일 이미지 */
   .cocktailrecipe-image {
     
-    width: 70%;
+    width: 100%;
     height: 70%;
     object-fit: cover;
     
