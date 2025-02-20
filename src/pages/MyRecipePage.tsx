@@ -9,6 +9,8 @@ import Footer from "../components/Footer";
 import RecipeView from "../components/recipe/viewRecipe/RecipeView";
 import RecipeEdit from "../components/recipe/editRecipe/RecipeEdit";
 import ExploreRecipe from "../components/recipe/explore/ExploreRecipe";
+import DeleteRecipeWindow from "../components/DeleteRecipeWindow";
+
 
 // props에 onCocktailSelect 추가
 interface MyRecipePageProps {
@@ -24,6 +26,10 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
   const [exploreCocktail, setExploreCocktail] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+  const [askDelete, setAskWindow] = useState(false);
+  const [deleteName, setDeleteName] = useState<string>("");
+  const [deleteId, setDeleteId] = useState<number | any>(null);
+
 
   useEffect(() => {
     fetchMyRecipes();
@@ -74,12 +80,14 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
   }, []);
 
   const toggleSaveRecipe = async (id: number, type: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+    
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-          alert("로그인이 필요합니다.");
-          return;
-      }
+
       const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
   
       const url = isFav
@@ -116,6 +124,19 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
       console.error("좋아요 처리 실패:", error);
     }
   };
+
+  useEffect(() => {
+    if (selectedCocktail || deleteId) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [selectedCocktail, deleteId]);
+  
   
 
   return (
@@ -158,6 +179,11 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
               recipeId={recipe.id}
               type={"user"}
               onClick={() => setSelectedCocktail(recipe)}
+              onDelete={() => {
+                setAskWindow(true)
+                setDeleteName(recipe.name)
+                setDeleteId(recipe.id)
+              }}
               isSelected={selectedCocktail?.id === recipe.id}
               isMyBar={recipe.myBar}
             />
@@ -247,6 +273,21 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             />
           </div>
         </div>
+      )}
+
+      {askDelete && (
+        <>
+        <div className="delete-window-background"/>
+          <div className="delete-window">
+          <DeleteRecipeWindow
+            deleteId={deleteId}
+            deleteItem={deleteName}
+            onDelete={() => {setAskWindow(false); setDeleteId(null)}}
+            onCancel={() => {setAskWindow(false); setDeleteId(null)}}
+          />
+          </div>
+        </>
+        
       )}
       <FloatingButton />
       <Footer />
