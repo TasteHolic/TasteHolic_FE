@@ -37,7 +37,8 @@ const categories = [
 
 const RecipeExplore: React.FC = () => {
   const [recipes, setRecipes] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("user");
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+  localStorage.getItem("selectedCategory") || "user");
   const [selectedRecipe, setSelectedRecipe] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -88,10 +89,10 @@ const RecipeExplore: React.FC = () => {
     try {
       let response;
       const token = localStorage.getItem("token");
-  
+
       if (category === "fav") {
         if (!token) {
-          console.warn("로그인 필요: fav 레시피를 가져올 수 없습니다.");
+          console.warn("로그인이 필요합니다.");
           return;
         }
   
@@ -156,8 +157,8 @@ const RecipeExplore: React.FC = () => {
     fetchRecipes(selectedCategory);
   }, [selectedCategory]);
 
-  useEffect(() => {
-    const fetchFavRecipes = async () => {
+
+  const fetchFavRecipes = async () => {
 
       const token = localStorage.getItem("token");
       if (!token) {
@@ -177,25 +178,25 @@ const RecipeExplore: React.FC = () => {
       } catch (error) {
         console.error("좋아요한 레시피 목록 불러오기 실패:", error);
       }
-    };
-  
-    fetchFavRecipes();
-  }, []);
+  };
+
   
   //toggleSaveRecipe
   const toggleSaveRecipe = async (id: number, type: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+    
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-          alert("로그인이 필요합니다.");
-          return;
-      }
+      fetchFavRecipes();
       const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
-      
+      console.log(isFav);
       const url = isFav
         ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=${type}`
         : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=${type}`;
-        
+      console.log(url)
       await axios.patch(url, {}, {
           headers: {
               "Content-Type": "application/json",
@@ -207,13 +208,11 @@ const RecipeExplore: React.FC = () => {
 
       setFavRecipes((prev) => {
         const newFavs = new Set(prev);
-        if (isFav) {
-          newFavs.delete(id); // 좋아요 취소
-        } else {
-          newFavs.add(id); // 좋아요 추가
-        }
+        isFav ? newFavs.delete(id) : newFavs.add(id);
         return newFavs;
       });
+
+      fetchFavRecipes();
 
     } catch (error: any) {
       if (error.response) {
@@ -240,6 +239,7 @@ const RecipeExplore: React.FC = () => {
 const handleCategoryClick = (category: string) => {
   if (selectedCategory !== category) {
     setSelectedCategory(category);
+    localStorage.setItem("selectedCategory", category);
   }
 };
 
@@ -250,9 +250,6 @@ const handleCategoryClick = (category: string) => {
   const handleCloseExploreRecipe = () => {
     setSelectedRecipe(null);
   };
-
-  useEffect(() => {
-}, [selectedRecipe]);
 
   return (
     <>
