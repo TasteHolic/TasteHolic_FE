@@ -479,8 +479,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     
     console.log('최종 카테고리 처리 결과:', type); // 최종 결과 로그
     
-
-
     try {
         const response = await fetch(`http://54.180.45.230:3000/api/v1/users/tasting-note?type=${type}`, {
             method: "POST",

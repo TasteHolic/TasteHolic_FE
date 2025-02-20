@@ -194,7 +194,7 @@ body {
 
 .taste-note-drink-hover {
     width: 86px;
-    height: 48px;
+    /* height: 48px; */
     bottom: 15px;
     left: 30%;
     transform: translateX(-50%);

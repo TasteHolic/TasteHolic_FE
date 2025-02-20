@@ -75,7 +75,7 @@ const TasteNote: React.FC = () => {
     const filteredDrinks = filter === "전체"
         ? drinks
         : drinks.filter((drink) => {
-            const drinkCategory = drink.category.toLowerCase();
+            const drinkCategory = drink.category ? drink.category.toLowerCase() : "other";
             const filterCategory = categoryMap[filter] ? categoryMap[filter].toLowerCase() : filter.toLowerCase();
 
             console.log("📌 필터:", filter);
@@ -426,7 +426,7 @@ const handleAddDrink = async (data: { name: string; category: string }) => {
                 colors: editTarget.colors || [],
                 finish: editTarget.finish || [],
                 note: editTarget.note || "",
-                ingredients: editTarget.ingredients || [],
+                // ingredients: editTarget.ingredients || [],
             }}
             onClose={() => setIsEditModalOpen(false)}
             onComplete={(finalData) => {
