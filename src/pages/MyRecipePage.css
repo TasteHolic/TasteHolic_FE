@@ -99,6 +99,7 @@ body::-webkit-scrollbar {
     gap: 2px;
     line-height: 1; 
     vertical-align: middle;
+    cursor: pointer;
 }
 .plusicon{
     margin-bottom: -4px;
