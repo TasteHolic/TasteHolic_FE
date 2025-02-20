@@ -123,6 +123,7 @@ const TasteNote: React.FC = () => {
         loadTastingNotes();
     }, [filter]);
 
+    
     const handleAddDrink = async (data: { name: string; category: string }) => {
         const imageUrl = "/image/default.png"; // 기본 이미지 설정
         
@@ -232,6 +233,7 @@ const TasteNote: React.FC = () => {
     };
     const handleEditDrink = async (updatedDrink: Drink) => {
         // 만약 noteId가 없다면 로컬에서 수정
+        console.log("noteId000000:", updatedDrink.noteId);
         if (!updatedDrink.noteId) {
             console.error("❌ noteId가 없습니다. 로컬에서 수정합니다.");
             

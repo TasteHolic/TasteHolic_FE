@@ -15,7 +15,7 @@ interface FinalData {
   alcohol: string | null;
   colors: string[];
   finish: string[];
-  note: string;
+  description: string;
 }
 
 interface CreateNoteModalProps {
@@ -439,14 +439,15 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-                name: drinkName || "",
-                tasteRating: selectedFlavors,
-                aromaRating: selectedAromas,
-                abv: selectedAlcohol,
-                color: selectedColors,
-                finishRating: selectedFinish,
-                description: tastingNote,
-            }),
+              name: drinkName || "",
+              tasteRating: JSON.stringify(selectedFlavors), // 배열을 JSON 문자열로 변환
+              aromaRating: JSON.stringify(selectedAromas),
+              abv: Number(selectedAlcohol) || 0,  // 숫자로 변환
+              color: JSON.stringify(selectedColors),
+              finishRating: JSON.stringify(selectedFinish),
+              description: tastingNote || "", // 빈 값 방지
+          }),
+          
         });
 
         if (!response.ok) {
@@ -468,7 +469,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             alcohol: selectedAlcohol,
             colors: selectedColors,
             finish: selectedFinish,
-            note: tastingNote,
+            description: tastingNote,
         };
 
         // 로컬스토리지에 저장
