@@ -626,8 +626,8 @@
 
 /* 전문가 노트 빈 상태 (Empty State) */
 .expert-empty-state {
-  margin-top: 40px;
-  margin-left: 60px;
+  margin-top: 90px;
+  margin-left: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -638,11 +638,14 @@
 .expert-empty-icon {
   width: 73.51px;
   height: 73.51px;
+  margin-bottom: 20px;
 }
 .expert-empty-text {
-  color: #fff;
-  font-size: 12px;
-  margin: 2px 0;
+  color: #C8CACB;
+  font-size: 16px;
+  line-height: 22.4px;
+  letter-spacing: -0.64px;
+  margin: 5px 0;
 }
 
 /* 도수 드랍다운 전용 스타일 */
