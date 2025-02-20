@@ -25,6 +25,48 @@ interface EditNoteModalProps {
     onComplete: (finalData: FinalData) => void;
     initialData: FinalData;
 }
+// const fetchTastingNote = async (noteId: string): Promise<{ userTastingNote: FinalData | null, expertTastingNote: FinalData | null } | null> => {
+//     const token = localStorage.getItem("token");
+
+//     if (!token) {
+//         throw new Error("액세스 토큰이 필요합니다.");
+//     }
+
+//     // 가장 최신의 noteId가 아니라 그 이전의 noteId를 사용
+//     const previousNoteId = await getPreviousNoteId(noteId);
+
+//     const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${previousNoteId}`;
+
+//     console.log("API 요청 URL:", url);  // 요청 URL 로그
+
+//     try {
+//         const response = await fetch(url, {
+//             method: "GET",
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//                 Accept: "application/json",
+//             },
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json().catch(() => null);
+//             console.error("응답 실패:", errorData);  // 에러 로그
+//             throw new Error(errorData?.error || errorData?.message || "서버 오류");
+//         }
+
+//         const data = await response.json();
+//         console.log("API 응답 데이터:", data);  // API 응답 데이터 로그
+
+//         // 'userTastingNote'와 'expertTastingNote'를 각각 분리하여 반환
+//         return {
+//             userTastingNote: data.userTastingNote ? transformUserTastingNote(data.userTastingNote) : null,
+//             expertTastingNote: data.expertTastingNote ? transformExpertTastingNote(data.expertTastingNote) : null,
+//         };
+//     } catch (error) {
+//         console.error("테이스팅 노트 가져오기 실패:", error);
+//         return null;
+//     }
+// };
 const fetchTastingNote = async (noteId: string): Promise<{ userTastingNote: FinalData | null, expertTastingNote: FinalData | null } | null> => {
     const token = localStorage.getItem("token");
 
@@ -32,12 +74,9 @@ const fetchTastingNote = async (noteId: string): Promise<{ userTastingNote: Fina
         throw new Error("액세스 토큰이 필요합니다.");
     }
 
-    // 가장 최신의 noteId가 아니라 그 이전의 noteId를 사용
-    const previousNoteId = await getPreviousNoteId(noteId);
+    const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${noteId}`; // ✅ 최신 noteId 그대로 사용
 
-    const url = `http://54.180.45.230:3000/api/v1/users/tasting-note/${previousNoteId}`;
-
-    console.log("API 요청 URL:", url);  // 요청 URL 로그
+    console.log("📡 API 요청 URL:", url);
 
     try {
         const response = await fetch(url, {
@@ -50,20 +89,19 @@ const fetchTastingNote = async (noteId: string): Promise<{ userTastingNote: Fina
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
-            console.error("응답 실패:", errorData);  // 에러 로그
+            console.error("❌ 응답 실패:", errorData);
             throw new Error(errorData?.error || errorData?.message || "서버 오류");
         }
 
         const data = await response.json();
-        console.log("API 응답 데이터:", data);  // API 응답 데이터 로그
+        console.log("✅ API 응답 데이터:", data);
 
-        // 'userTastingNote'와 'expertTastingNote'를 각각 분리하여 반환
         return {
             userTastingNote: data.userTastingNote ? transformUserTastingNote(data.userTastingNote) : null,
             expertTastingNote: data.expertTastingNote ? transformExpertTastingNote(data.expertTastingNote) : null,
         };
     } catch (error) {
-        console.error("테이스팅 노트 가져오기 실패:", error);
+        console.error("🚨 테이스팅 노트 가져오기 실패:", error);
         return null;
     }
 };

@@ -490,11 +490,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             },
             body: JSON.stringify({
               name: drinkName || "",
-              tasteRating: JSON.stringify(selectedFlavors), // 배열을 JSON 문자열로 변환
-              aromaRating: JSON.stringify(selectedAromas),
+              tasteRating: selectedFlavors, // 배열을 JSON 문자열로 변환
+              aromaRating: selectedAromas,
               abv: Number(selectedAlcohol) || 0,  // 숫자로 변환
-              color: JSON.stringify(selectedColors),
-              finishRating: JSON.stringify(selectedFinish),
+              color: selectedColors,
+              finishRating: selectedFinish,
               description: tastingNote || "", // 빈 값 방지
           }),
           
