@@ -23,7 +23,7 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
   const [views, setViews] = useState(0);
   const [likes, setLikes] = useState(0);
   const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
-  
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -62,25 +62,26 @@ const CocktailRecipeCard: React.FC<CocktailRecipeCardProps> = ({
         }
         try {
             const response = await axios.get("http://54.180.45.230:3000/api/v1/users/recipes/fav", 
-            
-              {
-                headers: { Authorization: `Bearer ${token}` },
-            }
+              {headers: { Authorization: `Bearer ${token}` },}
           );
 
-            if (response.data.success && response.data.success.recipes) {
-                const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
-                setFavRecipes(favIds);
+            if (response.data && response.data.recipes) {
+                const favIds = new Set<number>(response.data.recipes.map((recipe: any) => recipe.id));
+                setFavRecipes(favIds); 
             }
+            
+            
         } catch (error) {
             console.error("좋아요한 레시피 목록 불러오기 실패:", error);
         }
     };
 
     fetchFavRecipes();
-}, []);
+}, [favRecipes]);
 
-const isSaved = favRecipes.has(recipeId);
+useEffect(() => {
+  setIsSaved(favRecipes.has(recipeId));
+}, [favRecipes, recipeId]);
 
   return (
     <div className="cocktailrecipe-card" onClick={onClick}>
