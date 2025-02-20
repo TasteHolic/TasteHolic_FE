@@ -12,6 +12,7 @@ interface RecipeCardProps {
   type: "cocktail" | "user";
   isSelected: boolean;
   onClick: () => void;
+  onDelete: () => void;
   isMyBar: boolean
 }
 
@@ -29,10 +30,11 @@ const getAlcoholLabel = (abv: number): string => {
   return "Strong";
 };
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSelected, isMyBar }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, onDelete, isSelected, isMyBar }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("/image/image 92.png");
   const [keyWords, setKeyWords] = useState<Keyword[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -66,7 +68,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSele
   
 
   return (
-    <div className={`recipe-card ${isSelected ? "selected" : ""}`} onClick={onClick}>
+    <>
+    <div className={`recipe-card ${isSelected ? "selected" : ""}`} 
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      
       <div className="gradient" />
       <img src={image} alt={name} className="cocktail-image" />
 
@@ -90,7 +98,19 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipeId, type, onClick, isSele
         ))}
         {keyWords.length > 4 && <div className="keyword etc">...</div>}
       </div>
+      {isHovered && (
+      <button className="recipe-delete-button" 
+      onClick={(e) => {
+        onDelete();
+        e.stopPropagation();
+        }}>
+        <img src="/image/trash.png" className="trash-icon"/>
+      </button>
+      )}
     </div>
+
+
+    </>
   );
 };
 
