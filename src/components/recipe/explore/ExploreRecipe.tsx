@@ -23,6 +23,7 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
 }) => {
     const [recipeDetails, setRecipeDetails] = useState<any>(null);
     const [favRecipes, setFavRecipes] = useState<Set<number>>(new Set());
+    const [isSaved, setIsSaved] = useState(false);
     useEffect(() => {
 
     }, []);
@@ -66,8 +67,8 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                 }
             );
 
-                if (response.data.success && response.data.success.recipes) {
-                    const favIds = new Set<number>(response.data.success.recipes.map((recipe: any) => recipe.id));
+                if (response.data && response.data.recipes) {
+                    const favIds = new Set<number>(response.data.recipes.map((recipe: any) => recipe.id));
                     setFavRecipes(favIds);
                 }
             } catch (error) {
@@ -76,9 +77,11 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
         };
 
         fetchFavRecipes();
-    }, []);
+    }, [onSave]);
 
-    const isSaved = favRecipes.has(recipeId);
+    useEffect(() => {
+      setIsSaved(favRecipes.has(recipeId));
+    }, [favRecipes, recipeId]);
 
     return (
         <>
@@ -140,7 +143,10 @@ const ExploreRecipe: React.FC<ExploreRecipeProps> = ({
                             <button className="cancel-button" onClick={onCancel}>
                                 cancel
                             </button>
-                            <button className="save-button" onClick={onSave}>
+                            <button 
+                                className="save-button" 
+                                onClick={onSave}
+                            >
                                 {isSaved ? "저장됨" : "저장하기"}
                             </button>
                         </div>
