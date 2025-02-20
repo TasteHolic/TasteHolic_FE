@@ -18,7 +18,7 @@ const RecipeLineWrapper = styled.div`
 const RecipeLine = styled.input`
     display: flex;
     width: 507px;
-    height: 38px;
+    min-height: 38px;
     padding-left: 18px;
     padding-right: 40px;
     align-items: center;
