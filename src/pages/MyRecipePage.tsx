@@ -89,7 +89,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
     try {
 
       const isFav = favRecipes.has(id); // 좋아요한 레시피인지 확인
-  
+
       const url = isFav
         ? `http://54.180.45.230:3000/api/v1/recipes/${id}/like/cancel?type=user`
         : `http://54.180.45.230:3000/api/v1/recipes/${id}/like?type=user`;
@@ -100,7 +100,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
               "Authorization": `Bearer ${token}`
           }
       });
-  
+
       //좋아요 목록에서 추가/제거
       setFavRecipes((prev) => {
         const newFavs = new Set(prev);
