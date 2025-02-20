@@ -96,7 +96,10 @@ const isSaved = favRecipes.has(recipeId);
         </svg>
       </button>
 
-      {isMyBar && <div className="my-bar-label">My Bar ✔</div>}
+      {isMyBar && <div className="my-bar-label">
+        My Bar
+        <img src="/image/Done.png" alt="My Bar" className="my-bar-check-icon"/>
+      </div>}
 
       <div className="image-container">
         <img src={image} alt={name} className="cocktailrecipe-image" />
