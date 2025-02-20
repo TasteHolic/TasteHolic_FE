@@ -80,7 +80,7 @@ export default function RecipeModal({ isOpen, onClose }: { isOpen: boolean; onCl
                   }
                 }
               );
-              console.log(response.data.success.alcohols.map((item: any) => item.nameKor))
+
               return response.data.success.alcohols.map((item: any) => item.nameKor) || [];
               
             } catch (error) {
