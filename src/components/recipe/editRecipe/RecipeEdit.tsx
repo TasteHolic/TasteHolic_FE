@@ -1,120 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./RecipeEdit.css";
 import ItemList from "./ItemList";
 import RecipeDropdown from "./RecipeDropdown";
 import WriteRecipe from "./EditWriteRecipe";
 import ColorPicker from "../ColorPicker";
-import axios from "axios";
 
 interface RecipeEditProps {
-    recipeId: number;
     onReadMore: () => void;
     onCancel: () => void;
     onSave: () => void;
 }
 
 const RecipeEdit: React.FC<RecipeEditProps> = ({
-    recipeId,
     onReadMore,
     onCancel,
     onSave
 }) => {
-    const [recipe, setRecipe] = useState<any>(null);
-
-    const [name, setName] = useState<string>("");
-    const [ingredients, setIngredients] = useState<{ [key: string]: string }>({});
-    const [recipeSteps, setRecipeSteps] = useState<string[]>([]);
-    const [glassType, setGlassType] = useState<string>("");
+    // 하드코딩된 레시피 데이터
+    const [name, setName] = useState<string>("은하수 폭발");
+    const [ingredients, setIngredients] = useState<{ [key: string]: string }>({
+        "진": "50ml",
+        "레몬 주스": "30ml",
+        "설탕 시럽": "15ml",
+        "탄산수": "적당량"
+    });
+    const [recipeSteps, setRecipeSteps] = useState<string[]>([
+        "진을 잔에 붓는다.",
+        "레몬 주스와 설탕 시럽을 넣고 섞는다.",
+        "탄산수를 추가하고 가볍게 젓는다."
+    ]);
+    const [glassType, setGlassType] = useState<string>("칵테일 글래스");
     const [status, setStatus] = useState<string>("published");
-    const [tastes, setTastes] = useState<string[]>([]);
-    const [aromas, setAromas] = useState<string[]>([]);
-    const [colors, setColors] = useState<string[]>([]);
-    const [abv, setAbv] = useState<number>(0);
-    const [isLoading, setIsLoading] = useState(true);
+    const [tastes, setTastes] = useState<string[]>(["달콤한", "상쾌한"]);
+    const [aromas, setAromas] = useState<string[]>(["과일 향", "민트 향"]);
+    const [colors, setColors] = useState<string[]>(["#001F3F", "#39CCCC", "#FFFFFF"]);
+    const [abv, setAbv] = useState<number>(18);
 
-
-    useEffect(() => {
-        const fetchRecipeDetails = async () => {
-    
-            try {
-                const response = await axios.get(`http://54.180.45.230:3000/api/v1/recipes/${recipeId}?type=user`);
-    
-                if (response.data.resultType === "SUCCESS") {
-                    const recipeData = response.data.success.recipe;
-                    setRecipe(recipeData);
-  
-    
-                    setName(recipeData.name);
-                    setIngredients(recipeData.ingredients);
-                    setRecipeSteps(recipeData.recipe);
-                    setGlassType(recipeData.glassType);
-                    setStatus(recipeData.status);
-                    setTastes(recipeData.tastes);
-                    setAromas(recipeData.aromas);
-                    setColors(recipeData.colors || []); // 색상이 null일 수도 있음
-                    setAbv(recipeData.abv);
-                    setIsLoading(false);
-                } else {
-                    alert("레시피 정보를 불러오는 데 실패했습니다.");
-                    setIsLoading(false);
-                }
-            } catch (error) {
-                console.error("레시피 상세 정보 불러오기 실패:", error);
-                setIsLoading(false);
-            }
-        };
-    
-        fetchRecipeDetails();
-    }, [recipeId]);
-
-    const handleUpdateRecipe = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                alert("레시피 소유자만 수정할 수 있습니다.");
-                return;
-            }
-    
-            const updatedRecipe = {
-                name,
-                ingredients, 
-                recipe: recipeSteps,
-                glassType,
-                status,
-                tastes,
-                aromas,
-                colors,
-                abv,
-            };
-    
-            const response = await axios.patch(`http://54.180.45.230:3000/api/v1/recipes/${recipeId}`, updatedRecipe, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-    
-            if (response.data.resultType === "SUCCESS") {
-                console.log("레시피 수정 완료!");
-                onCancel();
-            } else {
-                alert("레시피 수정 실패!");
-            }
-        } catch (error: any) {
-            alert("서버 응답이 없습니다.");
-            console.error("레시피 수정 실패:", error);
-        }
+    const handleUpdateRecipe = () => {
+        console.log("업데이트된 레시피:", {
+            name,
+            ingredients,
+            recipeSteps,
+            glassType,
+            status,
+            tastes,
+            aromas,
+            colors,
+            abv
+        });
         onSave();
     };
-    
-
-    if (isLoading) return  <p style={{ color: "#ffffff" }}>로딩 중...</p>;
 
     return (
         <>
             <div className="edit-container">
                 <div className="top">
-                    <p className="drink-name">{recipe.name}</p>
+                    <p className="drink-name">{name}</p>
                     <button className="read-more-button" onClick={onReadMore}>
                         자세히 보기
                     </button>
@@ -124,7 +65,7 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                     <div className="category">
                         <div className="category-name">맛</div>
                         <ItemList 
-                            items={recipe.tastes}
+                            items={tastes}
                             options={[
                                 "달콤함 (Sweet)", 
                                 "시트러스 (Citrus)", 
@@ -135,13 +76,13 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                                 "프루티 (Fruity)", 
                                 "허브 (Herbal)", 
                                 "짭짤함 (Salty)"
-                             ]}
-                              />
+                            ]}
+                        />
                     </div>
                     <div className="category">
                         <div className="category-name">향</div>
                         <ItemList 
-                            items={recipe.aromas}
+                            items={aromas}
                             options={[
                                 "바닐라 (Vanilla)", 
                                 "라임 (Lime)", 
@@ -153,35 +94,36 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                                 "오렌지 (Orange)", 
                                 "커피 (Coffee)"
                             ]}
-                            />
+                        />
                     </div>
                     <div className="category">
                         <div className="category-name">재료</div>
                         <ItemList 
-                        items={Object.keys(recipe.ingredients)} 
-                        options={[
-                            "보드카",  
-                            "라임 주스",  
-                            "진",  
-                            "럼",  
-                            "심플 시럽",  
-                            "레몬 주스",  
-                            "버몬트",  
-                            "오렌지 주스",  
-                            "아마레토",  
-                            "위스키",  
-                            "가루 설탕",  
-                            "소다수",  
-                            "데킬라",  
-                            "크렘 드 멘트",  
-                            "트리플 섹",  
-                            "얼음" 
-                            ]} />
+                            items={Object.keys(ingredients)} 
+                            options={[
+                                "보드카",  
+                                "라임 주스",  
+                                "진",  
+                                "럼",  
+                                "심플 시럽",  
+                                "레몬 주스",  
+                                "버몬트",  
+                                "오렌지 주스",  
+                                "아마레토",  
+                                "위스키",  
+                                "가루 설탕",  
+                                "소다수",  
+                                "데킬라",  
+                                "크렘 드 멘트",  
+                                "트리플 섹",  
+                                "얼음" 
+                            ]} 
+                        />
                     </div>
                     <div className="category">
                         <div className="category-name">도수</div>
                         <RecipeDropdown
-                            option={`${recipe.abv}%`}
+                            option={`${abv}%`}
                             placeholder="도수 찾기..."
                             options={[
                                 "논알콜", 
@@ -195,7 +137,7 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                     <div className="category">
                         <div className="category-name">잔</div>
                         <RecipeDropdown
-                            option={recipe.glassType}
+                            option={glassType}
                             placeholder="주종 찾기..."
                             options={[
                                 "마티니 글라스", 
@@ -214,12 +156,20 @@ const RecipeEdit: React.FC<RecipeEditProps> = ({
                     <div className="category">
                         <div className="category-name">색상</div>
                         <div className="colors">
-                            <ColorPicker color1={recipe.colors?.[0]} color2={recipe.colors?.[1]} color3={recipe.colors?.[2]} />
+                            <ColorPicker 
+                                color1={colors[0]} 
+                                color2={colors[1]} 
+                                color3={colors[2]} 
+                            />
                         </div>
                     </div>
                     <div className="category r1">
                         <div className="category-name r2">레시피</div>
-                        <WriteRecipe line1={recipe.recipe[0]} line2={recipe.recipe[1]} line3={recipe.recipe[2]} />
+                        <WriteRecipe 
+                            line1={recipeSteps[0]} 
+                            line2={recipeSteps[1]} 
+                            line3={recipeSteps[2]} 
+                        />
                     </div>
                 </div>
                 <div className="bottom">
