@@ -112,14 +112,14 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 400 && data.error?.errorCode === "R001") {
-          alert("존재하지 않는 레시피입니다.");
+          console.log("존재하지 않는 레시피입니다.");
         } else if (status === 409 && data.error?.errorCode === "R002") {
-          alert("이미 좋아요를 눌렀습니다.");
+          console.log("이미 좋아요를 눌렀습니다.");
         } else {
-          alert("좋아요 처리 중 오류가 발생했습니다.");
+          console.log("좋아요 처리 중 오류가 발생했습니다.");
         }
       } else {
-        alert("서버와의 연결이 원활하지 않습니다.");
+        console.log("서버와의 연결이 원활하지 않습니다.");
       }
       console.error("좋아요 처리 실패:", error);
     }
@@ -268,7 +268,7 @@ const MyRecipePage: React.FC<MyRecipePageProps> = ({ onCocktailSelect }) => {
             <ExploreRecipe
               recipeId={exploreCocktail.id}
               type={"user"}
-              onCancel={() => setIsExploreOpen(false)}
+              onCancel={() => {setIsExploreOpen(false); setIsEditMode(false)}}
               onSave={() => toggleSaveRecipe(exploreCocktail.id, exploreCocktail.type)}
             />
           </div>
