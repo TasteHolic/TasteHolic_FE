@@ -221,16 +221,16 @@ const RecipeExplore: React.FC = () => {
           console.log("서버 응답 데이터:", error.response.data);
 
           if (status === 400) {
-              alert("잘못된 요청: " + (data.error?.reason || "서버 오류"));
+            console.log("잘못된 요청: " + (data.error?.reason || "서버 오류"));
           } else if (status === 403) {
-              alert("접근 권한 없음");
+            console.log("접근 권한 없음");
           } else if (status === 404) {
-              alert("존재하지 않는 레시피입니다.");
+            console.log("존재하지 않는 레시피입니다.");
           } else {
-              alert("좋아요 처리 중 오류가 발생했습니다.");
+            console.log("좋아요 처리 중 오류가 발생했습니다.");
           }
       } else {
-          alert("서버와의 연결이 원활하지 않습니다.");
+        console.log("서버와의 연결이 원활하지 않습니다.");
       }
       console.error("좋아요 처리 실패:", error);
   }
